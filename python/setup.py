@@ -16,28 +16,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import importlib.util
 import glob
 import os
 import sys
 from setuptools import setup
 from setuptools.command.install import install
 from shutil import copyfile, copytree, rmtree
+import importlib
 
 try:
     exec(open('pyspark/version.py').read())
 except IOError:
-    print("Failed to load PySpark version file for packaging. You must be in Spark's python dir.",
-          file=sys.stderr)
+    print("Failed to load PySpark version file for packaging. You must be in Spark's python dir.")
     sys.exit(-1)
 try:
-    spec = importlib.util.spec_from_file_location("install", "pyspark/install.py")
-    install_module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(install_module)
+    importlib.import_module(".", "pyspark.install")
 except IOError:
     print("Failed to load the installing module (pyspark/install.py) which had to be "
-          "packaged together.",
-          file=sys.stderr)
+          "packaged together.")
     sys.exit(-1)
 VERSION = __version__  # noqa
 # A temporary path so we can access above the Python project root and fetch scripts and jars we need
@@ -66,10 +62,10 @@ elif (os.path.isfile("../RELEASE") and len(glob.glob("../jars/spark*core*.jar"))
     JARS_PATH = os.path.join(SPARK_HOME, "jars")
 elif len(JARS_PATH) > 1:
     print("Assembly jars exist for multiple scalas ({0}), please cleanup assembly/target".format(
-        JARS_PATH), file=sys.stderr)
+        JARS_PATH))
     sys.exit(-1)
 elif len(JARS_PATH) == 0 and not os.path.exists(TEMP_PATH):
-    print(incorrect_invocation_message, file=sys.stderr)
+    print(incorrect_invocation_message)
     sys.exit(-1)
 
 EXAMPLES_PATH = os.path.join(SPARK_HOME, "examples/src/main/python")
@@ -103,8 +99,7 @@ if (in_spark):
     try:
         os.mkdir(TEMP_PATH)
     except BaseException:
-        print("Temp path for symlink to parent already exists {0}".format(TEMP_PATH),
-              file=sys.stderr)
+        print("Temp path for symlink to parent already exists {0}".format(TEMP_PATH))
         sys.exit(-1)
 
 # If you are changing the versions here, please also change ./python/pyspark/sql/pandas/utils.py
@@ -179,11 +174,10 @@ try:
     else:
         # If we are not inside of SPARK_HOME verify we have the required symlink farm
         if not os.path.exists(JARS_TARGET):
-            print("To build packaging must be in the python directory under the SPARK_HOME.",
-                  file=sys.stderr)
+            print("To build packaging must be in the python directory under the SPARK_HOME.")
 
     if not os.path.isdir(SCRIPTS_TARGET):
-        print(incorrect_invocation_message, file=sys.stderr)
+        print(incorrect_invocation_message)
         sys.exit(-1)
 
     # Scripts directive requires a list of each script path and does not take wild cards.
