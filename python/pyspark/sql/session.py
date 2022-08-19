@@ -70,7 +70,7 @@ if TYPE_CHECKING:
 __all__ = ["SparkSession"]
 
 
-def _monkey_patch_RDD(sparkSession: "SparkSession") -> None:
+def _monkey_patch_RDD(sparkSession                )        :
     @no_type_check
     def toDF(self, schema=None, sampleRatio=None):
         """
@@ -142,23 +142,23 @@ class SparkSession(SparkConversionMixin):
         """Builder for :class:`SparkSession`."""
 
         _lock = RLock()
-        _options: Dict[str, Any] = {}
-        _sc: Optional[SparkContext] = None
+        _options                 = {}
+        _sc                         = None
 
         @overload
-        def config(self, *, conf: SparkConf) -> "SparkSession.Builder":
+        def config(self, *, conf           )                          :
             ...
 
         @overload
-        def config(self, key: str, value: Any) -> "SparkSession.Builder":
+        def config(self, key     , value     )                          :
             ...
 
         def config(
             self,
-            key: Optional[str] = None,
-            value: Optional[Any] = None,
-            conf: Optional[SparkConf] = None,
-        ) -> "SparkSession.Builder":
+            key                = None,
+            value                = None,
+            conf                      = None,
+        )                          :
             """Sets a config option. Options set using this method are automatically propagated to
             both :class:`SparkConf` and :class:`SparkSession`'s own configuration.
 
@@ -195,7 +195,7 @@ class SparkSession(SparkConversionMixin):
                         self._options[k] = v
                 return self
 
-        def master(self, master: str) -> "SparkSession.Builder":
+        def master(self, master     )                          :
             """Sets the Spark master URL to connect to, such as "local" to run locally, "local[4]"
             to run locally with 4 cores, or "spark://master:7077" to run on a Spark standalone
             cluster.
@@ -209,7 +209,7 @@ class SparkSession(SparkConversionMixin):
             """
             return self.config("spark.master", master)
 
-        def appName(self, name: str) -> "SparkSession.Builder":
+        def appName(self, name     )                          :
             """Sets a name for the application, which will be shown in the Spark web UI.
 
             If no application name is set, a randomly generated name will be used.
@@ -224,13 +224,13 @@ class SparkSession(SparkConversionMixin):
             return self.config("spark.app.name", name)
 
         @since(2.0)
-        def enableHiveSupport(self) -> "SparkSession.Builder":
+        def enableHiveSupport(self)                          :
             """Enables Hive support, including connectivity to a persistent Hive metastore, support
             for Hive SerDes, and Hive user-defined functions.
             """
             return self.config("spark.sql.catalogImplementation", "hive")
 
-        def getOrCreate(self) -> "SparkSession":
+        def getOrCreate(self)                  :
             """Gets an existing :class:`SparkSession` or, if there is no existing one, creates a
             new one based on the options set in this builder.
 
@@ -279,14 +279,14 @@ class SparkSession(SparkConversionMixin):
     builder = Builder()
     """A class attribute having a :class:`Builder` to construct :class:`SparkSession` instances."""
 
-    _instantiatedSession: ClassVar[Optional["SparkSession"]] = None
-    _activeSession: ClassVar[Optional["SparkSession"]] = None
+    _instantiatedSession                                     = None
+    _activeSession                                     = None
 
     def __init__(
         self,
-        sparkContext: SparkContext,
-        jsparkSession: Optional[JavaObject] = None,
-        options: Dict[str, Any] = {},
+        sparkContext              ,
+        jsparkSession                       = None,
+        options                 = {},
     ):
         self._sc = sparkContext
         self._jsc = self._sc._jsc
@@ -325,7 +325,7 @@ class SparkSession(SparkConversionMixin):
             self._jvm.SparkSession.setDefaultSession(self._jsparkSession)
             self._jvm.SparkSession.setActiveSession(self._jsparkSession)
 
-    def _repr_html_(self) -> str:
+    def _repr_html_(self)       :
         return """
             <div>
                 <p><b>SparkSession - {catalogImplementation}</b></p>
@@ -337,12 +337,12 @@ class SparkSession(SparkConversionMixin):
         )
 
     @property
-    def _jconf(self) -> "JavaObject":
+    def _jconf(self)                :
         """Accessor for the JVM SQL-specific configurations"""
         return self._jsparkSession.sessionState().conf()
 
     @since(2.0)
-    def newSession(self) -> "SparkSession":
+    def newSession(self)                  :
         """
         Returns a new :class:`SparkSession` as new session, that has separate SQLConf,
         registered temporary views and UDFs, but shared :class:`SparkContext` and
@@ -351,7 +351,7 @@ class SparkSession(SparkConversionMixin):
         return self.__class__(self._sc, self._jsparkSession.newSession())
 
     @classmethod
-    def getActiveSession(cls) -> Optional["SparkSession"]:
+    def getActiveSession(cls)                            :
         """
         Returns the active :class:`SparkSession` for the current thread, returned by the builder
 
@@ -386,19 +386,19 @@ class SparkSession(SparkConversionMixin):
 
     @property  # type: ignore[misc]
     @since(2.0)
-    def sparkContext(self) -> SparkContext:
+    def sparkContext(self)                :
         """Returns the underlying :class:`SparkContext`."""
         return self._sc
 
     @property  # type: ignore[misc]
     @since(2.0)
-    def version(self) -> str:
+    def version(self)       :
         """The version of Spark on which this application is running."""
         return self._jsparkSession.version()
 
     @property  # type: ignore[misc]
     @since(2.0)
-    def conf(self) -> RuntimeConfig:
+    def conf(self)                 :
         """Runtime configuration interface for Spark.
 
         This is the interface through which the user can get and set all Spark and Hadoop
@@ -414,7 +414,7 @@ class SparkSession(SparkConversionMixin):
         return self._conf
 
     @property
-    def catalog(self) -> "Catalog":
+    def catalog(self)             :
         """Interface through which the user may create, drop, alter or query underlying
         databases, tables, functions, etc.
 
@@ -431,7 +431,7 @@ class SparkSession(SparkConversionMixin):
         return self._catalog
 
     @property
-    def udf(self) -> "UDFRegistration":
+    def udf(self)                     :
         """Returns a :class:`UDFRegistration` for UDF registration.
 
         .. versionadded:: 2.0.0
@@ -446,11 +446,11 @@ class SparkSession(SparkConversionMixin):
 
     def range(
         self,
-        start: int,
-        end: Optional[int] = None,
-        step: int = 1,
-        numPartitions: Optional[int] = None,
-    ) -> DataFrame:
+        start     ,
+        end                = None,
+        step      = 1,
+        numPartitions                = None,
+    )             :
         """
         Create a :class:`DataFrame` with single :class:`pyspark.sql.types.LongType` column named
         ``id``, containing elements in a range from ``start`` to ``end`` (exclusive) with
@@ -494,8 +494,8 @@ class SparkSession(SparkConversionMixin):
         return DataFrame(jdf, self)
 
     def _inferSchemaFromList(
-        self, data: Iterable[Any], names: Optional[List[str]] = None
-    ) -> StructType:
+        self, data               , names                      = None
+    )              :
         """
         Infer schema from list of Row, dict, or tuple.
 
@@ -524,10 +524,10 @@ class SparkSession(SparkConversionMixin):
 
     def _inferSchema(
         self,
-        rdd: RDD[Any],
-        samplingRatio: Optional[float] = None,
-        names: Optional[List[str]] = None,
-    ) -> StructType:
+        rdd          ,
+        samplingRatio                  = None,
+        names                      = None,
+    )              :
         """
         Infer schema from an RDD of Row, dict, or tuple.
 
@@ -589,10 +589,10 @@ class SparkSession(SparkConversionMixin):
 
     def _createFromRDD(
         self,
-        rdd: RDD[Any],
-        schema: Optional[Union[DataType, List[str]]],
-        samplingRatio: Optional[float],
-    ) -> Tuple[RDD[Tuple], StructType]:
+        rdd          ,
+        schema                                      ,
+        samplingRatio                 ,
+    )                                 :
         """
         Create an RDD for DataFrame from an existing RDD, returns the RDD and schema.
         """
@@ -617,8 +617,8 @@ class SparkSession(SparkConversionMixin):
         return internal_rdd, struct
 
     def _createFromLocal(
-        self, data: Iterable[Any], schema: Optional[Union[DataType, List[str]]]
-    ) -> Tuple[RDD[Tuple], StructType]:
+        self, data               , schema                                      
+    )                                 :
         """
         Create an RDD for DataFrame from a list or pandas.DataFrame, returns
         the RDD and schema.
@@ -630,7 +630,7 @@ class SparkSession(SparkConversionMixin):
         if schema is None or isinstance(schema, (list, tuple)):
             struct = self._inferSchemaFromList(data, names=schema)
             converter = _create_converter(struct)
-            tupled_data: Iterable[Tuple] = map(converter, data)
+            tupled_data                  = map(converter, data)
             if isinstance(schema, (list, tuple)):
                 for i, name in enumerate(schema):
                     struct.fields[i].name = name
@@ -648,7 +648,7 @@ class SparkSession(SparkConversionMixin):
         return self._sc.parallelize(internal_data), struct
 
     @staticmethod
-    def _create_shell_session() -> "SparkSession":
+    def _create_shell_session()                  :
         """
         Initialize a :class:`SparkSession` for a pyspark shell session. This is called from
         shell.py to make error handling simpler without needing to declare local variables in
@@ -677,7 +677,7 @@ class SparkSession(SparkConversionMixin):
         return SparkSession._getActiveSessionOrCreate()
 
     @staticmethod
-    def _getActiveSessionOrCreate(**static_conf: Any) -> "SparkSession":
+    def _getActiveSessionOrCreate(**static_conf     )                  :
         """
         Returns the active :class:`SparkSession` for the current thread, returned by the builder,
         or if there is no existing one, creates a new one based on the options set in the builder.
@@ -696,81 +696,81 @@ class SparkSession(SparkConversionMixin):
     @overload
     def createDataFrame(
         self,
-        data: Iterable["RowLike"],
-        schema: Union[List[str], Tuple[str, ...]] = ...,
-        samplingRatio: Optional[float] = ...,
-    ) -> DataFrame:
+        data                     ,
+        schema                                    = ...,
+        samplingRatio                  = ...,
+    )             :
         ...
 
     @overload
     def createDataFrame(
         self,
-        data: "RDD[RowLike]",
-        schema: Union[List[str], Tuple[str, ...]] = ...,
-        samplingRatio: Optional[float] = ...,
-    ) -> DataFrame:
+        data                ,
+        schema                                    = ...,
+        samplingRatio                  = ...,
+    )             :
         ...
 
     @overload
     def createDataFrame(
         self,
-        data: Iterable["RowLike"],
-        schema: Union[StructType, str],
+        data                     ,
+        schema                        ,
         *,
-        verifySchema: bool = ...,
-    ) -> DataFrame:
+        verifySchema       = ...,
+    )             :
         ...
 
     @overload
     def createDataFrame(
         self,
-        data: "RDD[RowLike]",
-        schema: Union[StructType, str],
+        data                ,
+        schema                        ,
         *,
-        verifySchema: bool = ...,
-    ) -> DataFrame:
+        verifySchema       = ...,
+    )             :
         ...
 
     @overload
     def createDataFrame(
         self,
-        data: "RDD[AtomicValue]",
-        schema: Union[AtomicType, str],
-        verifySchema: bool = ...,
-    ) -> DataFrame:
+        data                    ,
+        schema                        ,
+        verifySchema       = ...,
+    )             :
         ...
 
     @overload
     def createDataFrame(
         self,
-        data: Iterable["AtomicValue"],
-        schema: Union[AtomicType, str],
-        verifySchema: bool = ...,
-    ) -> DataFrame:
+        data                         ,
+        schema                        ,
+        verifySchema       = ...,
+    )             :
         ...
 
     @overload
     def createDataFrame(
-        self, data: "PandasDataFrameLike", samplingRatio: Optional[float] = ...
-    ) -> DataFrame:
+        self, data                       , samplingRatio                  = ...
+    )             :
         ...
 
     @overload
     def createDataFrame(
         self,
-        data: "PandasDataFrameLike",
-        schema: Union[StructType, str],
-        verifySchema: bool = ...,
-    ) -> DataFrame:
+        data                       ,
+        schema                        ,
+        verifySchema       = ...,
+    )             :
         ...
 
     def createDataFrame(  # type: ignore[misc]
         self,
-        data: Union[RDD[Any], Iterable[Any], "PandasDataFrameLike"],
-        schema: Optional[Union[AtomicType, StructType, str]] = None,
-        samplingRatio: Optional[float] = None,
-        verifySchema: bool = True,
-    ) -> DataFrame:
+        data                                                       ,
+        schema                                               = None,
+        samplingRatio                  = None,
+        verifySchema       = True,
+    )             :
         """
         Creates a :class:`DataFrame` from an :class:`RDD`, a list or a :class:`pandas.DataFrame`.
 
@@ -897,11 +897,11 @@ class SparkSession(SparkConversionMixin):
 
     def _create_dataframe(
         self,
-        data: Union[RDD[Any], Iterable[Any]],
-        schema: Optional[Union[DataType, List[str]]],
-        samplingRatio: Optional[float],
-        verifySchema: bool,
-    ) -> DataFrame:
+        data                                ,
+        schema                                      ,
+        samplingRatio                 ,
+        verifySchema      ,
+    )             :
         if isinstance(schema, StructType):
             verify_func = _make_type_verifier(schema) if verifySchema else lambda _: True
 
@@ -927,7 +927,7 @@ class SparkSession(SparkConversionMixin):
 
         else:
 
-            def prepare(obj: Any) -> Any:
+            def prepare(obj     )       :
                 return obj
 
         if isinstance(data, RDD):
@@ -941,7 +941,7 @@ class SparkSession(SparkConversionMixin):
         df._schema = struct
         return df
 
-    def sql(self, sqlQuery: str, **kwargs: Any) -> DataFrame:
+    def sql(self, sqlQuery     , **kwargs     )             :
         """Returns a :class:`DataFrame` representing the result of the given query.
         When ``kwargs`` is specified, this method formats the given string by using the Python
         standard formatter.
@@ -1036,7 +1036,7 @@ class SparkSession(SparkConversionMixin):
             if len(kwargs) > 0:
                 formatter.clear()
 
-    def table(self, tableName: str) -> DataFrame:
+    def table(self, tableName     )             :
         """Returns the specified table as a :class:`DataFrame`.
 
         .. versionadded:: 2.0.0
@@ -1055,7 +1055,7 @@ class SparkSession(SparkConversionMixin):
         return DataFrame(self._jsparkSession.table(tableName), self)
 
     @property
-    def read(self) -> DataFrameReader:
+    def read(self)                   :
         """
         Returns a :class:`DataFrameReader` that can be used to read data
         in as a :class:`DataFrame`.
@@ -1069,7 +1069,7 @@ class SparkSession(SparkConversionMixin):
         return DataFrameReader(self)
 
     @property
-    def readStream(self) -> DataStreamReader:
+    def readStream(self)                    :
         """
         Returns a :class:`DataStreamReader` that can be used to read data streams
         as a streaming :class:`DataFrame`.
@@ -1087,7 +1087,7 @@ class SparkSession(SparkConversionMixin):
         return DataStreamReader(self)
 
     @property
-    def streams(self) -> "StreamingQueryManager":
+    def streams(self)                           :
         """Returns a :class:`StreamingQueryManager` that allows managing all the
         :class:`StreamingQuery` instances active on `this` context.
 
@@ -1106,7 +1106,7 @@ class SparkSession(SparkConversionMixin):
         return StreamingQueryManager(self._jsparkSession.streams())
 
     @since(2.0)
-    def stop(self) -> None:
+    def stop(self)        :
         """Stop the underlying :class:`SparkContext`."""
         from pyspark.sql.context import SQLContext
 
@@ -1120,7 +1120,7 @@ class SparkSession(SparkConversionMixin):
         SQLContext._instantiatedContext = None
 
     @since(2.0)
-    def __enter__(self) -> "SparkSession":
+    def __enter__(self)                  :
         """
         Enable 'with SparkSession.builder.(...).getOrCreate() as session: app' syntax.
         """
@@ -1129,10 +1129,10 @@ class SparkSession(SparkConversionMixin):
     @since(2.0)
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
-    ) -> None:
+        exc_type                               ,
+        exc_val                         ,
+        exc_tb                         ,
+    )        :
         """
         Enable 'with SparkSession.builder.(...).getOrCreate() as session: app' syntax.
 
@@ -1141,7 +1141,7 @@ class SparkSession(SparkConversionMixin):
         self.stop()
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     from pyspark.context import SparkContext

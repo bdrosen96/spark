@@ -67,7 +67,7 @@ class BinaryClassificationMetrics(JavaModelWrapper):
     0.88...
     """
 
-    def __init__(self, scoreAndLabels: RDD[Tuple[float, float]]):
+    def __init__(self, scoreAndLabels                          ):
         sc = scoreAndLabels.ctx
         sql_ctx = SQLContext.getOrCreate(sc)
         numCol = len(scoreAndLabels.first())
@@ -87,7 +87,7 @@ class BinaryClassificationMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def areaUnderROC(self) -> float:
+    def areaUnderROC(self)         :
         """
         Computes the area under the receiver operating characteristic
         (ROC) curve.
@@ -96,14 +96,14 @@ class BinaryClassificationMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def areaUnderPR(self) -> float:
+    def areaUnderPR(self)         :
         """
         Computes the area under the precision-recall curve.
         """
         return self.call("areaUnderPR")
 
     @since("1.4.0")
-    def unpersist(self) -> None:
+    def unpersist(self)        :
         """
         Unpersists intermediate RDDs used in the computation.
         """
@@ -143,7 +143,7 @@ class RegressionMetrics(JavaModelWrapper):
     0.68...
     """
 
-    def __init__(self, predictionAndObservations: RDD[Tuple[float, float]]):
+    def __init__(self, predictionAndObservations                          ):
         sc = predictionAndObservations.ctx
         sql_ctx = SQLContext.getOrCreate(sc)
         numCol = len(predictionAndObservations.first())
@@ -163,7 +163,7 @@ class RegressionMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def explainedVariance(self) -> float:
+    def explainedVariance(self)         :
         r"""
         Returns the explained variance regression score.
         explainedVariance = :math:`1 - \frac{variance(y - \hat{y})}{variance(y)}`
@@ -172,7 +172,7 @@ class RegressionMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def meanAbsoluteError(self) -> float:
+    def meanAbsoluteError(self)         :
         """
         Returns the mean absolute error, which is a risk function corresponding to the
         expected value of the absolute error loss or l1-norm loss.
@@ -181,7 +181,7 @@ class RegressionMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def meanSquaredError(self) -> float:
+    def meanSquaredError(self)         :
         """
         Returns the mean squared error, which is a risk function corresponding to the
         expected value of the squared error loss or quadratic loss.
@@ -190,7 +190,7 @@ class RegressionMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def rootMeanSquaredError(self) -> float:
+    def rootMeanSquaredError(self)         :
         """
         Returns the root mean squared error, which is defined as the square root of
         the mean squared error.
@@ -199,7 +199,7 @@ class RegressionMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def r2(self) -> float:
+    def r2(self)         :
         """
         Returns R^2^, the coefficient of determination.
         """
@@ -282,7 +282,7 @@ class MulticlassMetrics(JavaModelWrapper):
     0.9682...
     """
 
-    def __init__(self, predictionAndLabels: RDD[Tuple[float, float]]):
+    def __init__(self, predictionAndLabels                          ):
         sc = predictionAndLabels.ctx
         sql_ctx = SQLContext.getOrCreate(sc)
         numCol = len(predictionAndLabels.first())
@@ -303,7 +303,7 @@ class MulticlassMetrics(JavaModelWrapper):
         super(MulticlassMetrics, self).__init__(java_model)
 
     @since("1.4.0")
-    def confusionMatrix(self) -> Matrix:
+    def confusionMatrix(self)          :
         """
         Returns confusion matrix: predicted classes are in columns,
         they are ordered by class label ascending, as in "labels".
@@ -311,35 +311,35 @@ class MulticlassMetrics(JavaModelWrapper):
         return self.call("confusionMatrix")
 
     @since("1.4.0")
-    def truePositiveRate(self, label: float) -> float:
+    def truePositiveRate(self, label       )         :
         """
         Returns true positive rate for a given label (category).
         """
         return self.call("truePositiveRate", label)
 
     @since("1.4.0")
-    def falsePositiveRate(self, label: float) -> float:
+    def falsePositiveRate(self, label       )         :
         """
         Returns false positive rate for a given label (category).
         """
         return self.call("falsePositiveRate", label)
 
     @since("1.4.0")
-    def precision(self, label: float) -> float:
+    def precision(self, label       )         :
         """
         Returns precision.
         """
         return self.call("precision", float(label))
 
     @since("1.4.0")
-    def recall(self, label: float) -> float:
+    def recall(self, label       )         :
         """
         Returns recall.
         """
         return self.call("recall", float(label))
 
     @since("1.4.0")
-    def fMeasure(self, label: float, beta: Optional[float] = None) -> float:
+    def fMeasure(self, label       , beta                  = None)         :
         """
         Returns f-measure.
         """
@@ -350,7 +350,7 @@ class MulticlassMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def accuracy(self) -> float:
+    def accuracy(self)         :
         """
         Returns accuracy (equals to the total number of correctly classified instances
         out of the total number of instances).
@@ -359,7 +359,7 @@ class MulticlassMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def weightedTruePositiveRate(self) -> float:
+    def weightedTruePositiveRate(self)         :
         """
         Returns weighted true positive rate.
         (equals to precision, recall and f-measure)
@@ -368,7 +368,7 @@ class MulticlassMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def weightedFalsePositiveRate(self) -> float:
+    def weightedFalsePositiveRate(self)         :
         """
         Returns weighted false positive rate.
         """
@@ -376,7 +376,7 @@ class MulticlassMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def weightedRecall(self) -> float:
+    def weightedRecall(self)         :
         """
         Returns weighted averaged recall.
         (equals to precision, recall and f-measure)
@@ -385,14 +385,14 @@ class MulticlassMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def weightedPrecision(self) -> float:
+    def weightedPrecision(self)         :
         """
         Returns weighted averaged precision.
         """
         return self.call("weightedPrecision")
 
     @since("1.4.0")
-    def weightedFMeasure(self, beta: Optional[float] = None) -> float:
+    def weightedFMeasure(self, beta                  = None)         :
         """
         Returns weighted averaged f-measure.
         """
@@ -402,7 +402,7 @@ class MulticlassMetrics(JavaModelWrapper):
             return self.call("weightedFMeasure", beta)
 
     @since("3.0.0")
-    def logLoss(self, eps: float = 1e-15) -> float:
+    def logLoss(self, eps        = 1e-15)         :
         """
         Returns weighted logLoss.
         """
@@ -451,7 +451,7 @@ class RankingMetrics(JavaModelWrapper, Generic[T]):
     0.66...
     """
 
-    def __init__(self, predictionAndLabels: RDD[Tuple[List[T], List[T]]]):
+    def __init__(self, predictionAndLabels                              ):
         sc = predictionAndLabels.ctx
         sql_ctx = SQLContext.getOrCreate(sc)
         df = sql_ctx.createDataFrame(
@@ -461,7 +461,7 @@ class RankingMetrics(JavaModelWrapper, Generic[T]):
         super(RankingMetrics, self).__init__(java_model)
 
     @since("1.4.0")
-    def precisionAt(self, k: int) -> float:
+    def precisionAt(self, k     )         :
         """
         Compute the average precision of all the queries, truncated at ranking position k.
 
@@ -476,7 +476,7 @@ class RankingMetrics(JavaModelWrapper, Generic[T]):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def meanAveragePrecision(self) -> float:
+    def meanAveragePrecision(self)         :
         """
         Returns the mean average precision (MAP) of all the queries.
         If a query has an empty ground truth set, the average precision will be zero and
@@ -485,7 +485,7 @@ class RankingMetrics(JavaModelWrapper, Generic[T]):
         return self.call("meanAveragePrecision")
 
     @since("3.0.0")
-    def meanAveragePrecisionAt(self, k: int) -> float:
+    def meanAveragePrecisionAt(self, k     )         :
         """
         Returns the mean average precision (MAP) at first k ranking of all the queries.
         If a query has an empty ground truth set, the average precision will be zero and
@@ -494,7 +494,7 @@ class RankingMetrics(JavaModelWrapper, Generic[T]):
         return self.call("meanAveragePrecisionAt", int(k))
 
     @since("1.4.0")
-    def ndcgAt(self, k: int) -> float:
+    def ndcgAt(self, k     )         :
         """
         Compute the average NDCG value of all the queries, truncated at ranking position k.
         The discounted cumulative gain at position k is computed as:
@@ -507,7 +507,7 @@ class RankingMetrics(JavaModelWrapper, Generic[T]):
         return self.call("ndcgAt", int(k))
 
     @since("3.0.0")
-    def recallAt(self, k: int) -> float:
+    def recallAt(self, k     )         :
         """
         Compute the average recall of all the queries, truncated at ranking position k.
 
@@ -565,7 +565,7 @@ class MultilabelMetrics(JavaModelWrapper):
     0.54...
     """
 
-    def __init__(self, predictionAndLabels: RDD[Tuple[List[float], List[float]]]):
+    def __init__(self, predictionAndLabels                                      ):
         sc = predictionAndLabels.ctx
         sql_ctx = SQLContext.getOrCreate(sc)
         df = sql_ctx.createDataFrame(
@@ -577,7 +577,7 @@ class MultilabelMetrics(JavaModelWrapper):
         super(MultilabelMetrics, self).__init__(java_model)
 
     @since("1.4.0")
-    def precision(self, label: Optional[float] = None) -> float:
+    def precision(self, label                  = None)         :
         """
         Returns precision or precision for a given label (category) if specified.
         """
@@ -587,7 +587,7 @@ class MultilabelMetrics(JavaModelWrapper):
             return self.call("precision", float(label))
 
     @since("1.4.0")
-    def recall(self, label: Optional[float] = None) -> float:
+    def recall(self, label                  = None)         :
         """
         Returns recall or recall for a given label (category) if specified.
         """
@@ -597,7 +597,7 @@ class MultilabelMetrics(JavaModelWrapper):
             return self.call("recall", float(label))
 
     @since("1.4.0")
-    def f1Measure(self, label: Optional[float] = None) -> float:
+    def f1Measure(self, label                  = None)         :
         """
         Returns f1Measure or f1Measure for a given label (category) if specified.
         """
@@ -608,7 +608,7 @@ class MultilabelMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def microPrecision(self) -> float:
+    def microPrecision(self)         :
         """
         Returns micro-averaged label-based precision.
         (equals to micro-averaged document-based precision)
@@ -617,7 +617,7 @@ class MultilabelMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def microRecall(self) -> float:
+    def microRecall(self)         :
         """
         Returns micro-averaged label-based recall.
         (equals to micro-averaged document-based recall)
@@ -626,7 +626,7 @@ class MultilabelMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def microF1Measure(self) -> float:
+    def microF1Measure(self)         :
         """
         Returns micro-averaged label-based f1-measure.
         (equals to micro-averaged document-based f1-measure)
@@ -635,7 +635,7 @@ class MultilabelMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def hammingLoss(self) -> float:
+    def hammingLoss(self)         :
         """
         Returns Hamming-loss.
         """
@@ -643,7 +643,7 @@ class MultilabelMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def subsetAccuracy(self) -> float:
+    def subsetAccuracy(self)         :
         """
         Returns subset accuracy.
         (for equal sets of labels)
@@ -652,14 +652,14 @@ class MultilabelMetrics(JavaModelWrapper):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def accuracy(self) -> float:
+    def accuracy(self)         :
         """
         Returns accuracy.
         """
         return self.call("accuracy")
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import numpy
     from pyspark.sql import SparkSession

@@ -291,7 +291,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         dtype = CategoricalDtype(categories=["a", "b", "c"])
 
-        def categorize(ser) -> ps.Series[dtype]:
+        def categorize(ser)                    :
             return ser.astype(dtype)
 
         self.assert_eq(
@@ -323,7 +323,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         pdf, psdf = self.df_pair
 
-        def codes(pser) -> ps.Series[np.int8]:
+        def codes(pser)                      :
             return pser.cat.codes
 
         self.assert_eq(psdf.transform(codes), pdf.transform(codes))
@@ -335,7 +335,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         dtype = CategoricalDtype(categories=["a", "b", "c", "d"])
 
-        def to_category(pser) -> ps.Series[dtype]:
+        def to_category(pser)                    :
             return pser.astype(dtype)
 
         self.assert_eq(
@@ -356,7 +356,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
         pdf, psdf = self.df_pair
         ret = psdf.a.dtype
 
-        def identity(pser) -> ret:
+        def identity(pser)       :
             return pser
 
         self.assert_eq(psdf.a.apply(identity).sort_index(), pdf.a.apply(identity).sort_index())
@@ -404,7 +404,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         pdf, psdf = self.df_pair
 
-        def identity(df) -> ps.DataFrame[zip(psdf.columns, psdf.dtypes)]:
+        def identity(df)                                                :
             return df
 
         self.assert_eq(
@@ -433,7 +433,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         pdf, psdf = self.df_pair
 
-        def identity(x) -> ps.Series[psdf.b.dtype]:  # type: ignore[name-defined, no-untyped-def]
+        def identity(x)                           :  # type: ignore[name-defined, no-untyped-def]
             return x
 
         self.assert_eq(
@@ -449,7 +449,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
         else:
             ret_dtype = dtype
 
-        def astype(x) -> ps.Series[ret_dtype]:
+        def astype(x)                        :
             return x.astype(dtype)
 
         if LooseVersion(pd.__version__) >= LooseVersion("1.2"):
@@ -491,7 +491,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         pdf, psdf = self.df_pair
 
-        def to_str(pdf) -> 'ps.DataFrame["a":str, "b":str]':  # noqa: F405
+        def to_str(pdf)                                    :  # noqa: F405
             return pdf.astype(str)
 
         self.assert_eq(
@@ -507,7 +507,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
         dtype = CategoricalDtype(categories=["a", "b", "c", "d"])
         ret = ps.DataFrame["a":dtype, "b":dtype]
 
-        def to_category(pdf) -> ret:
+        def to_category(pdf)       :
             return pdf.astype(dtype)
 
         self.assert_eq(
@@ -551,7 +551,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         pdf, psdf = self.df_pair
 
-        def to_str(pdf) -> 'ps.DataFrame["a":str, "b":str]':  # noqa: F405
+        def to_str(pdf)                                    :  # noqa: F405
             return pdf.astype(str)
 
         self.assert_eq(
@@ -559,7 +559,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
             to_str(pdf).sort_index(),
         )
 
-        def to_codes(pdf) -> ps.Series[np.int8]:
+        def to_codes(pdf)                      :
             return pdf.b.cat.codes
 
         self.assert_eq(
@@ -575,7 +575,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
         dtype = CategoricalDtype(categories=["a", "b", "c", "d"])
         ret = ps.DataFrame["a":dtype, "b":dtype]
 
-        def to_category(pdf) -> ret:
+        def to_category(pdf)       :
             return pdf.astype(dtype)
 
         self.assert_eq(
@@ -583,7 +583,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
             to_category(pdf).sort_index(),
         )
 
-        def to_category(pdf) -> ps.Series[dtype]:
+        def to_category(pdf)                    :
             return pdf.b.astype(dtype)
 
         self.assert_eq(
@@ -617,7 +617,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         pdf, psdf = self.df_pair
 
-        def to_str(pser) -> ps.Series[str]:
+        def to_str(pser)                  :
             return pser.astype(str)
 
         self.assert_eq(
@@ -631,7 +631,7 @@ class CategoricalTest(ComparisonTestBase, TestUtils):
 
         dtype = CategoricalDtype(categories=["a", "b", "c", "d"])
 
-        def to_category(pser) -> ps.Series[dtype]:
+        def to_category(pser)                    :
             return pser.astype(dtype)
 
         self.assert_eq(

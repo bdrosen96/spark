@@ -33,8 +33,8 @@ if TYPE_CHECKING:
 __all__ = ["GroupedData"]
 
 
-def dfapi(f: Callable) -> Callable:
-    def _api(self: "GroupedData") -> DataFrame:
+def dfapi(f          )            :
+    def _api(self               )             :
         name = f.__name__
         jdf = getattr(self._jgd, name)()
         return DataFrame(jdf, self.session)
@@ -44,8 +44,8 @@ def dfapi(f: Callable) -> Callable:
     return _api
 
 
-def df_varargs_api(f: Callable) -> Callable:
-    def _api(self: "GroupedData", *cols: str) -> DataFrame:
+def df_varargs_api(f          )            :
+    def _api(self               , *cols     )             :
         name = f.__name__
         jdf = getattr(self._jgd, name)(_to_seq(self.session._sc, cols))
         return DataFrame(jdf, self.session)
@@ -63,20 +63,20 @@ class GroupedData(PandasGroupedOpsMixin):
     .. versionadded:: 1.3
     """
 
-    def __init__(self, jgd: JavaObject, df: DataFrame):
+    def __init__(self, jgd            , df           ):
         self._jgd = jgd
         self._df = df
-        self.session: SparkSession = df.sparkSession
+        self.session               = df.sparkSession
 
     @overload
-    def agg(self, *exprs: Column) -> DataFrame:
+    def agg(self, *exprs        )             :
         ...
 
     @overload
-    def agg(self, __exprs: Dict[str, str]) -> DataFrame:
+    def agg(self, __exprs                )             :
         ...
 
-    def agg(self, *exprs: Union[Column, Dict[str, str]]) -> DataFrame:
+    def agg(self, *exprs                               )             :
         """Compute aggregates and returns the result as a :class:`DataFrame`.
 
         The available aggregate functions can be:
@@ -138,7 +138,7 @@ class GroupedData(PandasGroupedOpsMixin):
         return DataFrame(jdf, self.session)
 
     @dfapi
-    def count(self) -> DataFrame:
+    def count(self)             :
         """Counts the number of records for each group.
 
         .. versionadded:: 1.3.0
@@ -150,7 +150,7 @@ class GroupedData(PandasGroupedOpsMixin):
         """
 
     @df_varargs_api
-    def mean(self, *cols: str) -> DataFrame:
+    def mean(self, *cols     )             :
         """Computes average values for each numeric columns for each group.
 
         :func:`mean` is an alias for :func:`avg`.
@@ -171,7 +171,7 @@ class GroupedData(PandasGroupedOpsMixin):
         """
 
     @df_varargs_api
-    def avg(self, *cols: str) -> DataFrame:
+    def avg(self, *cols     )             :
         """Computes average values for each numeric columns for each group.
 
         :func:`mean` is an alias for :func:`avg`.
@@ -192,7 +192,7 @@ class GroupedData(PandasGroupedOpsMixin):
         """
 
     @df_varargs_api
-    def max(self, *cols: str) -> DataFrame:
+    def max(self, *cols     )             :
         """Computes the max value for each numeric columns for each group.
 
         .. versionadded:: 1.3.0
@@ -206,7 +206,7 @@ class GroupedData(PandasGroupedOpsMixin):
         """
 
     @df_varargs_api
-    def min(self, *cols: str) -> DataFrame:
+    def min(self, *cols     )             :
         """Computes the min value for each numeric column for each group.
 
         .. versionadded:: 1.3.0
@@ -225,7 +225,7 @@ class GroupedData(PandasGroupedOpsMixin):
         """
 
     @df_varargs_api
-    def sum(self, *cols: str) -> DataFrame:
+    def sum(self, *cols     )             :
         """Computes the sum for each numeric columns for each group.
 
         .. versionadded:: 1.3.0
@@ -243,7 +243,7 @@ class GroupedData(PandasGroupedOpsMixin):
         [Row(sum(age)=7, sum(height)=165)]
         """
 
-    def pivot(self, pivot_col: str, values: Optional[List["LiteralType"]] = None) -> "GroupedData":
+    def pivot(self, pivot_col     , values                                = None)                 :
         """
         Pivots a column of the current :class:`DataFrame` and perform the specified aggregation.
         There are two versions of pivot function: one that requires the caller to specify the list
@@ -280,7 +280,7 @@ class GroupedData(PandasGroupedOpsMixin):
         return GroupedData(jgd, self._df)
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import Row, SparkSession
     import pyspark.sql.group

@@ -37,12 +37,12 @@ from builtins import locals as builtin_locals
 
 
 def sql(
-    query: str,
-    index_col: Optional[Union[str, List[str]]] = None,
-    globals: Optional[Dict[str, Any]] = None,
-    locals: Optional[Dict[str, Any]] = None,
-    **kwargs: Any,
-) -> DataFrame:
+    query     ,
+    index_col                                  = None,
+    globals                           = None,
+    locals                           = None,
+    **kwargs     ,
+)             :
     """
     Execute a SQL query and return the result as a pandas-on-Spark DataFrame.
 
@@ -202,7 +202,7 @@ def sql(
 _CAPTURE_SCOPES = 3
 
 
-def _get_local_scope() -> Dict[str, Any]:
+def _get_local_scope()                  :
     # Get 2 scopes above (_get_local_scope -> sql -> ...) to capture the vars there.
     try:
         return inspect.stack()[_CAPTURE_SCOPES][0].f_locals
@@ -212,7 +212,7 @@ def _get_local_scope() -> Dict[str, Any]:
         return {}
 
 
-def _get_ipython_scope() -> Dict[str, Any]:
+def _get_ipython_scope()                  :
     """
     Tries to extract the dictionary of variables if the program is running
     in an IPython notebook environment.
@@ -239,7 +239,7 @@ _escape_table[ord('"')] = '\\"'
 _escape_table[ord("'")] = "\\'"
 
 
-def escape_sql_string(value: str) -> str:
+def escape_sql_string(value     )       :
     """Escapes value without adding quotes.
 
     >>> escape_sql_string("foo\\nbar")
@@ -255,23 +255,23 @@ def escape_sql_string(value: str) -> str:
 
 
 class SQLProcessor:
-    def __init__(self, scope: Dict[str, Any], statement: str, session: SparkSession):
+    def __init__(self, scope                , statement     , session              ):
         self._scope = scope
         self._statement = statement
         # All the temporary views created when executing this statement
         # The key is the name of the variable in {}
         # The value is the cached Spark Dataframe.
-        self._temp_views: Dict[str, SDataFrame] = {}
+        self._temp_views                        = {}
         # All the other variables, converted to a normalized form.
         # The normalized form is typically a string
-        self._cached_vars: Dict[str, Any] = {}
+        self._cached_vars                 = {}
         # The SQL statement after:
         # - all the dataframes have been registered as temporary views
         # - all the values have been converted normalized to equivalent SQL representations
-        self._normalized_statement: Optional[str] = None
+        self._normalized_statement                = None
         self._session = session
 
-    def execute(self, index_col: Optional[Union[str, List[str]]]) -> DataFrame:
+    def execute(self, index_col                                 )             :
         """
         Returns a DataFrame for which the SQL statement has been executed by
         the underlying SQL engine.
@@ -318,7 +318,7 @@ class SQLProcessor:
             )
         )
 
-    def _convert(self, key: str) -> Any:
+    def _convert(self, key     )       :
         """
         Given a {} key, returns an equivalent SQL representation.
         This conversion performs all the necessary escaping so that the string
@@ -338,7 +338,7 @@ class SQLProcessor:
         self._cached_vars[key] = fillin
         return fillin
 
-    def _convert_var(self, var: Any) -> Any:
+    def _convert_var(self, var     )       :
         """
         Converts a python object into a string that is legal SQL.
         """
@@ -364,7 +364,7 @@ class SQLProcessor:
         raise ValueError("Unsupported variable type {}: {}".format(type(var).__name__, str(var)))
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

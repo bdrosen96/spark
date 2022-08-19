@@ -40,7 +40,7 @@ _float_str_mapping = {
 }
 
 
-def _new_smart_decode(obj: Any) -> str:
+def _new_smart_decode(obj     )       :
     if isinstance(obj, float):
         s = str(obj)
         return _float_str_mapping.get(s, s)
@@ -59,7 +59,7 @@ _picklable_classes = [
 
 
 # this will call the ML version of pythonToJava()
-def _to_java_object_rdd(rdd: RDD) -> JavaObject:
+def _to_java_object_rdd(rdd     )              :
     """Return an JavaRDD of Object by unpickling
 
     It will convert each Python object into Java object by Pickle, whenever the
@@ -70,7 +70,7 @@ def _to_java_object_rdd(rdd: RDD) -> JavaObject:
     return rdd.ctx._jvm.org.apache.spark.ml.python.MLSerDe.pythonToJava(rdd._jrdd, True)
 
 
-def _py2java(sc: SparkContext, obj: Any) -> JavaObject:
+def _py2java(sc              , obj     )              :
     """Convert Python object into Java"""
     if isinstance(obj, RDD):
         obj = _to_java_object_rdd(obj)
@@ -91,7 +91,7 @@ def _py2java(sc: SparkContext, obj: Any) -> JavaObject:
     return obj
 
 
-def _java2py(sc: SparkContext, r: "JavaObjectOrPickleDump", encoding: str = "bytes") -> Any:
+def _java2py(sc              , r                          , encoding      = "bytes")       :
     if isinstance(r, JavaObject):
         clsName = r.getClass().getSimpleName()
         # convert RDD into JavaRDD
@@ -122,14 +122,14 @@ def _java2py(sc: SparkContext, r: "JavaObjectOrPickleDump", encoding: str = "byt
 
 
 def callJavaFunc(
-    sc: pyspark.context.SparkContext, func: Callable[..., "JavaObjectOrPickleDump"], *args: Any
-) -> "JavaObjectOrPickleDump":
+    sc                              , func                                         , *args     
+)                            :
     """Call Java Function"""
     java_args = [_py2java(sc, a) for a in args]
     return _java2py(sc, func(*java_args))
 
 
-def inherit_doc(cls: "C") -> "C":
+def inherit_doc(cls     )       :
     """
     A decorator that makes a class inherit documentation from its parents.
     """

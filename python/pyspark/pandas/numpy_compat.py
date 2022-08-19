@@ -139,8 +139,8 @@ binary_np_spark_mappings = {
 # Copied from pandas.
 # See also https://docs.scipy.org/doc/numpy/reference/arrays.classes.html#standard-array-subclasses
 def maybe_dispatch_ufunc_to_dunder_op(
-    ser_or_index: IndexOpsMixin, ufunc: Callable, method: str, *inputs: Any, **kwargs: Any
-) -> IndexOpsMixin:
+    ser_or_index               , ufunc          , method     , *inputs     , **kwargs     
+)                 :
     special = {
         "add",
         "sub",
@@ -205,8 +205,8 @@ def maybe_dispatch_ufunc_to_dunder_op(
 
 # See also https://docs.scipy.org/doc/numpy/reference/arrays.classes.html#standard-array-subclasses
 def maybe_dispatch_ufunc_to_spark_func(
-    ser_or_index: IndexOpsMixin, ufunc: Callable, method: str, *inputs: Any, **kwargs: Any
-) -> IndexOpsMixin:
+    ser_or_index               , ufunc          , method     , *inputs     , **kwargs     
+)                 :
     from pyspark.pandas.base import column_op
 
     op_name = ufunc.__name__
@@ -231,7 +231,7 @@ def maybe_dispatch_ufunc_to_spark_func(
         return NotImplemented
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

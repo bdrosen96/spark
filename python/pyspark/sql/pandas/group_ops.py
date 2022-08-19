@@ -38,7 +38,7 @@ class PandasGroupedOpsMixin:
     can use this class.
     """
 
-    def apply(self, udf: "GroupedMapPandasUserDefinedFunction") -> DataFrame:
+    def apply(self, udf                                       )             :
         """
         It is an alias of :meth:`pyspark.sql.GroupedData.applyInPandas`; however, it takes a
         :meth:`pyspark.sql.functions.pandas_udf` whereas
@@ -105,8 +105,8 @@ class PandasGroupedOpsMixin:
         return self.applyInPandas(udf.func, schema=udf.returnType)  # type: ignore[attr-defined]
 
     def applyInPandas(
-        self, func: "PandasGroupedMapFunction", schema: Union[StructType, str]
-    ) -> DataFrame:
+        self, func                            , schema                        
+    )             :
         """
         Maps each group of the current :class:`DataFrame` using a pandas udf and returns the result
         as a `DataFrame`.
@@ -216,7 +216,7 @@ class PandasGroupedOpsMixin:
         jdf = self._jgd.flatMapGroupsInPandas(udf_column._jc.expr())
         return DataFrame(jdf, self.session)
 
-    def cogroup(self, other: "GroupedData") -> "PandasCogroupedOps":
+    def cogroup(self, other               )                        :
         """
         Cogroups this group with another group so that we can run cogrouped operations.
 
@@ -243,13 +243,13 @@ class PandasCogroupedOps:
     This API is experimental.
     """
 
-    def __init__(self, gd1: "GroupedData", gd2: "GroupedData"):
+    def __init__(self, gd1               , gd2               ):
         self._gd1 = gd1
         self._gd2 = gd2
 
     def applyInPandas(
-        self, func: "PandasCogroupedMapFunction", schema: Union[StructType, str]
-    ) -> DataFrame:
+        self, func                              , schema                        
+    )             :
         """
         Applies a function to each cogroup using pandas and returns the result
         as a `DataFrame`.
@@ -345,12 +345,12 @@ class PandasCogroupedOps:
         return DataFrame(jdf, self._gd1.session)
 
     @staticmethod
-    def _extract_cols(gd: "GroupedData") -> List[Column]:
+    def _extract_cols(gd               )                :
         df = gd._df
         return [df[col] for col in df.columns]
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import SparkSession
     import pyspark.sql.pandas.group_ops

@@ -50,13 +50,13 @@ class CachedAccessor(Generic[T]):
     The pandas-on-Spark accessor is modified based on pandas.core.accessor.
     """
 
-    def __init__(self, name: str, accessor: Type[T]) -> None:
+    def __init__(self, name     , accessor         )        :
         self._name = name
         self._accessor = accessor
 
     def __get__(
-        self, obj: Optional[Union["DataFrame", "Series", "Index"]], cls: Type[T]
-    ) -> Union[T, Type[T]]:
+        self, obj                                                 , cls         
+    )                     :
         if obj is None:
             return self._accessor
         accessor_obj = self._accessor(obj)  # type: ignore[call-arg]
@@ -65,8 +65,8 @@ class CachedAccessor(Generic[T]):
 
 
 def _register_accessor(
-    name: str, cls: Union[Type["DataFrame"], Type["Series"], Type["Index"]]
-) -> Callable[[Type[T]], Type[T]]:
+    name     , cls                                                         
+)                                :
     """
     Register a custom accessor on {klass} objects.
 
@@ -115,7 +115,7 @@ def _register_accessor(
     register_series_accessor, or register_index_accessor.
     """
 
-    def decorator(accessor: Type[T]) -> Type[T]:
+    def decorator(accessor         )           :
         if hasattr(cls, name):
             msg = (
                 "registration of accessor {0} under name '{1}' for type {2} is overriding "
@@ -133,7 +133,7 @@ def _register_accessor(
     return decorator
 
 
-def register_dataframe_accessor(name: str) -> Callable[[Type[T]], Type[T]]:
+def register_dataframe_accessor(name     )                                :
     """
     Register a custom accessor with a DataFrame
 
@@ -211,7 +211,7 @@ def register_dataframe_accessor(name: str) -> Callable[[Type[T]], Type[T]]:
     return _register_accessor(name, DataFrame)
 
 
-def register_series_accessor(name: str) -> Callable[[Type[T]], Type[T]]:
+def register_series_accessor(name     )                                :
     """
     Register a custom accessor with a Series object
 
@@ -283,7 +283,7 @@ def register_series_accessor(name: str) -> Callable[[Type[T]], Type[T]]:
     return _register_accessor(name, Series)
 
 
-def register_index_accessor(name: str) -> Callable[[Type[T]], Type[T]]:
+def register_index_accessor(name     )                                :
     """
     Register a custom accessor with an Index
 
@@ -356,7 +356,7 @@ def register_index_accessor(name: str) -> Callable[[Type[T]], Type[T]]:
     return _register_accessor(name, Index)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

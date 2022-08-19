@@ -29,12 +29,12 @@ from typing import Any, Callable, Iterator, List, Optional, TextIO, Tuple
 
 from py4j.clientserver import ClientServer
 
-__all__: List[str] = []
+__all__            = []
 
 from py4j.java_gateway import JavaObject
 
 
-def print_exec(stream: TextIO) -> None:
+def print_exec(stream        )        :
     ei = sys.exc_info()
     traceback.print_exception(ei[0], ei[1], ei[2], None, stream)
 
@@ -45,7 +45,7 @@ class VersionUtils:
     """
 
     @staticmethod
-    def majorMinorVersion(sparkVersion: str) -> Tuple[int, int]:
+    def majorMinorVersion(sparkVersion     )                   :
         """
         Given a Spark version string, return the (major version number, minor version number).
         E.g., for 2.0.1-SNAPSHOT, return (2, 0).
@@ -70,13 +70,13 @@ class VersionUtils:
             )
 
 
-def fail_on_stopiteration(f: Callable) -> Callable:
+def fail_on_stopiteration(f          )            :
     """
     Wraps the input function to fail on 'StopIteration' by raising a 'RuntimeError'
     prevents silent loss of data when 'f' is used in a for loop in Spark code
     """
 
-    def wrapper(*args: Any, **kwargs: Any) -> Any:
+    def wrapper(*args     , **kwargs     )       :
         try:
             return f(*args, **kwargs)
         except StopIteration as exc:
@@ -87,13 +87,13 @@ def fail_on_stopiteration(f: Callable) -> Callable:
     return wrapper
 
 
-def walk_tb(tb: Optional[TracebackType]) -> Iterator[TracebackType]:
+def walk_tb(tb                         )                           :
     while tb is not None:
         yield tb
         tb = tb.tb_next
 
 
-def try_simplify_traceback(tb: TracebackType) -> Optional[TracebackType]:
+def try_simplify_traceback(tb               )                           :
     """
     Simplify the traceback. It removes the tracebacks in the current package, and only
     shows the traceback that is related to the thirdparty and user-specified codes.
@@ -226,7 +226,7 @@ def try_simplify_traceback(tb: TracebackType) -> Optional[TracebackType]:
     return new_tb
 
 
-def _print_missing_jar(lib_name: str, pkg_name: str, jar_name: str, spark_version: str) -> None:
+def _print_missing_jar(lib_name     , pkg_name     , jar_name     , spark_version     )        :
     print(
         """
 ________________________________________________________________________________________________
@@ -256,7 +256,7 @@ ________________________________________________________________________________
     )
 
 
-def _parse_memory(s: str) -> int:
+def _parse_memory(s     )       :
     """
     Parse a memory string in the format supported by Java (e.g. 1g, 200m) and
     return the value in MiB
@@ -274,7 +274,7 @@ def _parse_memory(s: str) -> int:
     return int(float(s[:-1]) * units[s[-1].lower()])
 
 
-def inheritable_thread_target(f: Callable) -> Callable:
+def inheritable_thread_target(f          )            :
     """
     Return thread target wrapper which is recommended to be used in PySpark when the
     pinned thread mode is enabled. The wrapper function, before calling original
@@ -330,7 +330,7 @@ def inheritable_thread_target(f: Callable) -> Callable:
         properties = SparkContext._active_spark_context._jsc.sc().getLocalProperties().clone()
 
         @functools.wraps(f)
-        def wrapped(*args: Any, **kwargs: Any) -> Any:
+        def wrapped(*args     , **kwargs     )       :
             # Set local properties in child thread.
             assert SparkContext._active_spark_context is not None
             SparkContext._active_spark_context._jsc.sc().setLocalProperties(properties)
@@ -362,14 +362,14 @@ class InheritableThread(threading.Thread):
     This API is experimental.
     """
 
-    _props: JavaObject
+    #_props: JavaObject
 
-    def __init__(self, target: Callable, *args: Any, **kwargs: Any):
+    def __init__(self, target          , *args     , **kwargs     ):
         from pyspark import SparkContext
 
         if isinstance(SparkContext._gateway, ClientServer):
             # Here's when the pinned-thread mode (PYSPARK_PIN_THREAD) is on.
-            def copy_local_properties(*a: Any, **k: Any) -> Any:
+            def copy_local_properties(*a     , **k     )       :
                 # self._props is set before starting the thread to match the behavior with JVM.
                 assert hasattr(self, "_props")
                 assert SparkContext._active_spark_context is not None
@@ -384,7 +384,7 @@ class InheritableThread(threading.Thread):
                 target=target, *args, **kwargs  # type: ignore[misc]
             )
 
-    def start(self) -> None:
+    def start(self)        :
         from pyspark import SparkContext
 
         if isinstance(SparkContext._gateway, ClientServer):

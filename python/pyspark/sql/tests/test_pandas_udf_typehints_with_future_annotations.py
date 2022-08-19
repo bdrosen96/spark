@@ -45,42 +45,42 @@ if have_pandas:
 )
 class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
     def test_type_annotation_scalar(self):
-        def func(col: pd.Series) -> pd.Series:
+        def func(col           )             :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: pd.DataFrame, col1: pd.Series) -> pd.DataFrame:
+        def func(col              , col1           )                :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: pd.DataFrame, *args: pd.Series) -> pd.Series:
+        def func(col              , *args           )             :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: pd.Series, *args: pd.Series, **kwargs: pd.DataFrame) -> pd.Series:
+        def func(col           , *args           , **kwargs              )             :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: pd.Series, *, col2: pd.DataFrame) -> pd.DataFrame:
+        def func(col           , *, col2              )                :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: Union[pd.Series, pd.DataFrame], *, col2: pd.DataFrame) -> pd.Series:
+        def func(col                                , *, col2              )             :
             pass
 
         self.assertEqual(
@@ -88,28 +88,28 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
         )
 
     def test_type_annotation_scalar_iter(self):
-        def func(iter: Iterator[pd.Series]) -> Iterator[pd.Series]:
+        def func(iter                     )                       :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR_ITER
         )
 
-        def func(iter: Iterator[Tuple[pd.DataFrame, pd.Series]]) -> Iterator[pd.DataFrame]:
+        def func(iter                                          )                          :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR_ITER
         )
 
-        def func(iter: Iterator[Tuple[pd.DataFrame, ...]]) -> Iterator[pd.Series]:
+        def func(iter                                    )                       :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR_ITER
         )
 
-        def func(iter: Iterator[Tuple[Union[pd.DataFrame, pd.Series], ...]]) -> Iterator[pd.Series]:
+        def func(iter                                                      )                       :
             pass
 
         self.assertEqual(
@@ -117,42 +117,42 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
         )
 
     def test_type_annotation_group_agg(self):
-        def func(col: pd.Series) -> str:
+        def func(col           )       :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.GROUPED_AGG
         )
 
-        def func(col: pd.DataFrame, col1: pd.Series) -> int:
+        def func(col              , col1           )       :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.GROUPED_AGG
         )
 
-        def func(col: pd.DataFrame, *args: pd.Series) -> Row:
+        def func(col              , *args           )       :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.GROUPED_AGG
         )
 
-        def func(col: pd.Series, *args: pd.Series, **kwargs: pd.DataFrame) -> str:
+        def func(col           , *args           , **kwargs              )       :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.GROUPED_AGG
         )
 
-        def func(col: pd.Series, *, col2: pd.DataFrame) -> float:
+        def func(col           , *, col2              )         :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.GROUPED_AGG
         )
 
-        def func(col: Union[pd.Series, pd.DataFrame], *, col2: pd.DataFrame) -> float:
+        def func(col                                , *, col2              )         :
             pass
 
         self.assertEqual(
@@ -160,7 +160,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
         )
 
     def test_type_annotation_negative(self):
-        def func(col: str) -> pd.Series:
+        def func(col     )             :
             pass
 
         self.assertRaisesRegex(
@@ -171,7 +171,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
             get_type_hints(func),
         )
 
-        def func(col: pd.DataFrame, col1: int) -> pd.DataFrame:
+        def func(col              , col1     )                :
             pass
 
         self.assertRaisesRegex(
@@ -182,7 +182,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
             get_type_hints(func),
         )
 
-        def func(col: Union[pd.DataFrame, str], col1: int) -> pd.DataFrame:
+        def func(col                          , col1     )                :
             pass
 
         self.assertRaisesRegex(
@@ -193,7 +193,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
             get_type_hints(func),
         )
 
-        def func(col: pd.Series) -> Tuple[pd.DataFrame]:
+        def func(col           )                       :
             pass
 
         self.assertRaisesRegex(
@@ -204,7 +204,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
             get_type_hints(func),
         )
 
-        def func(col, *args: pd.Series) -> pd.Series:
+        def func(col, *args           )             :
             pass
 
         self.assertRaisesRegex(
@@ -215,7 +215,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
             get_type_hints(func),
         )
 
-        def func(col: pd.Series, *args: pd.Series, **kwargs: pd.DataFrame):
+        def func(col           , *args           , **kwargs              ):
             pass
 
         self.assertRaisesRegex(
@@ -226,7 +226,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
             get_type_hints(func),
         )
 
-        def func(col: pd.Series, *, col2) -> pd.DataFrame:
+        def func(col           , *, col2)                :
             pass
 
         self.assertRaisesRegex(
@@ -240,7 +240,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
     def test_scalar_udf_type_hint(self):
         df = self.spark.range(10).selectExpr("id", "id as v")
 
-        def plus_one(v: Union[pd.Series, pd.DataFrame]) -> pd.Series:
+        def plus_one(v                                )             :
             return v + 1  # type: ignore[return-value]
 
         plus_one = pandas_udf("long")(plus_one)
@@ -251,7 +251,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
     def test_scalar_iter_udf_type_hint(self):
         df = self.spark.range(10).selectExpr("id", "id as v")
 
-        def plus_one(itr: Iterator[pd.Series]) -> Iterator[pd.Series]:
+        def plus_one(itr                     )                       :
             for s in itr:
                 yield s + 1
 
@@ -264,7 +264,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
     def test_group_agg_udf_type_hint(self):
         df = self.spark.range(10).selectExpr("id", "id as v")
 
-        def weighted_mean(v: pd.Series, w: pd.Series) -> np.float64:
+        def weighted_mean(v           , w           )              :
             return np.average(v, weights=w)
 
         weighted_mean = pandas_udf("double")(weighted_mean)
@@ -276,7 +276,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
     def test_ignore_type_hint_in_group_apply_in_pandas(self):
         df = self.spark.range(10)
 
-        def pandas_plus_one(v: pd.DataFrame) -> pd.DataFrame:
+        def pandas_plus_one(v              )                :
             return v + 1
 
         actual = df.groupby("id").applyInPandas(pandas_plus_one, schema=df.schema).sort("id")
@@ -286,7 +286,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
     def test_ignore_type_hint_in_cogroup_apply_in_pandas(self):
         df = self.spark.range(10)
 
-        def pandas_plus_one(left: pd.DataFrame, right: pd.DataFrame) -> pd.DataFrame:
+        def pandas_plus_one(left              , right              )                :
             return left + 1
 
         actual = (
@@ -301,7 +301,7 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
     def test_ignore_type_hint_in_map_in_pandas(self):
         df = self.spark.range(10)
 
-        def pandas_plus_one(iter: Iterator[pd.DataFrame]) -> Iterator[pd.DataFrame]:
+        def pandas_plus_one(iter                        )                          :
             return map(lambda v: v + 1, iter)
 
         actual = df.mapInPandas(pandas_plus_one, schema=df.schema)
@@ -313,49 +313,49 @@ class PandasUDFTypeHintsWithFutureAnnotationsTests(ReusedSQLTestCase):
         "string annotations with future annotations do not work under Python<3.9",
     )
     def test_string_type_annotation(self):
-        def func(col: "pd.Series") -> "pd.Series":
+        def func(col             )               :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: "pd.DataFrame", col1: "pd.Series") -> "pd.DataFrame":
+        def func(col                , col1             )                  :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: "pd.DataFrame", *args: "pd.Series") -> "pd.Series":
+        def func(col                , *args             )               :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: "pd.Series", *args: "pd.Series", **kwargs: "pd.DataFrame") -> "pd.Series":
+        def func(col             , *args             , **kwargs                )               :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: "pd.Series", *, col2: "pd.DataFrame") -> "pd.DataFrame":
+        def func(col             , *, col2                )                  :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: Union["pd.Series", "pd.DataFrame"], *, col2: "pd.DataFrame") -> "pd.Series":
+        def func(col                                    , *, col2                )               :
             pass
 
         self.assertEqual(
             infer_eval_type(signature(func), get_type_hints(func)), PandasUDFType.SCALAR
         )
 
-        def func(col: "Union[pd.Series, pd.DataFrame]", *, col2: "pd.DataFrame") -> "pd.Series":
+        def func(col                                  , *, col2                )               :
             pass
 
         self.assertEqual(

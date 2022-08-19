@@ -43,13 +43,13 @@ from pyspark.pandas.spark import functions as SF
 class StringMethods:
     """String methods for pandas-on-Spark Series"""
 
-    def __init__(self, series: "ps.Series"):
+    def __init__(self, series             ):
         if not isinstance(series.spark.data_type, (StringType, BinaryType, ArrayType)):
             raise ValueError("Cannot call StringMethods on type {}".format(series.spark.data_type))
         self._data = series
 
     # Methods
-    def capitalize(self) -> "ps.Series":
+    def capitalize(self)               :
         """
         Convert Strings in the series to be capitalized.
 
@@ -71,12 +71,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_capitalize(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_capitalize(s)                  :  # type: ignore[no-untyped-def]
             return s.str.capitalize()
 
         return self._data.pandas_on_spark.transform_batch(pandas_capitalize)
 
-    def title(self) -> "ps.Series":
+    def title(self)               :
         """
         Convert Strings in the series to be titlecase.
 
@@ -98,12 +98,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_title(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_title(s)                  :  # type: ignore[no-untyped-def]
             return s.str.title()
 
         return self._data.pandas_on_spark.transform_batch(pandas_title)
 
-    def lower(self) -> "ps.Series":
+    def lower(self)               :
         """
         Convert strings in the Series/Index to all lowercase.
 
@@ -126,7 +126,7 @@ class StringMethods:
         """
         return self._data.spark.transform(F.lower)
 
-    def upper(self) -> "ps.Series":
+    def upper(self)               :
         """
         Convert strings in the Series/Index to all uppercase.
 
@@ -149,7 +149,7 @@ class StringMethods:
         """
         return self._data.spark.transform(F.upper)
 
-    def swapcase(self) -> "ps.Series":
+    def swapcase(self)               :
         """
         Convert strings in the Series/Index to be swapcased.
 
@@ -171,12 +171,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_swapcase(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_swapcase(s)                  :  # type: ignore[no-untyped-def]
             return s.str.swapcase()
 
         return self._data.pandas_on_spark.transform_batch(pandas_swapcase)
 
-    def startswith(self, pattern: str, na: Optional[Any] = None) -> "ps.Series":
+    def startswith(self, pattern     , na                = None)               :
         """
         Test if the start of each string element matches a pattern.
 
@@ -222,12 +222,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_startswith(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_startswith(s)                   :  # type: ignore[no-untyped-def]
             return s.str.startswith(pattern, na)
 
         return self._data.pandas_on_spark.transform_batch(pandas_startswith)
 
-    def endswith(self, pattern: str, na: Optional[Any] = None) -> "ps.Series":
+    def endswith(self, pattern     , na                = None)               :
         """
         Test if the end of each string element matches a pattern.
 
@@ -273,12 +273,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_endswith(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_endswith(s)                   :  # type: ignore[no-untyped-def]
             return s.str.endswith(pattern, na)
 
         return self._data.pandas_on_spark.transform_batch(pandas_endswith)
 
-    def strip(self, to_strip: Optional[str] = None) -> "ps.Series":
+    def strip(self, to_strip                = None)               :
         """
         Remove leading and trailing characters.
 
@@ -325,12 +325,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_strip(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_strip(s)                  :  # type: ignore[no-untyped-def]
             return s.str.strip(to_strip)
 
         return self._data.pandas_on_spark.transform_batch(pandas_strip)
 
-    def lstrip(self, to_strip: Optional[str] = None) -> "ps.Series":
+    def lstrip(self, to_strip                = None)               :
         """
         Remove leading characters.
 
@@ -365,12 +365,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_lstrip(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_lstrip(s)                  :  # type: ignore[no-untyped-def]
             return s.str.lstrip(to_strip)
 
         return self._data.pandas_on_spark.transform_batch(pandas_lstrip)
 
-    def rstrip(self, to_strip: Optional[str] = None) -> "ps.Series":
+    def rstrip(self, to_strip                = None)               :
         """
         Remove trailing characters.
 
@@ -405,12 +405,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_rstrip(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_rstrip(s)                  :  # type: ignore[no-untyped-def]
             return s.str.rstrip(to_strip)
 
         return self._data.pandas_on_spark.transform_batch(pandas_rstrip)
 
-    def get(self, i: int) -> "ps.Series":
+    def get(self, i     )               :
         """
         Extract element from each string or string list/tuple in the Series
         at the specified position.
@@ -459,12 +459,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_get(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_get(s)                  :  # type: ignore[no-untyped-def]
             return s.str.get(i)
 
         return self._data.pandas_on_spark.transform_batch(pandas_get)
 
-    def isalnum(self) -> "ps.Series":
+    def isalnum(self)               :
         """
         Check whether all characters in each string are alphanumeric.
 
@@ -495,12 +495,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isalnum(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isalnum(s)                   :  # type: ignore[no-untyped-def]
             return s.str.isalnum()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isalnum)
 
-    def isalpha(self) -> "ps.Series":
+    def isalpha(self)               :
         """
         Check whether all characters in each string are alphabetic.
 
@@ -520,12 +520,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isalpha(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isalpha(s)                   :  # type: ignore[no-untyped-def]
             return s.str.isalpha()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isalpha)
 
-    def isdigit(self) -> "ps.Series":
+    def isdigit(self)               :
         """
         Check whether all characters in each string are digits.
 
@@ -570,12 +570,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isdigit(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isdigit(s)                   :  # type: ignore[no-untyped-def]
             return s.str.isdigit()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isdigit)
 
-    def isspace(self) -> "ps.Series":
+    def isspace(self)               :
         """
         Check whether all characters in each string are whitespaces.
 
@@ -593,12 +593,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isspace(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isspace(s)                   :  # type: ignore[no-untyped-def]
             return s.str.isspace()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isspace)
 
-    def islower(self) -> "ps.Series":
+    def islower(self)               :
         """
         Check whether all characters in each string are lowercase.
 
@@ -617,12 +617,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isspace(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isspace(s)                   :  # type: ignore[no-untyped-def]
             return s.str.islower()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isspace)
 
-    def isupper(self) -> "ps.Series":
+    def isupper(self)               :
         """
         Check whether all characters in each string are uppercase.
 
@@ -641,12 +641,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isspace(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isspace(s)                   :  # type: ignore[no-untyped-def]
             return s.str.isupper()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isspace)
 
-    def istitle(self) -> "ps.Series":
+    def istitle(self)               :
         """
         Check whether all characters in each string are titlecase.
 
@@ -671,12 +671,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_istitle(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_istitle(s)                   :  # type: ignore[no-untyped-def]
             return s.str.istitle()
 
         return self._data.pandas_on_spark.transform_batch(pandas_istitle)
 
-    def isnumeric(self) -> "ps.Series":
+    def isnumeric(self)               :
         """
         Check whether all characters in each string are numeric.
 
@@ -729,12 +729,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isnumeric(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isnumeric(s)                   :  # type: ignore[no-untyped-def]
             return s.str.isnumeric()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isnumeric)
 
-    def isdecimal(self) -> "ps.Series":
+    def isdecimal(self)               :
         """
         Check whether all characters in each string are decimals.
 
@@ -779,19 +779,19 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_isdecimal(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_isdecimal(s)                   :  # type: ignore[no-untyped-def]
             return s.str.isdecimal()
 
         return self._data.pandas_on_spark.transform_batch(pandas_isdecimal)
 
     @no_type_check
-    def cat(self, others=None, sep=None, na_rep=None, join=None) -> "ps.Series":
+    def cat(self, others=None, sep=None, na_rep=None, join=None)               :
         """
         Not supported.
         """
         raise NotImplementedError()
 
-    def center(self, width: int, fillchar: str = " ") -> "ps.Series":
+    def center(self, width     , fillchar      = " ")               :
         """
         Filling left and right side of strings in the Series/Index with an
         additional character. Equivalent to :func:`str.center`.
@@ -822,14 +822,14 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_center(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_center(s)                  :  # type: ignore[no-untyped-def]
             return s.str.center(width, fillchar)
 
         return self._data.pandas_on_spark.transform_batch(pandas_center)
 
     def contains(
-        self, pat: str, case: bool = True, flags: int = 0, na: Any = None, regex: bool = True
-    ) -> "ps.Series":
+        self, pat     , case       = True, flags      = 0, na      = None, regex       = True
+    )               :
         """
         Test if pattern or regex is contained within a string of a Series.
 
@@ -941,12 +941,12 @@ class StringMethods:
         dtype: bool
         """
 
-        def pandas_contains(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_contains(s)                   :  # type: ignore[no-untyped-def]
             return s.str.contains(pat, case, flags, na, regex)
 
         return self._data.pandas_on_spark.transform_batch(pandas_contains)
 
-    def count(self, pat: str, flags: int = 0) -> "ps.Series":
+    def count(self, pat     , flags      = 0)               :
         """
         Count occurrences of pattern in each string of the Series.
 
@@ -991,40 +991,40 @@ class StringMethods:
         dtype: int64
         """
 
-        def pandas_count(s) -> ps.Series[int]:  # type: ignore[no-untyped-def]
+        def pandas_count(s)                  :  # type: ignore[no-untyped-def]
             return s.str.count(pat, flags)
 
         return self._data.pandas_on_spark.transform_batch(pandas_count)
 
     @no_type_check
-    def decode(self, encoding, errors="strict") -> "ps.Series":
+    def decode(self, encoding, errors="strict")               :
         """
         Not supported.
         """
         raise NotImplementedError()
 
     @no_type_check
-    def encode(self, encoding, errors="strict") -> "ps.Series":
+    def encode(self, encoding, errors="strict")               :
         """
         Not supported.
         """
         raise NotImplementedError()
 
     @no_type_check
-    def extract(self, pat, flags=0, expand=True) -> "ps.Series":
+    def extract(self, pat, flags=0, expand=True)               :
         """
         Not supported.
         """
         raise NotImplementedError()
 
     @no_type_check
-    def extractall(self, pat, flags=0) -> "ps.Series":
+    def extractall(self, pat, flags=0)               :
         """
         Not supported.
         """
         raise NotImplementedError()
 
-    def find(self, sub: str, start: int = 0, end: Optional[int] = None) -> "ps.Series":
+    def find(self, sub     , start      = 0, end                = None)               :
         """
         Return lowest indexes in each strings in the Series where the
         substring is fully contained between [start:end].
@@ -1074,12 +1074,12 @@ class StringMethods:
         dtype: int64
         """
 
-        def pandas_find(s) -> ps.Series[int]:  # type: ignore[no-untyped-def]
+        def pandas_find(s)                  :  # type: ignore[no-untyped-def]
             return s.str.find(sub, start, end)
 
         return self._data.pandas_on_spark.transform_batch(pandas_find)
 
-    def findall(self, pat: str, flags: int = 0) -> "ps.Series":
+    def findall(self, pat     , flags      = 0)               :
         """
         Find all occurrences of pattern or regular expression in the Series.
 
@@ -1161,12 +1161,12 @@ class StringMethods:
         @pandas_udf(  # type: ignore[call-overload]
             returnType=ArrayType(StringType(), containsNull=True)
         )
-        def pudf(s: pd.Series) -> pd.Series:
+        def pudf(s           )             :
             return s.str.findall(pat, flags)
 
         return self._data._with_new_scol(scol=pudf(self._data.spark.column))
 
-    def index(self, sub: str, start: int = 0, end: Optional[int] = None) -> "ps.Series":
+    def index(self, sub     , start      = 0, end                = None)               :
         """
         Return lowest indexes in each strings where the substring is fully
         contained between [start:end].
@@ -1204,12 +1204,12 @@ class StringMethods:
         >>> s.str.index('a', start=2) # doctest: +SKIP
         """
 
-        def pandas_index(s) -> ps.Series[np.int64]:  # type: ignore[no-untyped-def]
+        def pandas_index(s)                       :  # type: ignore[no-untyped-def]
             return s.str.index(sub, start, end)
 
         return self._data.pandas_on_spark.transform_batch(pandas_index)
 
-    def join(self, sep: str) -> "ps.Series":
+    def join(self, sep     )               :
         """
         Join lists contained as elements in the Series with passed delimiter.
 
@@ -1253,12 +1253,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_join(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_join(s)                  :  # type: ignore[no-untyped-def]
             return s.str.join(sep)
 
         return self._data.pandas_on_spark.transform_batch(pandas_join)
 
-    def len(self) -> "ps.Series":
+    def len(self)               :
         """
         Computes the length of each element in the Series.
 
@@ -1292,7 +1292,7 @@ class StringMethods:
         else:
             return self._data.spark.transform(lambda c: F.length(c).cast(LongType()))
 
-    def ljust(self, width: int, fillchar: str = " ") -> "ps.Series":
+    def ljust(self, width     , fillchar      = " ")               :
         """
         Filling right side of strings in the Series with an additional
         character. Equivalent to :func:`str.ljust`.
@@ -1323,12 +1323,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_ljust(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_ljust(s)                  :  # type: ignore[no-untyped-def]
             return s.str.ljust(width, fillchar)
 
         return self._data.pandas_on_spark.transform_batch(pandas_ljust)
 
-    def match(self, pat: str, case: bool = True, flags: int = 0, na: Any = np.NaN) -> "ps.Series":
+    def match(self, pat     , case       = True, flags      = 0, na      = np.NaN)               :
         """
         Determine if each string matches a regular expression.
 
@@ -1389,12 +1389,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_match(s) -> ps.Series[bool]:  # type: ignore[no-untyped-def]
+        def pandas_match(s)                   :  # type: ignore[no-untyped-def]
             return s.str.match(pat, case, flags, na)
 
         return self._data.pandas_on_spark.transform_batch(pandas_match)
 
-    def normalize(self, form: str) -> "ps.Series":
+    def normalize(self, form     )               :
         """
         Return the Unicode normal form for the strings in the Series.
 
@@ -1412,12 +1412,12 @@ class StringMethods:
             A Series of normalized strings.
         """
 
-        def pandas_normalize(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_normalize(s)                  :  # type: ignore[no-untyped-def]
             return s.str.normalize(form)
 
         return self._data.pandas_on_spark.transform_batch(pandas_normalize)
 
-    def pad(self, width: int, side: str = "left", fillchar: str = " ") -> "ps.Series":
+    def pad(self, width     , side      = "left", fillchar      = " ")               :
         """
         Pad strings in the Series up to width.
 
@@ -1460,18 +1460,18 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_pad(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_pad(s)                  :  # type: ignore[no-untyped-def]
             return s.str.pad(width, side, fillchar)
 
         return self._data.pandas_on_spark.transform_batch(pandas_pad)
 
-    def partition(self, sep: str = " ", expand: bool = True) -> "ps.Series":
+    def partition(self, sep      = " ", expand       = True)               :
         """
         Not supported.
         """
         raise NotImplementedError()
 
-    def repeat(self, repeats: int) -> "ps.Series":
+    def repeat(self, repeats     )               :
         """
         Duplicate each string in the Series.
 
@@ -1510,13 +1510,13 @@ class StringMethods:
 
     def replace(
         self,
-        pat: str,
-        repl: Union[str, Callable[[str], str]],
-        n: int = -1,
-        case: Optional[bool] = None,
-        flags: int = 0,
-        regex: bool = True,
-    ) -> "ps.Series":
+        pat     ,
+        repl                                  ,
+        n      = -1,
+        case                 = None,
+        flags      = 0,
+        regex       = True,
+    )               :
         """
         Replace occurrences of pattern/regex in the Series with some other
         string. Equivalent to :func:`str.replace` or :func:`re.sub`.
@@ -1605,12 +1605,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_replace(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_replace(s)                  :  # type: ignore[no-untyped-def]
             return s.str.replace(pat, repl, n=n, case=case, flags=flags, regex=regex)
 
         return self._data.pandas_on_spark.transform_batch(pandas_replace)
 
-    def rfind(self, sub: str, start: int = 0, end: Optional[int] = None) -> "ps.Series":
+    def rfind(self, sub     , start      = 0, end                = None)               :
         """
         Return highest indexes in each strings in the Series where the
         substring is fully contained between [start:end].
@@ -1660,12 +1660,12 @@ class StringMethods:
         dtype: int64
         """
 
-        def pandas_rfind(s) -> ps.Series[int]:  # type: ignore[no-untyped-def]
+        def pandas_rfind(s)                  :  # type: ignore[no-untyped-def]
             return s.str.rfind(sub, start, end)
 
         return self._data.pandas_on_spark.transform_batch(pandas_rfind)
 
-    def rindex(self, sub: str, start: int = 0, end: Optional[int] = None) -> "ps.Series":
+    def rindex(self, sub     , start      = 0, end                = None)               :
         """
         Return highest indexes in each strings where the substring is fully
         contained between [start:end].
@@ -1703,12 +1703,12 @@ class StringMethods:
         >>> s.str.rindex('a', start=2) # doctest: +SKIP
         """
 
-        def pandas_rindex(s) -> ps.Series[np.int64]:  # type: ignore[no-untyped-def]
+        def pandas_rindex(s)                       :  # type: ignore[no-untyped-def]
             return s.str.rindex(sub, start, end)
 
         return self._data.pandas_on_spark.transform_batch(pandas_rindex)
 
-    def rjust(self, width: int, fillchar: str = " ") -> "ps.Series":
+    def rjust(self, width     , fillchar      = " ")               :
         """
         Filling left side of strings in the Series with an additional
         character. Equivalent to :func:`str.rjust`.
@@ -1744,20 +1744,20 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_rjust(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_rjust(s)                  :  # type: ignore[no-untyped-def]
             return s.str.rjust(width, fillchar)
 
         return self._data.pandas_on_spark.transform_batch(pandas_rjust)
 
-    def rpartition(self, sep: str = " ", expand: bool = True) -> "ps.Series":
+    def rpartition(self, sep      = " ", expand       = True)               :
         """
         Not supported.
         """
         raise NotImplementedError()
 
     def slice(
-        self, start: Optional[int] = None, stop: Optional[int] = None, step: Optional[int] = None
-    ) -> "ps.Series":
+        self, start                = None, stop                = None, step                = None
+    )               :
         """
         Slice substrings from each element in the Series.
 
@@ -1809,14 +1809,14 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_slice(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_slice(s)                  :  # type: ignore[no-untyped-def]
             return s.str.slice(start, stop, step)
 
         return self._data.pandas_on_spark.transform_batch(pandas_slice)
 
     def slice_replace(
-        self, start: Optional[int] = None, stop: Optional[int] = None, repl: Optional[str] = None
-    ) -> "ps.Series":
+        self, start                = None, stop                = None, repl                = None
+    )               :
         """
         Slice substrings from each element in the Series.
 
@@ -1885,14 +1885,14 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_slice_replace(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_slice_replace(s)                  :  # type: ignore[no-untyped-def]
             return s.str.slice_replace(start, stop, repl)
 
         return self._data.pandas_on_spark.transform_batch(pandas_slice_replace)
 
     def split(
-        self, pat: Optional[str] = None, n: int = -1, expand: bool = False
-    ) -> Union["ps.Series", "ps.DataFrame"]:
+        self, pat                = None, n      = -1, expand       = False
+    )                                      :
         """
         Split strings around given separator/delimiter.
 
@@ -2021,7 +2021,7 @@ class StringMethods:
         return_type = ArrayType(StringType(), containsNull=True)
 
         @pandas_udf(returnType=return_type)  # type: ignore[call-overload]
-        def pudf(s: pd.Series) -> pd.Series:
+        def pudf(s           )             :
             return s.str.split(pat, n)
 
         psser = self._data._with_new_scol(
@@ -2047,8 +2047,8 @@ class StringMethods:
             return psser
 
     def rsplit(
-        self, pat: Optional[str] = None, n: int = -1, expand: bool = False
-    ) -> Union["ps.Series", "ps.DataFrame"]:
+        self, pat                = None, n      = -1, expand       = False
+    )                                      :
         """
         Split strings around given separator/delimiter.
 
@@ -2168,7 +2168,7 @@ class StringMethods:
         return_type = ArrayType(StringType(), containsNull=True)
 
         @pandas_udf(returnType=return_type)  # type: ignore[call-overload]
-        def pudf(s: pd.Series) -> pd.Series:
+        def pudf(s           )             :
             return s.str.rsplit(pat, n)
 
         psser = self._data._with_new_scol(
@@ -2193,7 +2193,7 @@ class StringMethods:
         else:
             return psser
 
-    def translate(self, table: Dict) -> "ps.Series":
+    def translate(self, table      )               :
         """
         Map all characters in the string through the given mapping table.
         Equivalent to standard :func:`str.translate`.
@@ -2222,12 +2222,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_translate(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_translate(s)                  :  # type: ignore[no-untyped-def]
             return s.str.translate(table)
 
         return self._data.pandas_on_spark.transform_batch(pandas_translate)
 
-    def wrap(self, width: int, **kwargs: bool) -> "ps.Series":
+    def wrap(self, width     , **kwargs      )               :
         """
         Wrap long strings in the Series to be formatted in paragraphs with
         length less than a given width.
@@ -2273,12 +2273,12 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_wrap(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_wrap(s)                  :  # type: ignore[no-untyped-def]
             return s.str.wrap(width, **kwargs)
 
         return self._data.pandas_on_spark.transform_batch(pandas_wrap)
 
-    def zfill(self, width: int) -> "ps.Series":
+    def zfill(self, width     )               :
         """
         Pad strings in the Series by prepending ‘0’ characters.
 
@@ -2323,20 +2323,20 @@ class StringMethods:
         dtype: object
         """
 
-        def pandas_zfill(s) -> ps.Series[str]:  # type: ignore[no-untyped-def]
+        def pandas_zfill(s)                  :  # type: ignore[no-untyped-def]
             return s.str.zfill(width)
 
         return self._data.pandas_on_spark.transform_batch(pandas_zfill)
 
     @no_type_check
-    def get_dummies(self, sep: str = "|") -> "ps.DataFrame":
+    def get_dummies(self, sep      = "|")                  :
         """
         Not supported.
         """
         raise NotImplementedError()
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

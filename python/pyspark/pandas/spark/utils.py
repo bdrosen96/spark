@@ -23,26 +23,26 @@ from pyspark.sql.types import DecimalType, StructType, MapType, ArrayType, Struc
 
 
 @overload
-def as_nullable_spark_type(dt: StructType) -> StructType:
+def as_nullable_spark_type(dt            )              :
     ...
 
 
 @overload
-def as_nullable_spark_type(dt: ArrayType) -> ArrayType:
+def as_nullable_spark_type(dt           )             :
     ...
 
 
 @overload
-def as_nullable_spark_type(dt: MapType) -> MapType:
+def as_nullable_spark_type(dt         )           :
     ...
 
 
 @overload
-def as_nullable_spark_type(dt: DataType) -> DataType:
+def as_nullable_spark_type(dt          )            :
     ...
 
 
-def as_nullable_spark_type(dt: DataType) -> DataType:
+def as_nullable_spark_type(dt          )            :
     """
     Returns a nullable schema or data types.
 
@@ -95,35 +95,35 @@ def as_nullable_spark_type(dt: DataType) -> DataType:
 
 @overload
 def force_decimal_precision_scale(
-    dt: StructType, *, precision: int = ..., scale: int = ...
-) -> StructType:
+    dt            , *, precision      = ..., scale      = ...
+)              :
     ...
 
 
 @overload
 def force_decimal_precision_scale(
-    dt: ArrayType, *, precision: int = ..., scale: int = ...
-) -> ArrayType:
+    dt           , *, precision      = ..., scale      = ...
+)             :
     ...
 
 
 @overload
 def force_decimal_precision_scale(
-    dt: MapType, *, precision: int = ..., scale: int = ...
-) -> MapType:
+    dt         , *, precision      = ..., scale      = ...
+)           :
     ...
 
 
 @overload
 def force_decimal_precision_scale(
-    dt: DataType, *, precision: int = ..., scale: int = ...
-) -> DataType:
+    dt          , *, precision      = ..., scale      = ...
+)            :
     ...
 
 
 def force_decimal_precision_scale(
-    dt: DataType, *, precision: int = 38, scale: int = 18
-) -> DataType:
+    dt          , *, precision      = 38, scale      = 18
+)            :
     """
     Returns a data type with a fixed decimal type.
 
@@ -183,7 +183,7 @@ def force_decimal_precision_scale(
         return dt
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import sys
     import pyspark.pandas.spark.utils

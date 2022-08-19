@@ -51,10 +51,10 @@ T = TypeVar("T")
 
 
 # Holds broadcasted data received from Java, keyed by its id.
-_broadcastRegistry: Dict[int, "Broadcast[Any]"] = {}
+_broadcastRegistry                              = {}
 
 
-def _from_id(bid: int) -> "Broadcast[Any]":
+def _from_id(bid     )                    :
     from pyspark.broadcast import _broadcastRegistry
 
     if bid not in _broadcastRegistry:
@@ -84,28 +84,28 @@ class Broadcast(Generic[T]):
 
     @overload  # On driver
     def __init__(
-        self: "Broadcast[T]",
-        sc: "SparkContext",
-        value: T,
-        pickle_registry: "BroadcastPickleRegistry",
+        self                ,
+        sc                ,
+        value   ,
+        pickle_registry                           ,
     ):
         ...
 
     @overload  # On worker without decryption server
-    def __init__(self: "Broadcast[Any]", *, path: str):
+    def __init__(self                  , *, path     ):
         ...
 
     @overload  # On worker with decryption server
-    def __init__(self: "Broadcast[Any]", *, sock_file: str):
+    def __init__(self                  , *, sock_file     ):
         ...
 
     def __init__(
         self,
-        sc: Optional["SparkContext"] = None,
-        value: Optional[T] = None,
-        pickle_registry: Optional["BroadcastPickleRegistry"] = None,
-        path: Optional[str] = None,
-        sock_file: Optional[BinaryIO] = None,
+        sc                           = None,
+        value              = None,
+        pickle_registry                                      = None,
+        path                = None,
+        sock_file                     = None,
     ):
         """
         Should not be called directly by users -- use :meth:`SparkContext.broadcast`
@@ -115,10 +115,10 @@ class Broadcast(Generic[T]):
             # we're on the driver.  We want the pickled data to end up in a file (maybe encrypted)
             f = NamedTemporaryFile(delete=False, dir=sc._temp_dir)
             self._path = f.name
-            self._sc: Optional["SparkContext"] = sc
+            self._sc                           = sc
             assert sc._jvm is not None
             self._python_broadcast = sc._jvm.PythonRDD.setupBroadcast(self._path)
-            broadcast_out: Union[ChunkedStream, IO[bytes]]
+            #broadcast_out: Union[ChunkedStream, IO[bytes]]
             if sc._encryption_enabled:
                 # with encryption, we ask the jvm to do the encryption for us, we send it data
                 # over a socket
@@ -148,7 +148,7 @@ class Broadcast(Generic[T]):
                 assert path is not None
                 self._path = path
 
-    def dump(self, value: T, f: BinaryIO) -> None:
+    def dump(self, value   , f          )        :
         try:
             pickle.dump(value, f, pickle_protocol)
         except pickle.PickleError:
@@ -159,11 +159,11 @@ class Broadcast(Generic[T]):
             raise pickle.PicklingError(msg)
         f.close()
 
-    def load_from_path(self, path: str) -> T:
+    def load_from_path(self, path     )     :
         with open(path, "rb", 1 << 20) as f:
             return self.load(f)
 
-    def load(self, file: BinaryIO) -> T:
+    def load(self, file          )     :
         # "file" could also be a socket
         gc.disable()
         try:
@@ -172,7 +172,7 @@ class Broadcast(Generic[T]):
             gc.enable()
 
     @property
-    def value(self) -> T:
+    def value(self)     :
         """Return the broadcasted value"""
         if not hasattr(self, "_value") and self._path is not None:
             # we only need to decrypt it here when encryption is enabled and
@@ -186,7 +186,7 @@ class Broadcast(Generic[T]):
                 self._value = self.load_from_path(self._path)
         return self._value
 
-    def unpersist(self, blocking: bool = False) -> None:
+    def unpersist(self, blocking       = False)        :
         """
         Delete cached copies of this broadcast on the executors. If the
         broadcast is used after this is called, it will need to be
@@ -201,7 +201,7 @@ class Broadcast(Generic[T]):
             raise RuntimeError("Broadcast can only be unpersisted in driver")
         self._jbroadcast.unpersist(blocking)
 
-    def destroy(self, blocking: bool = False) -> None:
+    def destroy(self, blocking       = False)        :
         """
         Destroy all data and metadata related to this broadcast variable.
         Use this with caution; once a broadcast variable has been destroyed,
@@ -221,7 +221,7 @@ class Broadcast(Generic[T]):
         self._jbroadcast.destroy(blocking)
         os.unlink(self._path)
 
-    def __reduce__(self) -> Tuple[Callable[[int], "Broadcast[T]"], Tuple[int]]:
+    def __reduce__(self)                                                      :
         if self._jbroadcast is None:
             raise RuntimeError("Broadcast can only be serialized in driver")
         assert self._pickle_registry is not None
@@ -232,17 +232,17 @@ class Broadcast(Generic[T]):
 class BroadcastPickleRegistry(threading.local):
     """Thread-local registry for broadcast variables that have been pickled"""
 
-    def __init__(self) -> None:
+    def __init__(self)        :
         self.__dict__.setdefault("_registry", set())
 
-    def __iter__(self) -> Iterator[Broadcast[Any]]:
+    def __iter__(self)                            :
         for bcast in self._registry:
             yield bcast
 
-    def add(self, bcast: Broadcast[Any]) -> None:
+    def add(self, bcast                )        :
         self._registry.add(bcast)
 
-    def clear(self) -> None:
+    def clear(self)        :
         self._registry.clear()
 
 

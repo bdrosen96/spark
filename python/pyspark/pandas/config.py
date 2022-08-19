@@ -84,11 +84,11 @@ class Option:
     def __init__(
         self,
         *,
-        key: str,
-        doc: str,
-        default: Any,
-        types: Union[Tuple[type, ...], type] = str,
-        check_func: Tuple[Callable[[Any], bool], str] = (lambda v: True, ""),
+        key     ,
+        doc     ,
+        default     ,
+        types                                = str,
+        check_func                                    = (lambda v: True, ""),
     ):
         self.key = key
         self.doc = doc
@@ -96,7 +96,7 @@ class Option:
         self.types = types
         self.check_func = check_func
 
-    def validate(self, v: Any) -> None:
+    def validate(self, v     )        :
         """
         Validate the given value and throw an exception with related information such as key.
         """
@@ -117,7 +117,7 @@ class Option:
 #     See the examples below:
 #     >>> from pyspark.pandas.config import show_options
 #     >>> show_options()
-_options: List[Option] = [
+_options               = [
     Option(
         key="display.max_rows",
         doc=(
@@ -263,7 +263,7 @@ _options: List[Option] = [
     ),
 ]
 
-_options_dict: Dict[str, Option] = dict(zip((option.key for option in _options), _options))
+_options_dict                    = dict(zip((option.key for option in _options), _options))
 
 _key_format = "pandas_on_Spark.{}".format
 
@@ -272,7 +272,7 @@ class OptionError(AttributeError, KeyError):
     pass
 
 
-def show_options() -> None:
+def show_options()        :
     """
     Make a pretty table that can be copied and pasted into public documentation.
     This is currently for an internal purpose.
@@ -305,7 +305,7 @@ def show_options() -> None:
     print(row_format.format("=" * 31, "=" * 23, "=" * 53))
 
 
-def get_option(key: str, default: Union[Any, _NoValueType] = _NoValue) -> Any:
+def get_option(key     , default                           = _NoValue)       :
     """
     Retrieves the value of the specified option.
 
@@ -332,7 +332,7 @@ def get_option(key: str, default: Union[Any, _NoValueType] = _NoValue) -> Any:
     return json.loads(default_session().conf.get(_key_format(key), default=json.dumps(default)))
 
 
-def set_option(key: str, value: Any) -> None:
+def set_option(key     , value     )        :
     """
     Sets the value of the specified option.
 
@@ -353,7 +353,7 @@ def set_option(key: str, value: Any) -> None:
     default_session().conf.set(_key_format(key), json.dumps(value))
 
 
-def reset_option(key: str) -> None:
+def reset_option(key     )        :
     """
     Reset one option to their default value.
 
@@ -373,7 +373,7 @@ def reset_option(key: str) -> None:
 
 
 @contextmanager
-def option_context(*args: Any) -> Iterator[None]:
+def option_context(*args     )                  :
     """
     Context manager to temporarily set options in the `with` statement context.
 
@@ -400,7 +400,7 @@ def option_context(*args: Any) -> Iterator[None]:
             set_option(key, value)
 
 
-def _check_option(key: str) -> None:
+def _check_option(key     )        :
     if key not in _options_dict:
         raise OptionError(
             "No such option: '{}'. Available options are [{}]".format(
@@ -412,11 +412,11 @@ def _check_option(key: str) -> None:
 class DictWrapper:
     """provide attribute-style access to a nested dict"""
 
-    def __init__(self, d: Dict[str, Option], prefix: str = ""):
+    def __init__(self, d                   , prefix      = ""):
         object.__setattr__(self, "d", d)
         object.__setattr__(self, "prefix", prefix)
 
-    def __setattr__(self, key: str, val: Any) -> None:
+    def __setattr__(self, key     , val     )        :
         prefix = object.__getattribute__(self, "prefix")
         d = object.__getattribute__(self, "d")
         if prefix:
@@ -435,7 +435,7 @@ class DictWrapper:
                 )
             )
 
-    def __getattr__(self, key: str) -> Union["DictWrapper", Any]:
+    def __getattr__(self, key     )                             :
         prefix = object.__getattribute__(self, "prefix")
         d = object.__getattribute__(self, "d")
         if prefix:
@@ -456,7 +456,7 @@ class DictWrapper:
         else:
             return DictWrapper(d, canonical_key)
 
-    def __dir__(self) -> List[str]:
+    def __dir__(self)             :
         prefix = object.__getattribute__(self, "prefix")
         d = object.__getattribute__(self, "d")
 
@@ -472,7 +472,7 @@ class DictWrapper:
 options = DictWrapper(_options_dict)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

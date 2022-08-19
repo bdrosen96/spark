@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     import pyspark.pandas as ps
 
 
-def plot_pandas_on_spark(data: Union["ps.DataFrame", "ps.Series"], kind: str, **kwargs):
+def plot_pandas_on_spark(data                                    , kind     , **kwargs):
     import plotly
 
     # pandas-on-Spark specific plots
@@ -48,7 +48,7 @@ def plot_pandas_on_spark(data: Union["ps.DataFrame", "ps.Series"], kind: str, **
     return plotly.plot(PandasOnSparkPlotAccessor.pandas_plot_data_map[kind](data), kind, **kwargs)
 
 
-def plot_pie(data: Union["ps.DataFrame", "ps.Series"], **kwargs):
+def plot_pie(data                                    , **kwargs):
     from plotly import express
 
     data = PandasOnSparkPlotAccessor.pandas_plot_data_map["pie"](data)
@@ -72,7 +72,7 @@ def plot_pie(data: Union["ps.DataFrame", "ps.Series"], **kwargs):
         raise RuntimeError("Unexpected type: [%s]" % type(data))
 
 
-def plot_histogram(data: Union["ps.DataFrame", "ps.Series"], **kwargs):
+def plot_histogram(data                                    , **kwargs):
     import plotly.graph_objs as go
     import pyspark.pandas as ps
 
@@ -120,7 +120,7 @@ def plot_histogram(data: Union["ps.DataFrame", "ps.Series"], **kwargs):
     return fig
 
 
-def plot_box(data: Union["ps.DataFrame", "ps.Series"], **kwargs):
+def plot_box(data                                    , **kwargs):
     import plotly.graph_objs as go
     import pyspark.pandas as ps
 
@@ -188,7 +188,7 @@ def plot_box(data: Union["ps.DataFrame", "ps.Series"], **kwargs):
     return fig
 
 
-def plot_kde(data: Union["ps.DataFrame", "ps.Series"], **kwargs):
+def plot_kde(data                                    , **kwargs):
     from plotly import express
     import pyspark.pandas as ps
 

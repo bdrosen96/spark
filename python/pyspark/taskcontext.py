@@ -29,17 +29,17 @@ class TaskContext:
     :meth:`TaskContext.get`.
     """
 
-    _taskContext: ClassVar[Optional["TaskContext"]] = None
+    _taskContext                                    = None
 
-    _attemptNumber: Optional[int] = None
-    _partitionId: Optional[int] = None
-    _stageId: Optional[int] = None
-    _taskAttemptId: Optional[int] = None
-    _localProperties: Optional[Dict[str, str]] = None
-    _cpus: Optional[int] = None
-    _resources: Optional[Dict[str, ResourceInformation]] = None
+    _attemptNumber                = None
+    _partitionId                = None
+    _stageId                = None
+    _taskAttemptId                = None
+    _localProperties                           = None
+    _cpus                = None
+    _resources                                           = None
 
-    def __new__(cls: Type["TaskContext"]) -> "TaskContext":
+    def __new__(cls                     )                 :
         """Even if users construct TaskContext instead of using get, give them the singleton."""
         taskContext = cls._taskContext
         if taskContext is not None:
@@ -48,18 +48,18 @@ class TaskContext:
         return taskContext
 
     @classmethod
-    def _getOrCreate(cls: Type["TaskContext"]) -> "TaskContext":
+    def _getOrCreate(cls                     )                 :
         """Internal function to get or create global TaskContext."""
         if cls._taskContext is None:
             cls._taskContext = TaskContext()
         return cls._taskContext
 
     @classmethod
-    def _setTaskContext(cls: Type["TaskContext"], taskContext: "TaskContext") -> None:
+    def _setTaskContext(cls                     , taskContext               )        :
         cls._taskContext = taskContext
 
     @classmethod
-    def get(cls: Type["TaskContext"]) -> Optional["TaskContext"]:
+    def get(cls                     )                           :
         """
         Return the currently active TaskContext. This can be called inside of
         user functions to access contextual information about running tasks.
@@ -70,24 +70,24 @@ class TaskContext:
         """
         return cls._taskContext
 
-    def stageId(self) -> int:
+    def stageId(self)       :
         """The ID of the stage that this task belong to."""
         return cast(int, self._stageId)
 
-    def partitionId(self) -> int:
+    def partitionId(self)       :
         """
         The ID of the RDD partition that is computed by this task.
         """
         return cast(int, self._partitionId)
 
-    def attemptNumber(self) -> int:
+    def attemptNumber(self)       :
         """ "
         How many times this task has been attempted.  The first task attempt will be assigned
         attemptNumber = 0, and subsequent attempts will have increasing attempt numbers.
         """
         return cast(int, self._attemptNumber)
 
-    def taskAttemptId(self) -> int:
+    def taskAttemptId(self)       :
         """
         An ID that is unique to this task attempt (within the same SparkContext, no two task
         attempts will share the same attempt ID).  This is roughly equivalent to Hadoop's
@@ -95,19 +95,19 @@ class TaskContext:
         """
         return cast(int, self._taskAttemptId)
 
-    def getLocalProperty(self, key: str) -> Optional[str]:
+    def getLocalProperty(self, key     )                 :
         """
         Get a local property set upstream in the driver, or None if it is missing.
         """
         return cast(Dict[str, str], self._localProperties).get(key, None)
 
-    def cpus(self) -> int:
+    def cpus(self)       :
         """
         CPUs allocated to the task.
         """
         return cast(int, self._cpus)
 
-    def resources(self) -> Dict[str, ResourceInformation]:
+    def resources(self)                                  :
         """
         Resources allocated to the task. The key is the resource name and the value is information
         about the resource.
@@ -120,11 +120,11 @@ ALL_GATHER_FUNCTION = 2
 
 
 def _load_from_socket(
-    port: Optional[Union[str, int]],
-    auth_secret: str,
-    function: int,
-    all_gather_message: Optional[str] = None,
-) -> List[str]:
+    port                           ,
+    auth_secret     ,
+    function     ,
+    all_gather_message                = None,
+)             :
     """
     Load data from a given socket, this is a blocking method thus only return when the socket
     connection has been closed.
@@ -171,11 +171,11 @@ class BarrierTaskContext(TaskContext):
     This API is experimental
     """
 
-    _port: ClassVar[Optional[Union[str, int]]] = None
-    _secret: ClassVar[Optional[str]] = None
+    _port                                      = None
+    _secret                          = None
 
     @classmethod
-    def _getOrCreate(cls: Type["BarrierTaskContext"]) -> "BarrierTaskContext":
+    def _getOrCreate(cls                            )                        :
         """
         Internal function to get or create global BarrierTaskContext. We need to make sure
         BarrierTaskContext is returned from here because it is needed in python worker reuse
@@ -186,7 +186,7 @@ class BarrierTaskContext(TaskContext):
         return cls._taskContext
 
     @classmethod
-    def get(cls: Type["BarrierTaskContext"]) -> "BarrierTaskContext":
+    def get(cls                            )                        :
         """
         Return the currently active :class:`BarrierTaskContext`.
         This can be called inside of user functions to access contextual information about
@@ -205,8 +205,8 @@ class BarrierTaskContext(TaskContext):
 
     @classmethod
     def _initialize(
-        cls: Type["BarrierTaskContext"], port: Optional[Union[str, int]], secret: str
-    ) -> None:
+        cls                            , port                           , secret     
+    )        :
         """
         Initialize BarrierTaskContext, other methods within BarrierTaskContext can only be called
         after BarrierTaskContext is initialized.
@@ -214,7 +214,7 @@ class BarrierTaskContext(TaskContext):
         cls._port = port
         cls._secret = secret
 
-    def barrier(self) -> None:
+    def barrier(self)        :
         """
         Sets a global barrier and waits until all tasks in this stage hit this barrier.
         Similar to `MPI_Barrier` function in MPI, this function blocks until all tasks
@@ -237,7 +237,7 @@ class BarrierTaskContext(TaskContext):
         else:
             _load_from_socket(self._port, self._secret, BARRIER_FUNCTION)
 
-    def allGather(self, message: str = "") -> List[str]:
+    def allGather(self, message      = "")             :
         """
         This function blocks until all tasks in the same stage have reached this routine.
         Each task passes in a message and returns with a list of all the messages passed in
@@ -262,7 +262,7 @@ class BarrierTaskContext(TaskContext):
         else:
             return _load_from_socket(self._port, self._secret, ALL_GATHER_FUNCTION, message)
 
-    def getTaskInfos(self) -> List["BarrierTaskInfo"]:
+    def getTaskInfos(self)                           :
         """
         Returns :class:`BarrierTaskInfo` for all tasks in this barrier stage,
         ordered by partition ID.
@@ -298,5 +298,5 @@ class BarrierTaskInfo:
     This API is experimental
     """
 
-    def __init__(self, address: str) -> None:
+    def __init__(self, address     )        :
         self.address = address

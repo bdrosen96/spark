@@ -46,8 +46,8 @@ class ChiSquareTest:
 
     @staticmethod
     def test(
-        dataset: DataFrame, featuresCol: str, labelCol: str, flatten: bool = False
-    ) -> DataFrame:
+        dataset           , featuresCol     , labelCol     , flatten       = False
+    )             :
         """
         Perform a Pearson's independence test using dataset.
 
@@ -128,7 +128,7 @@ class Correlation:
     """
 
     @staticmethod
-    def corr(dataset: DataFrame, column: str, method: str = "pearson") -> DataFrame:
+    def corr(dataset           , column     , method      = "pearson")             :
         """
         Compute the correlation matrix with specified method using dataset.
 
@@ -195,7 +195,7 @@ class KolmogorovSmirnovTest:
     """
 
     @staticmethod
-    def test(dataset: DataFrame, sampleCol: str, distName: str, *params: float) -> DataFrame:
+    def test(dataset           , sampleCol     , distName     , *params       )             :
         """
         Conduct a one-sample, two-sided Kolmogorov-Smirnov test for probability distribution
         equality. Currently supports the normal distribution, taking as parameters the mean and
@@ -300,7 +300,7 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def mean(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def mean(col        , weightCol                   = None)          :
         """
         return a column of mean summary
         """
@@ -308,7 +308,7 @@ class Summarizer:
 
     @staticmethod
     @since("3.0.0")
-    def sum(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def sum(col        , weightCol                   = None)          :
         """
         return a column of sum summary
         """
@@ -316,7 +316,7 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def variance(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def variance(col        , weightCol                   = None)          :
         """
         return a column of variance summary
         """
@@ -324,7 +324,7 @@ class Summarizer:
 
     @staticmethod
     @since("3.0.0")
-    def std(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def std(col        , weightCol                   = None)          :
         """
         return a column of std summary
         """
@@ -332,7 +332,7 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def count(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def count(col        , weightCol                   = None)          :
         """
         return a column of count summary
         """
@@ -340,7 +340,7 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def numNonZeros(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def numNonZeros(col        , weightCol                   = None)          :
         """
         return a column of numNonZero summary
         """
@@ -348,7 +348,7 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def max(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def max(col        , weightCol                   = None)          :
         """
         return a column of max summary
         """
@@ -356,7 +356,7 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def min(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def min(col        , weightCol                   = None)          :
         """
         return a column of min summary
         """
@@ -364,7 +364,7 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def normL1(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def normL1(col        , weightCol                   = None)          :
         """
         return a column of normL1 summary
         """
@@ -372,14 +372,14 @@ class Summarizer:
 
     @staticmethod
     @since("2.4.0")
-    def normL2(col: Column, weightCol: Optional[Column] = None) -> Column:
+    def normL2(col        , weightCol                   = None)          :
         """
         return a column of normL2 summary
         """
         return Summarizer._get_single_metric(col, weightCol, "normL2")
 
     @staticmethod
-    def _check_param(featuresCol: Column, weightCol: Optional[Column]) -> Tuple[Column, Column]:
+    def _check_param(featuresCol        , weightCol                  )                         :
         if weightCol is None:
             weightCol = lit(1.0)
         if not isinstance(featuresCol, Column) or not isinstance(weightCol, Column):
@@ -387,7 +387,7 @@ class Summarizer:
         return featuresCol, weightCol
 
     @staticmethod
-    def _get_single_metric(col: Column, weightCol: Optional[Column], metric: str) -> Column:
+    def _get_single_metric(col        , weightCol                  , metric     )          :
         col, weightCol = Summarizer._check_param(col, weightCol)
         return Column(
             JavaWrapper._new_java_obj(
@@ -396,7 +396,7 @@ class Summarizer:
         )
 
     @staticmethod
-    def metrics(*metrics: str) -> "SummaryBuilder":
+    def metrics(*metrics     )                    :
         """
         Given a list of metrics, provides a builder that it turns computes metrics from a column.
 
@@ -450,10 +450,10 @@ class SummaryBuilder(JavaWrapper):
 
     """
 
-    def __init__(self, jSummaryBuilder: "JavaObject"):
+    def __init__(self, jSummaryBuilder              ):
         super(SummaryBuilder, self).__init__(jSummaryBuilder)
 
-    def summary(self, featuresCol: Column, weightCol: Optional[Column] = None) -> Column:
+    def summary(self, featuresCol        , weightCol                   = None)          :
         """
         Returns an aggregate object that contains the summary of the column with the requested
         metrics.
@@ -494,7 +494,7 @@ class MultivariateGaussian:
            [ 3.,  2.]]))
     """
 
-    def __init__(self, mean: Vector, cov: Matrix):
+    def __init__(self, mean        , cov        ):
         self.mean = mean
         self.cov = cov
 

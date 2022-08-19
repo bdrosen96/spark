@@ -45,10 +45,10 @@ class DateOps(DataTypeOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "dates"
 
-    def sub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def sub(self, left              , right     )                 :
         _sanitize_list_like(right)
         # Note that date subtraction casts arguments to integer. This is to mimic pandas's
         # behaviors. pandas returns 'timedelta64[ns]' in days from date's subtraction.
@@ -66,7 +66,7 @@ class DateOps(DataTypeOps):
         else:
             raise TypeError("Date subtraction can only be applied to date series.")
 
-    def rsub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rsub(self, left              , right     )                 :
         _sanitize_list_like(right)
         # Note that date subtraction casts arguments to integer. This is to mimic pandas's
         # behaviors. pandas returns 'timedelta64[ns]' in days from date's subtraction.
@@ -81,31 +81,31 @@ class DateOps(DataTypeOps):
         else:
             raise TypeError("Date subtraction can only be applied to date series.")
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__lt__)(left, right)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__le__)(left, right)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__ge__)(left, right)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__gt__)(left, right)
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, spark_type = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype):

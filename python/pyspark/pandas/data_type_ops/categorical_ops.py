@@ -37,10 +37,10 @@ class CategoricalOps(DataTypeOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "categoricals"
 
-    def restore(self, col: pd.Series) -> pd.Series:
+    def restore(self, col           )             :
         """Restore column when to_pandas."""
         return pd.Series(
             pd.Categorical.from_codes(
@@ -50,11 +50,11 @@ class CategoricalOps(DataTypeOps):
             )
         )
 
-    def prepare(self, col: pd.Series) -> pd.Series:
+    def prepare(self, col           )             :
         """Prepare column when from_pandas."""
         return col.cat.codes
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, _ = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype) and (
@@ -64,38 +64,38 @@ class CategoricalOps(DataTypeOps):
 
         return _to_cat(index_ops).astype(dtype)
 
-    def eq(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def eq(self, left              , right     )                 :
         _sanitize_list_like(right)
         return _compare(left, right, Column.__eq__, is_equality_comparison=True)
 
-    def ne(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ne(self, left              , right     )                 :
         _sanitize_list_like(right)
         return _compare(left, right, Column.__ne__, is_equality_comparison=True)
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         _sanitize_list_like(right)
         return _compare(left, right, Column.__lt__)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         _sanitize_list_like(right)
         return _compare(left, right, Column.__le__)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         _sanitize_list_like(right)
         return _compare(left, right, Column.__gt__)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         _sanitize_list_like(right)
         return _compare(left, right, Column.__ge__)
 
 
 def _compare(
-    left: IndexOpsLike,
-    right: Any,
-    f: Callable[..., Column],
+    left              ,
+    right     ,
+    f                       ,
     *,
-    is_equality_comparison: bool = False,
-) -> SeriesOrIndex:
+    is_equality_comparison       = False,
+)                 :
     """
     Compare a Categorical operand `left` to `right` with the given Spark Column function.
 
@@ -131,7 +131,7 @@ def _compare(
         raise TypeError("Cannot compare a Categorical with the given type.")
 
 
-def _to_cat(index_ops: IndexOpsLike) -> IndexOpsLike:
+def _to_cat(index_ops              )                :
     categories = cast(CategoricalDtype, index_ops.dtype).categories
     if len(categories) == 0:
         scol = SF.lit(None)

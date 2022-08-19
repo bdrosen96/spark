@@ -42,12 +42,12 @@ class PythonModelWrapper:
 
     """
 
-    def __init__(self, model_uri: str, return_type_hint: Union[str, type, Dtype]):
+    def __init__(self, model_uri     , return_type_hint                         ):
         self._model_uri = model_uri
         self._return_type_hint = return_type_hint
 
     @lazy_property
-    def _return_type(self) -> DataType:
+    def _return_type(self)            :
         hint = self._return_type_hint
         # The logic is simple for now, because it corresponds to the default
         # case: continuous predictions
@@ -60,7 +60,7 @@ class PythonModelWrapper:
         return as_spark_type(hint)
 
     @lazy_property
-    def _model(self) -> Any:
+    def _model(self)       :
         """
         The return object has to follow the API of mlflow.pyfunc.PythonModel.
         """
@@ -69,19 +69,19 @@ class PythonModelWrapper:
         return pyfunc.load_model(model_uri=self._model_uri)
 
     @lazy_property
-    def _model_udf(self) -> Any:
+    def _model_udf(self)       :
         from mlflow import pyfunc
 
         spark = default_session()
         return pyfunc.spark_udf(spark, model_uri=self._model_uri, result_type=self._return_type)
 
-    def __str__(self) -> str:
+    def __str__(self)       :
         return "PythonModelWrapper({})".format(str(self._model))
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "PythonModelWrapper({})".format(repr(self._model))
 
-    def predict(self, data: Union[DataFrame, pd.DataFrame]) -> Union[Series, pd.Series]:
+    def predict(self, data                                )                            :
         """
         Returns a prediction on the data.
 
@@ -98,7 +98,7 @@ class PythonModelWrapper:
             # However, this is only possible with spark >= 3.0
             # s = F.struct(*data.columns)
             # return_col = self._model_udf(s)
-            column_labels: List[Label] = [
+            column_labels              = [
                 (col,) for col in data._internal.spark_frame.select(return_col).columns
             ]
             internal = data._internal.copy(
@@ -110,8 +110,8 @@ class PythonModelWrapper:
 
 
 def load_model(
-    model_uri: str, predict_type: Union[str, type, Dtype] = "infer"
-) -> PythonModelWrapper:
+    model_uri     , predict_type                          = "infer"
+)                      :
     """
     Loads an MLflow model into an wrapper that can be used both for pandas and pandas-on-Spark
     DataFrame.
@@ -204,7 +204,7 @@ def load_model(
     return PythonModelWrapper(model_uri, predict_type)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

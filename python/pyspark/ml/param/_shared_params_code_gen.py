@@ -48,8 +48,8 @@ _type_for_type_converter = {
 
 
 def _gen_param_header(
-    name: str, doc: str, defaultValueStr: Optional[str], typeConverter: str, paramType: str
-) -> str:
+    name     , doc     , defaultValueStr               , typeConverter     , paramType     
+)       :
     """
     Generates the header part for shared variables
 
@@ -80,7 +80,7 @@ def _gen_param_header(
     return template
 
 
-def _gen_param_code(name: str, paramType: str) -> str:
+def _gen_param_code(name     , paramType     )       :
     """
     Generates Python code for a shared param class.
 

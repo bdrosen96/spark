@@ -35,5 +35,5 @@ class MultivariateGaussian(NamedTuple):
     (DenseVector([11.0, 12.0]), array([[ 1., 5.],[ 3., 2.]]))
     """
 
-    mu: Vector
-    sigma: Matrix
+    #mu: Vector
+    #sigma: Matrix

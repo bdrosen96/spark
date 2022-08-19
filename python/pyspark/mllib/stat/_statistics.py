@@ -39,34 +39,34 @@ class MultivariateStatisticalSummary(JavaModelWrapper):
     Trait for multivariate statistical summary of a data matrix.
     """
 
-    def mean(self) -> ndarray:
+    def mean(self)           :
         return cast(JavaObject, self.call("mean")).toArray()
 
-    def variance(self) -> ndarray:
+    def variance(self)           :
         return cast(JavaObject, self.call("variance")).toArray()
 
-    def count(self) -> int:
+    def count(self)       :
         return int(self.call("count"))
 
-    def numNonzeros(self) -> ndarray:
+    def numNonzeros(self)           :
         return cast(JavaObject, self.call("numNonzeros")).toArray()
 
-    def max(self) -> ndarray:
+    def max(self)           :
         return cast(JavaObject, self.call("max")).toArray()
 
-    def min(self) -> ndarray:
+    def min(self)           :
         return cast(JavaObject, self.call("min")).toArray()
 
-    def normL1(self) -> ndarray:
+    def normL1(self)           :
         return cast(JavaObject, self.call("normL1")).toArray()
 
-    def normL2(self) -> ndarray:
+    def normL2(self)           :
         return cast(JavaObject, self.call("normL2")).toArray()
 
 
 class Statistics:
     @staticmethod
-    def colStats(rdd: RDD[Vector]) -> MultivariateStatisticalSummary:
+    def colStats(rdd             )                                  :
         """
         Computes column-wise summary statistics for the input RDD[Vector].
 
@@ -106,20 +106,20 @@ class Statistics:
 
     @overload
     @staticmethod
-    def corr(x: RDD[Vector], *, method: Optional["CorrelationMethod"] = ...) -> Matrix:
+    def corr(x             , *, method                                = ...)          :
         ...
 
     @overload
     @staticmethod
-    def corr(x: RDD[float], y: RDD[float], method: Optional["CorrelationMethod"] = ...) -> float:
+    def corr(x            , y            , method                                = ...)         :
         ...
 
     @staticmethod
     def corr(
-        x: Union[RDD[Vector], RDD[float]],
-        y: Optional[RDD[float]] = None,
-        method: Optional["CorrelationMethod"] = None,
-    ) -> Union[float, Matrix]:
+        x                                ,
+        y                       = None,
+        method                                = None,
+    )                        :
         """
         Compute the correlation (matrix) for the input RDD(s) using the
         specified method.
@@ -199,23 +199,23 @@ class Statistics:
 
     @overload
     @staticmethod
-    def chiSqTest(observed: Matrix) -> ChiSqTestResult:
+    def chiSqTest(observed        )                   :
         ...
 
     @overload
     @staticmethod
-    def chiSqTest(observed: Vector, expected: Optional[Vector] = ...) -> ChiSqTestResult:
+    def chiSqTest(observed        , expected                   = ...)                   :
         ...
 
     @overload
     @staticmethod
-    def chiSqTest(observed: RDD[LabeledPoint]) -> List[ChiSqTestResult]:
+    def chiSqTest(observed                   )                         :
         ...
 
     @staticmethod
     def chiSqTest(
-        observed: Union[Matrix, RDD[LabeledPoint], Vector], expected: Optional[Vector] = None
-    ) -> Union[ChiSqTestResult, List[ChiSqTestResult]]:
+        observed                                          , expected                   = None
+    )                                                 :
         """
         If `observed` is Vector, conduct Pearson's chi-squared goodness
         of fit test of the observed data against the expected distribution,
@@ -313,8 +313,8 @@ class Statistics:
 
     @staticmethod
     def kolmogorovSmirnovTest(
-        data: RDD[float], distName: "DistName" = "norm", *params: float
-    ) -> KolmogorovSmirnovTestResult:
+        data            , distName             = "norm", *params       
+    )                               :
         """
         Performs the Kolmogorov-Smirnov (KS) test for data sampled from
         a continuous distribution. It tests the null hypothesis that
@@ -384,7 +384,7 @@ class Statistics:
         )
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import numpy
     from pyspark.sql import SparkSession

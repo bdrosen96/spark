@@ -47,14 +47,14 @@ class TreeEnsembleModel(JavaModelWrapper, JavaSaveable):
     """
 
     @overload
-    def predict(self, x: "VectorLike") -> float:
+    def predict(self, x              )         :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[float]:
+    def predict(self, x                   )              :
         ...
 
-    def predict(self, x: Union["VectorLike", RDD["VectorLike"]]) -> Union[float, RDD[float]]:
+    def predict(self, x                                        )                            :
         """
         Predict values for a single data point or an RDD of points using
         the model trained.
@@ -74,25 +74,25 @@ class TreeEnsembleModel(JavaModelWrapper, JavaSaveable):
             return self.call("predict", _convert_to_vector(x))
 
     @since("1.3.0")
-    def numTrees(self) -> int:
+    def numTrees(self)       :
         """
         Get number of trees in ensemble.
         """
         return self.call("numTrees")
 
     @since("1.3.0")
-    def totalNumNodes(self) -> int:
+    def totalNumNodes(self)       :
         """
         Get total number of nodes, summed over all trees in the ensemble.
         """
         return self.call("totalNumNodes")
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         """Summary of model"""
         return self._java_model.toString()
 
     @since("1.3.0")
-    def toDebugString(self) -> str:
+    def toDebugString(self)       :
         """Full model"""
         return self._java_model.toDebugString()
 
@@ -105,14 +105,14 @@ class DecisionTreeModel(JavaModelWrapper, JavaSaveable, JavaLoader["DecisionTree
     """
 
     @overload
-    def predict(self, x: "VectorLike") -> float:
+    def predict(self, x              )         :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[float]:
+    def predict(self, x                   )              :
         ...
 
-    def predict(self, x: Union["VectorLike", RDD["VectorLike"]]) -> Union[float, RDD[float]]:
+    def predict(self, x                                        )                            :
         """
         Predict the label of one or more examples.
 
@@ -137,29 +137,29 @@ class DecisionTreeModel(JavaModelWrapper, JavaSaveable, JavaLoader["DecisionTree
             return self.call("predict", _convert_to_vector(x))
 
     @since("1.1.0")
-    def numNodes(self) -> int:
+    def numNodes(self)       :
         """Get number of nodes in tree, including leaf nodes."""
         return self._java_model.numNodes()
 
     @since("1.1.0")
-    def depth(self) -> int:
+    def depth(self)       :
         """
         Get depth of tree (e.g. depth 0 means 1 leaf node, depth 1
         means 1 internal node + 2 leaf nodes).
         """
         return self._java_model.depth()
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         """summary of model."""
         return self._java_model.toString()
 
     @since("1.2.0")
-    def toDebugString(self) -> str:
+    def toDebugString(self)       :
         """full model."""
         return self._java_model.toDebugString()
 
     @classmethod
-    def _java_loader_class(cls) -> str:
+    def _java_loader_class(cls)       :
         return "org.apache.spark.mllib.tree.model.DecisionTreeModel"
 
 
@@ -174,16 +174,16 @@ class DecisionTree:
     @classmethod
     def _train(
         cls,
-        data: RDD[LabeledPoint],
-        type: str,
-        numClasses: int,
-        features: Dict[int, int],
-        impurity: str = "gini",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-    ) -> DecisionTreeModel:
+        data                   ,
+        type     ,
+        numClasses     ,
+        features                ,
+        impurity      = "gini",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+    )                     :
         first = data.first()
         assert isinstance(first, LabeledPoint), "the data should be RDD of LabeledPoint"
         model = callMLlibFunc(
@@ -203,15 +203,15 @@ class DecisionTree:
     @classmethod
     def trainClassifier(
         cls,
-        data: RDD[LabeledPoint],
-        numClasses: int,
-        categoricalFeaturesInfo: Dict[int, int],
-        impurity: str = "gini",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-    ) -> DecisionTreeModel:
+        data                   ,
+        numClasses     ,
+        categoricalFeaturesInfo                ,
+        impurity      = "gini",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+    )                     :
         """
         Train a decision tree model for classification.
 
@@ -298,14 +298,14 @@ class DecisionTree:
     @since("1.1.0")
     def trainRegressor(
         cls,
-        data: RDD[LabeledPoint],
-        categoricalFeaturesInfo: Dict[int, int],
-        impurity: str = "variance",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-    ) -> DecisionTreeModel:
+        data                   ,
+        categoricalFeaturesInfo                ,
+        impurity      = "variance",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+    )                     :
         """
         Train a decision tree model for regression.
 
@@ -384,7 +384,7 @@ class RandomForestModel(TreeEnsembleModel, JavaLoader["RandomForestModel"]):
     """
 
     @classmethod
-    def _java_loader_class(cls) -> str:
+    def _java_loader_class(cls)       :
         return "org.apache.spark.mllib.tree.model.RandomForestModel"
 
 
@@ -396,22 +396,22 @@ class RandomForest:
     .. versionadded:: 1.2.0
     """
 
-    supportedFeatureSubsetStrategies: Tuple[str, ...] = ("auto", "all", "sqrt", "log2", "onethird")
+    supportedFeatureSubsetStrategies                  = ("auto", "all", "sqrt", "log2", "onethird")
 
     @classmethod
     def _train(
         cls,
-        data: RDD[LabeledPoint],
-        algo: str,
-        numClasses: int,
-        categoricalFeaturesInfo: Dict[int, int],
-        numTrees: int,
-        featureSubsetStrategy: str,
-        impurity: str,
-        maxDepth: int,
-        maxBins: int,
-        seed: Optional[int],
-    ) -> RandomForestModel:
+        data                   ,
+        algo     ,
+        numClasses     ,
+        categoricalFeaturesInfo                ,
+        numTrees     ,
+        featureSubsetStrategy     ,
+        impurity     ,
+        maxDepth     ,
+        maxBins     ,
+        seed               ,
+    )                     :
         first = data.first()
         assert isinstance(first, LabeledPoint), "the data should be RDD of LabeledPoint"
         if featureSubsetStrategy not in cls.supportedFeatureSubsetStrategies:
@@ -436,16 +436,16 @@ class RandomForest:
     @classmethod
     def trainClassifier(
         cls,
-        data: RDD[LabeledPoint],
-        numClasses: int,
-        categoricalFeaturesInfo: Dict[int, int],
-        numTrees: int,
-        featureSubsetStrategy: str = "auto",
-        impurity: str = "gini",
-        maxDepth: int = 4,
-        maxBins: int = 32,
-        seed: Optional[int] = None,
-    ) -> RandomForestModel:
+        data                   ,
+        numClasses     ,
+        categoricalFeaturesInfo                ,
+        numTrees     ,
+        featureSubsetStrategy      = "auto",
+        impurity      = "gini",
+        maxDepth      = 4,
+        maxBins      = 32,
+        seed                = None,
+    )                     :
         """
         Train a random forest model for binary or multiclass
         classification.
@@ -552,15 +552,15 @@ class RandomForest:
     @classmethod
     def trainRegressor(
         cls,
-        data: RDD[LabeledPoint],
-        categoricalFeaturesInfo: Dict[int, int],
-        numTrees: int,
-        featureSubsetStrategy: str = "auto",
-        impurity: str = "variance",
-        maxDepth: int = 4,
-        maxBins: int = 32,
-        seed: Optional[int] = None,
-    ) -> RandomForestModel:
+        data                   ,
+        categoricalFeaturesInfo                ,
+        numTrees     ,
+        featureSubsetStrategy      = "auto",
+        impurity      = "variance",
+        maxDepth      = 4,
+        maxBins      = 32,
+        seed                = None,
+    )                     :
         """
         Train a random forest model for regression.
 
@@ -655,7 +655,7 @@ class GradientBoostedTreesModel(TreeEnsembleModel, JavaLoader["GradientBoostedTr
     """
 
     @classmethod
-    def _java_loader_class(cls) -> str:
+    def _java_loader_class(cls)       :
         return "org.apache.spark.mllib.tree.model.GradientBoostedTreesModel"
 
 
@@ -670,15 +670,15 @@ class GradientBoostedTrees:
     @classmethod
     def _train(
         cls,
-        data: RDD[LabeledPoint],
-        algo: str,
-        categoricalFeaturesInfo: Dict[int, int],
-        loss: str,
-        numIterations: int,
-        learningRate: float,
-        maxDepth: int,
-        maxBins: int,
-    ) -> GradientBoostedTreesModel:
+        data                   ,
+        algo     ,
+        categoricalFeaturesInfo                ,
+        loss     ,
+        numIterations     ,
+        learningRate       ,
+        maxDepth     ,
+        maxBins     ,
+    )                             :
         first = data.first()
         assert isinstance(first, LabeledPoint), "the data should be RDD of LabeledPoint"
         model = callMLlibFunc(
@@ -697,14 +697,14 @@ class GradientBoostedTrees:
     @classmethod
     def trainClassifier(
         cls,
-        data: RDD[LabeledPoint],
-        categoricalFeaturesInfo: Dict[int, int],
-        loss: str = "logLoss",
-        numIterations: int = 100,
-        learningRate: float = 0.1,
-        maxDepth: int = 3,
-        maxBins: int = 32,
-    ) -> GradientBoostedTreesModel:
+        data                   ,
+        categoricalFeaturesInfo                ,
+        loss      = "logLoss",
+        numIterations      = 100,
+        learningRate        = 0.1,
+        maxDepth      = 3,
+        maxBins      = 32,
+    )                             :
         """
         Train a gradient-boosted trees model for classification.
 
@@ -787,14 +787,14 @@ class GradientBoostedTrees:
     @classmethod
     def trainRegressor(
         cls,
-        data: RDD[LabeledPoint],
-        categoricalFeaturesInfo: Dict[int, int],
-        loss: str = "leastSquaresError",
-        numIterations: int = 100,
-        learningRate: float = 0.1,
-        maxDepth: int = 3,
-        maxBins: int = 32,
-    ) -> GradientBoostedTreesModel:
+        data                   ,
+        categoricalFeaturesInfo                ,
+        loss      = "leastSquaresError",
+        numIterations      = 100,
+        learningRate        = 0.1,
+        maxDepth      = 3,
+        maxBins      = 32,
+    )                             :
         """
         Train a gradient-boosted trees model for regression.
 
@@ -873,7 +873,7 @@ class GradientBoostedTrees:
         )
 
 
-def _test() -> None:
+def _test()        :
     import doctest
 
     globs = globals().copy()

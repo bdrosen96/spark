@@ -16,7 +16,7 @@
 #
 
 
-def require_minimum_pandas_version() -> None:
+def require_minimum_pandas_version()        :
     """Raise ImportError if minimum version of Pandas is not installed"""
     # TODO(HyukjinKwon): Relocate and deduplicate the version specification.
     minimum_pandas_version = "1.0.5"
@@ -41,7 +41,7 @@ def require_minimum_pandas_version() -> None:
         )
 
 
-def require_minimum_pyarrow_version() -> None:
+def require_minimum_pyarrow_version()        :
     """Raise ImportError if minimum version of pyarrow is not installed"""
     # TODO(HyukjinKwon): Relocate and deduplicate the version specification.
     minimum_pyarrow_version = "1.0.0"

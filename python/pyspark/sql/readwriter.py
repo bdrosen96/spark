@@ -40,9 +40,9 @@ TupleOrListOfString = Union[List[str], Tuple[str, ...]]
 class OptionUtils:
     def _set_opts(
         self,
-        schema: Optional[Union[StructType, str]] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> None:
+        schema                                   = None,
+        **options                         ,
+    )        :
         """
         Set named options (filter out those the value is None)
         """
@@ -62,16 +62,16 @@ class DataFrameReader(OptionUtils):
     .. versionadded:: 1.4
     """
 
-    def __init__(self, spark: "SparkSession"):
+    def __init__(self, spark                ):
         self._jreader = spark._jsparkSession.read()
         self._spark = spark
 
-    def _df(self, jdf: JavaObject) -> "DataFrame":
+    def _df(self, jdf            )               :
         from pyspark.sql.dataframe import DataFrame
 
         return DataFrame(jdf, self._spark)
 
-    def format(self, source: str) -> "DataFrameReader":
+    def format(self, source     )                     :
         """Specifies the input data source format.
 
         .. versionadded:: 1.4.0
@@ -91,7 +91,7 @@ class DataFrameReader(OptionUtils):
         self._jreader = self._jreader.format(source)
         return self
 
-    def schema(self, schema: Union[StructType, str]) -> "DataFrameReader":
+    def schema(self, schema                        )                     :
         """Specifies the input schema.
 
         Some data sources (e.g. JSON) can infer the input schema automatically from data.
@@ -121,13 +121,13 @@ class DataFrameReader(OptionUtils):
         return self
 
     @since(1.5)
-    def option(self, key: str, value: "OptionalPrimitiveType") -> "DataFrameReader":
+    def option(self, key     , value                         )                     :
         """Adds an input option for the underlying data source."""
         self._jreader = self._jreader.option(key, to_str(value))
         return self
 
     @since(1.4)
-    def options(self, **options: "OptionalPrimitiveType") -> "DataFrameReader":
+    def options(self, **options                         )                     :
         """Adds input options for the underlying data source."""
         for k in options:
             self._jreader = self._jreader.option(k, to_str(options[k]))
@@ -135,11 +135,11 @@ class DataFrameReader(OptionUtils):
 
     def load(
         self,
-        path: Optional[PathOrPaths] = None,
-        format: Optional[str] = None,
-        schema: Optional[Union[StructType, str]] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> "DataFrame":
+        path                        = None,
+        format                = None,
+        schema                                   = None,
+        **options                         ,
+    )               :
         """Loads data from a data source and returns it as a :class:`DataFrame`.
 
         .. versionadded:: 1.4.0
@@ -185,32 +185,32 @@ class DataFrameReader(OptionUtils):
 
     def json(
         self,
-        path: Union[str, List[str], RDD[str]],
-        schema: Optional[Union[StructType, str]] = None,
-        primitivesAsString: Optional[Union[bool, str]] = None,
-        prefersDecimal: Optional[Union[bool, str]] = None,
-        allowComments: Optional[Union[bool, str]] = None,
-        allowUnquotedFieldNames: Optional[Union[bool, str]] = None,
-        allowSingleQuotes: Optional[Union[bool, str]] = None,
-        allowNumericLeadingZero: Optional[Union[bool, str]] = None,
-        allowBackslashEscapingAnyCharacter: Optional[Union[bool, str]] = None,
-        mode: Optional[str] = None,
-        columnNameOfCorruptRecord: Optional[str] = None,
-        dateFormat: Optional[str] = None,
-        timestampFormat: Optional[str] = None,
-        multiLine: Optional[Union[bool, str]] = None,
-        allowUnquotedControlChars: Optional[Union[bool, str]] = None,
-        lineSep: Optional[str] = None,
-        samplingRatio: Optional[Union[float, str]] = None,
-        dropFieldIfAllNull: Optional[Union[bool, str]] = None,
-        encoding: Optional[str] = None,
-        locale: Optional[str] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-        modifiedBefore: Optional[Union[bool, str]] = None,
-        modifiedAfter: Optional[Union[bool, str]] = None,
-        allowNonNumericNumbers: Optional[Union[bool, str]] = None,
-    ) -> "DataFrame":
+        path                                 ,
+        schema                                   = None,
+        primitivesAsString                             = None,
+        prefersDecimal                             = None,
+        allowComments                             = None,
+        allowUnquotedFieldNames                             = None,
+        allowSingleQuotes                             = None,
+        allowNumericLeadingZero                             = None,
+        allowBackslashEscapingAnyCharacter                             = None,
+        mode                = None,
+        columnNameOfCorruptRecord                = None,
+        dateFormat                = None,
+        timestampFormat                = None,
+        multiLine                             = None,
+        allowUnquotedControlChars                             = None,
+        lineSep                = None,
+        samplingRatio                              = None,
+        dropFieldIfAllNull                             = None,
+        encoding                = None,
+        locale                = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+        modifiedBefore                             = None,
+        modifiedAfter                             = None,
+        allowNonNumericNumbers                             = None,
+    )               :
         """
         Loads JSON files and returns the results as a :class:`DataFrame`.
 
@@ -284,7 +284,7 @@ class DataFrameReader(OptionUtils):
             return self._df(self._jreader.json(self._spark._sc._jvm.PythonUtils.toSeq(path)))
         elif isinstance(path, RDD):
 
-            def func(iterator: Iterable) -> Iterable:
+            def func(iterator          )            :
                 for x in iterator:
                     if not isinstance(x, str):
                         x = str(x)
@@ -300,7 +300,7 @@ class DataFrameReader(OptionUtils):
         else:
             raise TypeError("path can be only string, list or RDD")
 
-    def table(self, tableName: str) -> "DataFrame":
+    def table(self, tableName     )               :
         """Returns the specified table as a :class:`DataFrame`.
 
         .. versionadded:: 1.4.0
@@ -319,7 +319,7 @@ class DataFrameReader(OptionUtils):
         """
         return self._df(self._jreader.table(tableName))
 
-    def parquet(self, *paths: str, **options: "OptionalPrimitiveType") -> "DataFrame":
+    def parquet(self, *paths     , **options                         )               :
         """
         Loads Parquet files, returning the result as a :class:`DataFrame`.
 
@@ -365,14 +365,14 @@ class DataFrameReader(OptionUtils):
 
     def text(
         self,
-        paths: PathOrPaths,
-        wholetext: bool = False,
-        lineSep: Optional[str] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-        modifiedBefore: Optional[Union[bool, str]] = None,
-        modifiedAfter: Optional[Union[bool, str]] = None,
-    ) -> "DataFrame":
+        paths             ,
+        wholetext       = False,
+        lineSep                = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+        modifiedBefore                             = None,
+        modifiedAfter                             = None,
+    )               :
         """
         Loads text files and returns a :class:`DataFrame` whose schema starts with a
         string column named "value", and followed by partitioned columns if there
@@ -422,41 +422,41 @@ class DataFrameReader(OptionUtils):
 
     def csv(
         self,
-        path: PathOrPaths,
-        schema: Optional[Union[StructType, str]] = None,
-        sep: Optional[str] = None,
-        encoding: Optional[str] = None,
-        quote: Optional[str] = None,
-        escape: Optional[str] = None,
-        comment: Optional[str] = None,
-        header: Optional[Union[bool, str]] = None,
-        inferSchema: Optional[Union[bool, str]] = None,
-        ignoreLeadingWhiteSpace: Optional[Union[bool, str]] = None,
-        ignoreTrailingWhiteSpace: Optional[Union[bool, str]] = None,
-        nullValue: Optional[str] = None,
-        nanValue: Optional[str] = None,
-        positiveInf: Optional[str] = None,
-        negativeInf: Optional[str] = None,
-        dateFormat: Optional[str] = None,
-        timestampFormat: Optional[str] = None,
-        maxColumns: Optional[Union[int, str]] = None,
-        maxCharsPerColumn: Optional[Union[int, str]] = None,
-        maxMalformedLogPerPartition: Optional[Union[int, str]] = None,
-        mode: Optional[str] = None,
-        columnNameOfCorruptRecord: Optional[str] = None,
-        multiLine: Optional[Union[bool, str]] = None,
-        charToEscapeQuoteEscaping: Optional[str] = None,
-        samplingRatio: Optional[Union[float, str]] = None,
-        enforceSchema: Optional[Union[bool, str]] = None,
-        emptyValue: Optional[str] = None,
-        locale: Optional[str] = None,
-        lineSep: Optional[str] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-        modifiedBefore: Optional[Union[bool, str]] = None,
-        modifiedAfter: Optional[Union[bool, str]] = None,
-        unescapedQuoteHandling: Optional[str] = None,
-    ) -> "DataFrame":
+        path             ,
+        schema                                   = None,
+        sep                = None,
+        encoding                = None,
+        quote                = None,
+        escape                = None,
+        comment                = None,
+        header                             = None,
+        inferSchema                             = None,
+        ignoreLeadingWhiteSpace                             = None,
+        ignoreTrailingWhiteSpace                             = None,
+        nullValue                = None,
+        nanValue                = None,
+        positiveInf                = None,
+        negativeInf                = None,
+        dateFormat                = None,
+        timestampFormat                = None,
+        maxColumns                            = None,
+        maxCharsPerColumn                            = None,
+        maxMalformedLogPerPartition                            = None,
+        mode                = None,
+        columnNameOfCorruptRecord                = None,
+        multiLine                             = None,
+        charToEscapeQuoteEscaping                = None,
+        samplingRatio                              = None,
+        enforceSchema                             = None,
+        emptyValue                = None,
+        locale                = None,
+        lineSep                = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+        modifiedBefore                             = None,
+        modifiedAfter                             = None,
+        unescapedQuoteHandling                = None,
+    )               :
         r"""Loads a CSV file and returns the result as a  :class:`DataFrame`.
 
         This function will go through the input once to determine the input schema if
@@ -559,13 +559,13 @@ class DataFrameReader(OptionUtils):
 
     def orc(
         self,
-        path: PathOrPaths,
-        mergeSchema: Optional[bool] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-        modifiedBefore: Optional[Union[bool, str]] = None,
-        modifiedAfter: Optional[Union[bool, str]] = None,
-    ) -> "DataFrame":
+        path             ,
+        mergeSchema                 = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+        modifiedBefore                             = None,
+        modifiedAfter                             = None,
+    )               :
         """Loads ORC files, returning the result as a :class:`DataFrame`.
 
         .. versionadded:: 1.5.0
@@ -602,46 +602,46 @@ class DataFrameReader(OptionUtils):
 
     @overload
     def jdbc(
-        self, url: str, table: str, *, properties: Optional[Dict[str, str]] = None
-    ) -> "DataFrame":
+        self, url     , table     , *, properties                           = None
+    )               :
         ...
 
     @overload
     def jdbc(
         self,
-        url: str,
-        table: str,
-        column: str,
-        lowerBound: Union[int, str],
-        upperBound: Union[int, str],
-        numPartitions: int,
+        url     ,
+        table     ,
+        column     ,
+        lowerBound                 ,
+        upperBound                 ,
+        numPartitions     ,
         *,
-        properties: Optional[Dict[str, str]] = None,
-    ) -> "DataFrame":
+        properties                           = None,
+    )               :
         ...
 
     @overload
     def jdbc(
         self,
-        url: str,
-        table: str,
+        url     ,
+        table     ,
         *,
-        predicates: List[str],
-        properties: Optional[Dict[str, str]] = None,
-    ) -> "DataFrame":
+        predicates           ,
+        properties                           = None,
+    )               :
         ...
 
     def jdbc(
         self,
-        url: str,
-        table: str,
-        column: Optional[str] = None,
-        lowerBound: Optional[Union[int, str]] = None,
-        upperBound: Optional[Union[int, str]] = None,
-        numPartitions: Optional[int] = None,
-        predicates: Optional[List[str]] = None,
-        properties: Optional[Dict[str, str]] = None,
-    ) -> "DataFrame":
+        url     ,
+        table     ,
+        column                = None,
+        lowerBound                            = None,
+        upperBound                            = None,
+        numPartitions                = None,
+        predicates                      = None,
+        properties                           = None,
+    )               :
         """
         Construct a :class:`DataFrame` representing the database table named ``table``
         accessible via JDBC URL ``url`` and connection ``properties``.
@@ -725,17 +725,17 @@ class DataFrameWriter(OptionUtils):
     .. versionadded:: 1.4
     """
 
-    def __init__(self, df: "DataFrame"):
+    def __init__(self, df             ):
         self._df = df
         self._spark = df.sparkSession
         self._jwrite = df._jdf.write()
 
-    def _sq(self, jsq: JavaObject) -> "StreamingQuery":
+    def _sq(self, jsq            )                    :
         from pyspark.sql.streaming import StreamingQuery
 
         return StreamingQuery(jsq)
 
-    def mode(self, saveMode: Optional[str]) -> "DataFrameWriter":
+    def mode(self, saveMode               )                     :
         """Specifies the behavior when data or table already exists.
 
         Options include:
@@ -757,7 +757,7 @@ class DataFrameWriter(OptionUtils):
             self._jwrite = self._jwrite.mode(saveMode)
         return self
 
-    def format(self, source: str) -> "DataFrameWriter":
+    def format(self, source     )                     :
         """Specifies the underlying output data source.
 
         .. versionadded:: 1.4.0
@@ -775,27 +775,27 @@ class DataFrameWriter(OptionUtils):
         return self
 
     @since(1.5)
-    def option(self, key: str, value: "OptionalPrimitiveType") -> "DataFrameWriter":
+    def option(self, key     , value                         )                     :
         """Adds an output option for the underlying data source."""
         self._jwrite = self._jwrite.option(key, to_str(value))
         return self
 
     @since(1.4)
-    def options(self, **options: "OptionalPrimitiveType") -> "DataFrameWriter":
+    def options(self, **options                         )                     :
         """Adds output options for the underlying data source."""
         for k in options:
             self._jwrite = self._jwrite.option(k, to_str(options[k]))
         return self
 
     @overload
-    def partitionBy(self, *cols: str) -> "DataFrameWriter":
+    def partitionBy(self, *cols     )                     :
         ...
 
     @overload
-    def partitionBy(self, *cols: List[str]) -> "DataFrameWriter":
+    def partitionBy(self, *cols           )                     :
         ...
 
-    def partitionBy(self, *cols: Union[str, List[str]]) -> "DataFrameWriter":
+    def partitionBy(self, *cols                       )                     :
         """Partitions the output by the given columns on the file system.
 
         If specified, the output is laid out on the file system similar
@@ -820,16 +820,16 @@ class DataFrameWriter(OptionUtils):
         return self
 
     @overload
-    def bucketBy(self, numBuckets: int, col: str, *cols: str) -> "DataFrameWriter":
+    def bucketBy(self, numBuckets     , col     , *cols     )                     :
         ...
 
     @overload
-    def bucketBy(self, numBuckets: int, col: TupleOrListOfString) -> "DataFrameWriter":
+    def bucketBy(self, numBuckets     , col                     )                     :
         ...
 
     def bucketBy(
-        self, numBuckets: int, col: Union[str, TupleOrListOfString], *cols: Optional[str]
-    ) -> "DataFrameWriter":
+        self, numBuckets     , col                                 , *cols               
+    )                     :
         """Buckets the output by the given columns. If specified,
         the output is laid out on the file system similar to Hive's bucketing scheme,
         but with a different bucket hash function and is not compatible with Hive's bucketing.
@@ -875,16 +875,16 @@ class DataFrameWriter(OptionUtils):
         return self
 
     @overload
-    def sortBy(self, col: str, *cols: str) -> "DataFrameWriter":
+    def sortBy(self, col     , *cols     )                     :
         ...
 
     @overload
-    def sortBy(self, col: TupleOrListOfString) -> "DataFrameWriter":
+    def sortBy(self, col                     )                     :
         ...
 
     def sortBy(
-        self, col: Union[str, TupleOrListOfString], *cols: Optional[str]
-    ) -> "DataFrameWriter":
+        self, col                                 , *cols               
+    )                     :
         """Sorts the output in each bucket by the given columns on the file system.
 
         .. versionadded:: 2.3.0
@@ -920,12 +920,12 @@ class DataFrameWriter(OptionUtils):
 
     def save(
         self,
-        path: Optional[str] = None,
-        format: Optional[str] = None,
-        mode: Optional[str] = None,
-        partitionBy: Optional[Union[str, List[str]]] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> None:
+        path                = None,
+        format                = None,
+        mode                = None,
+        partitionBy                                  = None,
+        **options                         ,
+    )        :
         """Saves the contents of the :class:`DataFrame` to a data source.
 
         The data source is specified by the ``format`` and a set of ``options``.
@@ -968,7 +968,7 @@ class DataFrameWriter(OptionUtils):
             self._jwrite.save(path)
 
     @since(1.4)
-    def insertInto(self, tableName: str, overwrite: Optional[bool] = None) -> None:
+    def insertInto(self, tableName     , overwrite                 = None)        :
         """Inserts the content of the :class:`DataFrame` to the specified table.
 
         It requires that the schema of the :class:`DataFrame` is the same as the
@@ -991,12 +991,12 @@ class DataFrameWriter(OptionUtils):
 
     def saveAsTable(
         self,
-        name: str,
-        format: Optional[str] = None,
-        mode: Optional[str] = None,
-        partitionBy: Optional[Union[str, List[str]]] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> None:
+        name     ,
+        format                = None,
+        mode                = None,
+        partitionBy                                  = None,
+        **options                         ,
+    )        :
         """Saves the content of the :class:`DataFrame` as the specified table.
 
         In the case the table already exists, behavior of this function depends on the
@@ -1042,15 +1042,15 @@ class DataFrameWriter(OptionUtils):
 
     def json(
         self,
-        path: str,
-        mode: Optional[str] = None,
-        compression: Optional[str] = None,
-        dateFormat: Optional[str] = None,
-        timestampFormat: Optional[str] = None,
-        lineSep: Optional[str] = None,
-        encoding: Optional[str] = None,
-        ignoreNullFields: Optional[Union[bool, str]] = None,
-    ) -> None:
+        path     ,
+        mode                = None,
+        compression                = None,
+        dateFormat                = None,
+        timestampFormat                = None,
+        lineSep                = None,
+        encoding                = None,
+        ignoreNullFields                             = None,
+    )        :
         """Saves the content of the :class:`DataFrame` in JSON format
         (`JSON Lines text format or newline-delimited JSON <http://jsonlines.org/>`_) at the
         specified path.
@@ -1096,11 +1096,11 @@ class DataFrameWriter(OptionUtils):
 
     def parquet(
         self,
-        path: str,
-        mode: Optional[str] = None,
-        partitionBy: Optional[Union[str, List[str]]] = None,
-        compression: Optional[str] = None,
-    ) -> None:
+        path     ,
+        mode                = None,
+        partitionBy                                  = None,
+        compression                = None,
+    )        :
         """Saves the content of the :class:`DataFrame` in Parquet format at the specified path.
 
         .. versionadded:: 1.4.0
@@ -1140,8 +1140,8 @@ class DataFrameWriter(OptionUtils):
         self._jwrite.parquet(path)
 
     def text(
-        self, path: str, compression: Optional[str] = None, lineSep: Optional[str] = None
-    ) -> None:
+        self, path     , compression                = None, lineSep                = None
+    )        :
         """Saves the content of the DataFrame in a text file at the specified path.
         The text files will be encoded as UTF-8.
 
@@ -1169,25 +1169,25 @@ class DataFrameWriter(OptionUtils):
 
     def csv(
         self,
-        path: str,
-        mode: Optional[str] = None,
-        compression: Optional[str] = None,
-        sep: Optional[str] = None,
-        quote: Optional[str] = None,
-        escape: Optional[str] = None,
-        header: Optional[Union[bool, str]] = None,
-        nullValue: Optional[str] = None,
-        escapeQuotes: Optional[Union[bool, str]] = None,
-        quoteAll: Optional[Union[bool, str]] = None,
-        dateFormat: Optional[str] = None,
-        timestampFormat: Optional[str] = None,
-        ignoreLeadingWhiteSpace: Optional[Union[bool, str]] = None,
-        ignoreTrailingWhiteSpace: Optional[Union[bool, str]] = None,
-        charToEscapeQuoteEscaping: Optional[str] = None,
-        encoding: Optional[str] = None,
-        emptyValue: Optional[str] = None,
-        lineSep: Optional[str] = None,
-    ) -> None:
+        path     ,
+        mode                = None,
+        compression                = None,
+        sep                = None,
+        quote                = None,
+        escape                = None,
+        header                             = None,
+        nullValue                = None,
+        escapeQuotes                             = None,
+        quoteAll                             = None,
+        dateFormat                = None,
+        timestampFormat                = None,
+        ignoreLeadingWhiteSpace                             = None,
+        ignoreTrailingWhiteSpace                             = None,
+        charToEscapeQuoteEscaping                = None,
+        encoding                = None,
+        emptyValue                = None,
+        lineSep                = None,
+    )        :
         r"""Saves the content of the :class:`DataFrame` in CSV format at the specified path.
 
         .. versionadded:: 2.0.0
@@ -1241,11 +1241,11 @@ class DataFrameWriter(OptionUtils):
 
     def orc(
         self,
-        path: str,
-        mode: Optional[str] = None,
-        partitionBy: Optional[Union[str, List[str]]] = None,
-        compression: Optional[str] = None,
-    ) -> None:
+        path     ,
+        mode                = None,
+        partitionBy                                  = None,
+        compression                = None,
+    )        :
         """Saves the content of the :class:`DataFrame` in ORC format at the specified path.
 
         .. versionadded:: 1.5.0
@@ -1287,11 +1287,11 @@ class DataFrameWriter(OptionUtils):
 
     def jdbc(
         self,
-        url: str,
-        table: str,
-        mode: Optional[str] = None,
-        properties: Optional[Dict[str, str]] = None,
-    ) -> None:
+        url     ,
+        table     ,
+        mode                = None,
+        properties                           = None,
+    )        :
         """Saves the content of the :class:`DataFrame` to an external database table via JDBC.
 
         .. versionadded:: 1.4.0
@@ -1348,13 +1348,13 @@ class DataFrameWriterV2:
     .. versionadded:: 3.1.0
     """
 
-    def __init__(self, df: "DataFrame", table: str):
+    def __init__(self, df             , table     ):
         self._df = df
         self._spark = df.sparkSession
         self._jwriter = df._jdf.writeTo(table)
 
     @since(3.1)
-    def using(self, provider: str) -> "DataFrameWriterV2":
+    def using(self, provider     )                       :
         """
         Specifies a provider for the underlying output data source.
         Spark's default catalog supports "parquet", "json", etc.
@@ -1363,7 +1363,7 @@ class DataFrameWriterV2:
         return self
 
     @since(3.1)
-    def option(self, key: str, value: "OptionalPrimitiveType") -> "DataFrameWriterV2":
+    def option(self, key     , value                         )                       :
         """
         Add a write option.
         """
@@ -1371,7 +1371,7 @@ class DataFrameWriterV2:
         return self
 
     @since(3.1)
-    def options(self, **options: "OptionalPrimitiveType") -> "DataFrameWriterV2":
+    def options(self, **options                         )                       :
         """
         Add write options.
         """
@@ -1380,7 +1380,7 @@ class DataFrameWriterV2:
         return self
 
     @since(3.1)
-    def tableProperty(self, property: str, value: str) -> "DataFrameWriterV2":
+    def tableProperty(self, property     , value     )                       :
         """
         Add table property.
         """
@@ -1388,7 +1388,7 @@ class DataFrameWriterV2:
         return self
 
     @since(3.1)
-    def partitionedBy(self, col: Column, *cols: Column) -> "DataFrameWriterV2":
+    def partitionedBy(self, col        , *cols        )                       :
         """
         Partition the output table created by `create`, `createOrReplace`, or `replace` using
         the given columns or transforms.
@@ -1421,7 +1421,7 @@ class DataFrameWriterV2:
         return self
 
     @since(3.1)
-    def create(self) -> None:
+    def create(self)        :
         """
         Create a new table from the contents of the data frame.
 
@@ -1431,7 +1431,7 @@ class DataFrameWriterV2:
         self._jwriter.create()
 
     @since(3.1)
-    def replace(self) -> None:
+    def replace(self)        :
         """
         Replace an existing table with the contents of the data frame.
 
@@ -1441,7 +1441,7 @@ class DataFrameWriterV2:
         self._jwriter.replace()
 
     @since(3.1)
-    def createOrReplace(self) -> None:
+    def createOrReplace(self)        :
         """
         Create a new table or replace an existing table with the contents of the data frame.
 
@@ -1453,14 +1453,14 @@ class DataFrameWriterV2:
         self._jwriter.createOrReplace()
 
     @since(3.1)
-    def append(self) -> None:
+    def append(self)        :
         """
         Append the contents of the data frame to the output table.
         """
         self._jwriter.append()
 
     @since(3.1)
-    def overwrite(self, condition: Column) -> None:
+    def overwrite(self, condition        )        :
         """
         Overwrite rows matching the given filter condition with the contents of the data frame in
         the output table.
@@ -1468,7 +1468,7 @@ class DataFrameWriterV2:
         self._jwriter.overwrite(condition)
 
     @since(3.1)
-    def overwritePartitions(self) -> None:
+    def overwritePartitions(self)        :
         """
         Overwrite all partition for which the data frame contains at least one row with the contents
         of the data frame in the output table.
@@ -1479,7 +1479,7 @@ class DataFrameWriterV2:
         self._jwriter.overwritePartitions()
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import os
     import tempfile

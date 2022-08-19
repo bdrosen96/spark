@@ -30,17 +30,17 @@ class RuntimeConfig:
     Options set here are automatically propagated to the Hadoop configuration during I/O.
     """
 
-    def __init__(self, jconf: JavaObject) -> None:
+    def __init__(self, jconf            )        :
         """Create a new RuntimeConfig that wraps the underlying JVM object."""
         self._jconf = jconf
 
     @since(2.0)
-    def set(self, key: str, value: str) -> None:
+    def set(self, key     , value     )        :
         """Sets the given Spark runtime configuration property."""
         self._jconf.set(key, value)
 
     @since(2.0)
-    def get(self, key: str, default: Union[Optional[str], _NoValueType] = _NoValue) -> str:
+    def get(self, key     , default                                     = _NoValue)       :
         """Returns the value of Spark runtime configuration property for the given key,
         assuming it is set.
         """
@@ -53,11 +53,11 @@ class RuntimeConfig:
             return self._jconf.get(key, default)
 
     @since(2.0)
-    def unset(self, key: str) -> None:
+    def unset(self, key     )        :
         """Resets the configuration property for the given key."""
         self._jconf.unset(key)
 
-    def _checkType(self, obj: Any, identifier: str) -> None:
+    def _checkType(self, obj     , identifier     )        :
         """Assert that an object is of type str."""
         if not isinstance(obj, str):
             raise TypeError(
@@ -65,14 +65,14 @@ class RuntimeConfig:
             )
 
     @since(2.4)
-    def isModifiable(self, key: str) -> bool:
+    def isModifiable(self, key     )        :
         """Indicates whether the configuration property with the given key
         is modifiable in the current session.
         """
         return self._jconf.isModifiable(key)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     from pyspark.sql.session import SparkSession

@@ -36,7 +36,7 @@ from pyspark.sql.types import (
 )
 
 
-def repeat(col: Column, n: Union[int, Column]) -> Column:
+def repeat(col        , n                    )          :
     """
     Repeats a string column n times, and returns it as a new string column.
     """
@@ -45,7 +45,7 @@ def repeat(col: Column, n: Union[int, Column]) -> Column:
     return _call_udf(sc, "repeat", _to_java_column(col), n)
 
 
-def date_part(field: Union[str, Column], source: Column) -> Column:
+def date_part(field                    , source        )          :
     """
     Extracts a part of the date/timestamp or interval source.
     """
@@ -56,7 +56,7 @@ def date_part(field: Union[str, Column], source: Column) -> Column:
     return _call_udf(sc, "date_part", field, _to_java_column(source))
 
 
-def lit(literal: Any) -> Column:
+def lit(literal     )          :
     """
     Creates a Column of literal value.
     """

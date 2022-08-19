@@ -55,7 +55,7 @@ class PandasConversionMixin:
     can use this class.
     """
 
-    def toPandas(self) -> "PandasDataFrameLike":
+    def toPandas(self)                         :
         """
         Returns the contents of this :class:`DataFrame` as Pandas ``pandas.DataFrame``.
 
@@ -205,7 +205,7 @@ class PandasConversionMixin:
         pdf = pd.DataFrame.from_records(self.collect(), columns=self.columns)
         column_counter = Counter(self.columns)
 
-        corrected_dtypes: List[Optional[Type]] = [None] * len(self.schema)
+        corrected_dtypes                       = [None] * len(self.schema)
         for index, field in enumerate(self.schema):
             # We use `iloc` to access columns with duplicate column names.
             if column_counter[field.name] > 1:
@@ -274,7 +274,7 @@ class PandasConversionMixin:
             return df
 
     @staticmethod
-    def _to_corrected_pandas_type(dt: DataType) -> Optional[Type]:
+    def _to_corrected_pandas_type(dt          )                  :
         """
         When converting Spark SQL records to Pandas `pandas.DataFrame`, the inferred data type
         may be wrong. This method gets the corrected data type for Pandas if that type may be
@@ -305,7 +305,7 @@ class PandasConversionMixin:
         else:
             return None
 
-    def _collect_as_arrow(self, split_batches: bool = False) -> List["pa.RecordBatch"]:
+    def _collect_as_arrow(self, split_batches       = False)                          :
         """
         Returns all records as a list of ArrowRecordBatches, pyarrow must be installed
         and available on driver and worker Python environments.
@@ -371,30 +371,30 @@ class SparkConversionMixin:
     can use this class.
     """
 
-    _jsparkSession: "JavaObject"
+    #_jsparkSession: "JavaObject"
 
     @overload
     def createDataFrame(
-        self, data: "PandasDataFrameLike", samplingRatio: Optional[float] = ...
-    ) -> "DataFrame":
+        self, data                       , samplingRatio                  = ...
+    )               :
         ...
 
     @overload
     def createDataFrame(
         self,
-        data: "PandasDataFrameLike",
-        schema: Union[StructType, str],
-        verifySchema: bool = ...,
-    ) -> "DataFrame":
+        data                       ,
+        schema                        ,
+        verifySchema       = ...,
+    )               :
         ...
 
     def createDataFrame(  # type: ignore[misc]
         self,
-        data: "PandasDataFrameLike",
-        schema: Optional[Union[StructType, List[str]]] = None,
-        samplingRatio: Optional[float] = None,
-        verifySchema: bool = True,
-    ) -> "DataFrame":
+        data                       ,
+        schema                                         = None,
+        samplingRatio                  = None,
+        verifySchema       = True,
+    )               :
         from pyspark.sql import SparkSession
 
         assert isinstance(self, SparkSession)
@@ -437,8 +437,8 @@ class SparkConversionMixin:
         return self._create_dataframe(converted_data, schema, samplingRatio, verifySchema)
 
     def _convert_from_pandas(
-        self, pdf: "PandasDataFrameLike", schema: Union[StructType, str, List[str]], timezone: str
-    ) -> List:
+        self, pdf                       , schema                                   , timezone     
+    )        :
         """
         Convert a pandas.DataFrame to list of records that can be used to make a DataFrame
 
@@ -508,7 +508,7 @@ class SparkConversionMixin:
         # Convert list of numpy records to python lists
         return [r.tolist() for r in np_records]
 
-    def _get_numpy_record_dtype(self, rec: "np.recarray") -> Optional["np.dtype"]:
+    def _get_numpy_record_dtype(self, rec               )                        :
         """
         Used when converting a pandas.DataFrame to Spark using to_records(), this will correct
         the dtypes of fields in a record so they can be properly loaded into Spark.
@@ -541,8 +541,8 @@ class SparkConversionMixin:
         return np.dtype(record_type_list) if has_rec_fix else None
 
     def _create_from_pandas_with_arrow(
-        self, pdf: "PandasDataFrameLike", schema: Union[StructType, List[str]], timezone: str
-    ) -> "DataFrame":
+        self, pdf                       , schema                              , timezone     
+    )               :
         """
         Create a DataFrame from a given pandas.DataFrame by slicing it into partitions, converting
         to Arrow data, then sending to the JVM to parallelize. If a schema is passed in, the
@@ -628,7 +628,7 @@ class SparkConversionMixin:
         return df
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import SparkSession
     import pyspark.sql.pandas.conversion

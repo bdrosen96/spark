@@ -47,10 +47,10 @@ class BooleanOps(DataTypeOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "bools"
 
-    def add(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def add(self, left              , right     )                 :
         _sanitize_list_like(right)
         if not is_valid_operand_for_numeric_arithmetic(right):
             raise TypeError(
@@ -70,7 +70,7 @@ class BooleanOps(DataTypeOps):
                 left = transform_boolean_operand_to_numeric(left, spark_type=right.spark.data_type)
                 return left + right
 
-    def sub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def sub(self, left              , right     )                 :
         _sanitize_list_like(right)
         if not is_valid_operand_for_numeric_arithmetic(right, allow_bool=False):
             raise TypeError(
@@ -84,7 +84,7 @@ class BooleanOps(DataTypeOps):
             left = transform_boolean_operand_to_numeric(left, spark_type=right.spark.data_type)
             return left - right
 
-    def mul(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def mul(self, left              , right     )                 :
         _sanitize_list_like(right)
         if not is_valid_operand_for_numeric_arithmetic(right):
             raise TypeError(
@@ -103,7 +103,7 @@ class BooleanOps(DataTypeOps):
                 left = transform_boolean_operand_to_numeric(left, spark_type=right.spark.data_type)
                 return left * right
 
-    def truediv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def truediv(self, left              , right     )                 :
         _sanitize_list_like(right)
         if not is_valid_operand_for_numeric_arithmetic(right, allow_bool=False):
             raise TypeError(
@@ -117,7 +117,7 @@ class BooleanOps(DataTypeOps):
             left = transform_boolean_operand_to_numeric(left, spark_type=right.spark.data_type)
             return left / right
 
-    def floordiv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def floordiv(self, left              , right     )                 :
         _sanitize_list_like(right)
         if not is_valid_operand_for_numeric_arithmetic(right, allow_bool=False):
             raise TypeError(
@@ -131,7 +131,7 @@ class BooleanOps(DataTypeOps):
             left = transform_boolean_operand_to_numeric(left, spark_type=right.spark.data_type)
             return left // right
 
-    def mod(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def mod(self, left              , right     )                 :
         _sanitize_list_like(right)
         if not is_valid_operand_for_numeric_arithmetic(right, allow_bool=False):
             raise TypeError(
@@ -145,7 +145,7 @@ class BooleanOps(DataTypeOps):
             left = transform_boolean_operand_to_numeric(left, spark_type=right.spark.data_type)
             return left % right
 
-    def pow(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def pow(self, left              , right     )                 :
         _sanitize_list_like(right)
         if not is_valid_operand_for_numeric_arithmetic(right, allow_bool=False):
             raise TypeError(
@@ -159,7 +159,7 @@ class BooleanOps(DataTypeOps):
             left = transform_boolean_operand_to_numeric(left, spark_type=right.spark.data_type)
             return left ** right
 
-    def radd(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def radd(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, bool):
             return left.__or__(right)
@@ -171,7 +171,7 @@ class BooleanOps(DataTypeOps):
                 "Addition can not be applied to %s and the given type." % self.pretty_name
             )
 
-    def rsub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rsub(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, numbers.Number) and not isinstance(right, bool):
             left = transform_boolean_operand_to_numeric(left, spark_type=as_spark_type(type(right)))
@@ -181,7 +181,7 @@ class BooleanOps(DataTypeOps):
                 "Subtraction can not be applied to %s and the given type." % self.pretty_name
             )
 
-    def rmul(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rmul(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, bool):
             return left.__and__(right)
@@ -193,7 +193,7 @@ class BooleanOps(DataTypeOps):
                 "Multiplication can not be applied to %s and the given type." % self.pretty_name
             )
 
-    def rtruediv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rtruediv(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, numbers.Number) and not isinstance(right, bool):
             left = transform_boolean_operand_to_numeric(left, spark_type=as_spark_type(type(right)))
@@ -203,7 +203,7 @@ class BooleanOps(DataTypeOps):
                 "True division can not be applied to %s and the given type." % self.pretty_name
             )
 
-    def rfloordiv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rfloordiv(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, numbers.Number) and not isinstance(right, bool):
             left = transform_boolean_operand_to_numeric(left, spark_type=as_spark_type(type(right)))
@@ -213,7 +213,7 @@ class BooleanOps(DataTypeOps):
                 "Floor division can not be applied to %s and the given type." % self.pretty_name
             )
 
-    def rpow(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rpow(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, numbers.Number) and not isinstance(right, bool):
             left = transform_boolean_operand_to_numeric(left, spark_type=as_spark_type(type(right)))
@@ -223,7 +223,7 @@ class BooleanOps(DataTypeOps):
                 "Exponentiation can not be applied to %s and the given type." % self.pretty_name
             )
 
-    def rmod(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rmod(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, numbers.Number) and not isinstance(right, bool):
             left = transform_boolean_operand_to_numeric(left, spark_type=as_spark_type(type(right)))
@@ -233,13 +233,13 @@ class BooleanOps(DataTypeOps):
                 "Modulo can not be applied to %s and the given type." % self.pretty_name
             )
 
-    def __and__(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def __and__(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, IndexOpsMixin) and isinstance(right.dtype, extension_dtypes):
             return right.__and__(left)
         else:
 
-            def and_func(left: Column, right: Any) -> Column:
+            def and_func(left        , right     )          :
                 if not isinstance(right, Column):
                     if pd.isna(right):
                         right = SF.lit(None)
@@ -250,13 +250,13 @@ class BooleanOps(DataTypeOps):
 
             return column_op(and_func)(left, right)
 
-    def xor(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def xor(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, IndexOpsMixin) and isinstance(right.dtype, extension_dtypes):
             return right ^ left
         elif _is_valid_for_logical_operator(right):
 
-            def xor_func(left: Column, right: Any) -> Column:
+            def xor_func(left        , right     )          :
                 if not isinstance(right, Column):
                     if pd.isna(right):
                         right = SF.lit(None)
@@ -269,13 +269,13 @@ class BooleanOps(DataTypeOps):
         else:
             raise TypeError("XOR can not be applied to given types.")
 
-    def __or__(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def __or__(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, IndexOpsMixin) and isinstance(right.dtype, extension_dtypes):
             return right.__or__(left)
         else:
 
-            def or_func(left: Column, right: Any) -> Column:
+            def or_func(left        , right     )          :
                 if not isinstance(right, Column) and pd.isna(right):
                     return SF.lit(False)
                 else:
@@ -284,7 +284,7 @@ class BooleanOps(DataTypeOps):
 
             return column_op(or_func)(left, right)
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, spark_type = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype):
@@ -312,29 +312,29 @@ class BooleanOps(DataTypeOps):
         else:
             return _as_other_type(index_ops, dtype, spark_type)
 
-    def neg(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def neg(self, operand              )                :
         return ~operand
 
-    def abs(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def abs(self, operand              )                :
         return operand
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         _sanitize_list_like(right)
         return column_op(Column.__lt__)(left, right)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         _sanitize_list_like(right)
         return column_op(Column.__le__)(left, right)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         _sanitize_list_like(right)
         return column_op(Column.__ge__)(left, right)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         _sanitize_list_like(right)
         return column_op(Column.__gt__)(left, right)
 
-    def invert(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def invert(self, operand              )                :
         return operand._with_new_scol(~operand.spark.column, field=operand._internal.data_fields[0])
 
 
@@ -345,13 +345,13 @@ class BooleanExtensionOps(BooleanOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "booleans"
 
-    def __and__(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def __and__(self, left              , right     )                 :
         _sanitize_list_like(right)
 
-        def and_func(left: Column, right: Any) -> Column:
+        def and_func(left        , right     )          :
             if not isinstance(right, Column):
                 if pd.isna(right):
                     right = SF.lit(None)
@@ -361,10 +361,10 @@ class BooleanExtensionOps(BooleanOps):
 
         return column_op(and_func)(left, right)
 
-    def __or__(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def __or__(self, left              , right     )                 :
         _sanitize_list_like(right)
 
-        def or_func(left: Column, right: Any) -> Column:
+        def or_func(left        , right     )          :
             if not isinstance(right, Column):
                 if pd.isna(right):
                     right = SF.lit(None)
@@ -374,12 +374,12 @@ class BooleanExtensionOps(BooleanOps):
 
         return column_op(or_func)(left, right)
 
-    def xor(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def xor(self, left              , right     )                 :
         _sanitize_list_like(right)
 
         if _is_boolean_type(right):
 
-            def xor_func(left: Column, right: Any) -> Column:
+            def xor_func(left        , right     )          :
                 if not isinstance(right, Column):
                     if pd.isna(right):
                         right = SF.lit(None)
@@ -391,15 +391,15 @@ class BooleanExtensionOps(BooleanOps):
         else:
             raise TypeError("XOR can not be applied to given types.")
 
-    def restore(self, col: pd.Series) -> pd.Series:
+    def restore(self, col           )             :
         """Restore column when to_pandas."""
         return col.astype(self.dtype)
 
-    def neg(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def neg(self, operand              )                :
         raise TypeError("Unary - can not be applied to %s." % self.pretty_name)
 
-    def invert(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def invert(self, operand              )                :
         raise TypeError("Unary ~ can not be applied to %s." % self.pretty_name)
 
-    def abs(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def abs(self, operand              )                :
         raise TypeError("abs() can not be applied to %s." % self.pretty_name)

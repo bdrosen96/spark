@@ -58,12 +58,12 @@ class LinearClassificationModel(LinearModel):
     model. The categories are represented by int values: 0, 1, 2, etc.
     """
 
-    def __init__(self, weights: Vector, intercept: float) -> None:
+    def __init__(self, weights        , intercept       )        :
         super(LinearClassificationModel, self).__init__(weights, intercept)
-        self._threshold: Optional[float] = None
+        self._threshold                  = None
 
     @since("1.4.0")
-    def setThreshold(self, value: float) -> None:
+    def setThreshold(self, value       )        :
         """
         Sets the threshold that separates positive predictions from
         negative predictions. An example with prediction score greater
@@ -75,7 +75,7 @@ class LinearClassificationModel(LinearModel):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def threshold(self) -> Optional[float]:
+    def threshold(self)                   :
         """
         Returns the threshold (if any) used for converting raw
         prediction scores into 0/1 predictions. It is used for
@@ -84,7 +84,7 @@ class LinearClassificationModel(LinearModel):
         return self._threshold
 
     @since("1.4.0")
-    def clearThreshold(self) -> None:
+    def clearThreshold(self)        :
         """
         Clears the threshold so that `predict` will output raw
         prediction scores. It is used for binary classification only.
@@ -92,16 +92,16 @@ class LinearClassificationModel(LinearModel):
         self._threshold = None
 
     @overload
-    def predict(self, test: "VectorLike") -> Union[int, float]:
+    def predict(self, test              )                     :
         ...
 
     @overload
-    def predict(self, test: RDD["VectorLike"]) -> RDD[Union[int, float]]:
+    def predict(self, test                   )                          :
         ...
 
     def predict(
-        self, test: Union["VectorLike", RDD["VectorLike"]]
-    ) -> Union[RDD[Union[int, float]], Union[int, float]]:
+        self, test                                        
+    )                                                    :
         """
         Predict values for a single data point or an RDD of points
         using the model trained.
@@ -197,8 +197,8 @@ class LogisticRegressionModel(LinearClassificationModel):
     """
 
     def __init__(
-        self, weights: Vector, intercept: float, numFeatures: int, numClasses: int
-    ) -> None:
+        self, weights        , intercept       , numFeatures     , numClasses     
+    )        :
         super(LogisticRegressionModel, self).__init__(weights, intercept)
         self._numFeatures = int(numFeatures)
         self._numClasses = int(numClasses)
@@ -216,7 +216,7 @@ class LogisticRegressionModel(LinearClassificationModel):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def numFeatures(self) -> int:
+    def numFeatures(self)       :
         """
         Dimension of the features.
         """
@@ -224,7 +224,7 @@ class LogisticRegressionModel(LinearClassificationModel):
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def numClasses(self) -> int:
+    def numClasses(self)       :
         """
         Number of possible outcomes for k classes classification problem
         in Multinomial Logistic Regression.
@@ -232,16 +232,16 @@ class LogisticRegressionModel(LinearClassificationModel):
         return self._numClasses
 
     @overload
-    def predict(self, x: "VectorLike") -> Union[int, float]:
+    def predict(self, x              )                     :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[Union[int, float]]:
+    def predict(self, x                   )                          :
         ...
 
     def predict(
-        self, x: Union["VectorLike", RDD["VectorLike"]]
-    ) -> Union[RDD[Union[int, float]], Union[int, float]]:
+        self, x                                        
+    )                                                    :
         """
         Predict values for a single data point or an RDD of points
         using the model trained.
@@ -286,7 +286,7 @@ class LogisticRegressionModel(LinearClassificationModel):
             return best_class
 
     @since("1.4.0")
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """
         Save this model to the given path.
         """
@@ -299,7 +299,7 @@ class LogisticRegressionModel(LinearClassificationModel):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "LogisticRegressionModel":
+    def load(cls, sc              , path     )                             :
         """
         Load a model from the given path.
         """
@@ -317,7 +317,7 @@ class LogisticRegressionModel(LinearClassificationModel):
         model.setThreshold(threshold)
         return model
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return (
             "pyspark.mllib.LogisticRegressionModel: intercept = {}, "
             "numFeatures = {}, numClasses = {}, threshold = {}"
@@ -336,17 +336,17 @@ class LogisticRegressionWithSGD:
     @classmethod
     def train(
         cls,
-        data: RDD[LabeledPoint],
-        iterations: int = 100,
-        step: float = 1.0,
-        miniBatchFraction: float = 1.0,
-        initialWeights: Optional["VectorLike"] = None,
-        regParam: float = 0.01,
-        regType: str = "l2",
-        intercept: bool = False,
-        validateData: bool = True,
-        convergenceTol: float = 0.001,
-    ) -> LogisticRegressionModel:
+        data                   ,
+        iterations      = 100,
+        step        = 1.0,
+        miniBatchFraction        = 1.0,
+        initialWeights                         = None,
+        regParam        = 0.01,
+        regType      = "l2",
+        intercept       = False,
+        validateData       = True,
+        convergenceTol        = 0.001,
+    )                           :
         """
         Train a logistic regression model on the given data.
 
@@ -398,7 +398,7 @@ class LogisticRegressionWithSGD:
             FutureWarning,
         )
 
-        def train(rdd: RDD[LabeledPoint], i: Vector) -> Iterable[Any]:
+        def train(rdd                   , i        )                 :
             return callMLlibFunc(
                 "trainLogisticRegressionModelWithSGD",
                 rdd,
@@ -428,17 +428,17 @@ class LogisticRegressionWithLBFGS:
     @classmethod
     def train(
         cls,
-        data: RDD[LabeledPoint],
-        iterations: int = 100,
-        initialWeights: Optional["VectorLike"] = None,
-        regParam: float = 0.0,
-        regType: str = "l2",
-        intercept: bool = False,
-        corrections: int = 10,
-        tolerance: float = 1e-6,
-        validateData: bool = True,
-        numClasses: int = 2,
-    ) -> LogisticRegressionModel:
+        data                   ,
+        iterations      = 100,
+        initialWeights                         = None,
+        regParam        = 0.0,
+        regType      = "l2",
+        intercept       = False,
+        corrections      = 10,
+        tolerance        = 1e-6,
+        validateData       = True,
+        numClasses      = 2,
+    )                           :
         """
         Train a logistic regression model on the given data.
 
@@ -500,7 +500,7 @@ class LogisticRegressionWithLBFGS:
         0
         """
 
-        def train(rdd: RDD[LabeledPoint], i: Vector) -> Iterable[Any]:
+        def train(rdd                   , i        )                 :
             return callMLlibFunc(
                 "trainLogisticRegressionModelWithLBFGS",
                 rdd,
@@ -584,21 +584,21 @@ class SVMModel(LinearClassificationModel):
     ...    pass
     """
 
-    def __init__(self, weights: Vector, intercept: float) -> None:
+    def __init__(self, weights        , intercept       )        :
         super(SVMModel, self).__init__(weights, intercept)
         self._threshold = 0.0
 
     @overload
-    def predict(self, x: "VectorLike") -> Union[int, float]:
+    def predict(self, x              )                     :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[Union[int, float]]:
+    def predict(self, x                   )                          :
         ...
 
     def predict(
-        self, x: Union["VectorLike", RDD["VectorLike"]]
-    ) -> Union[RDD[Union[int, float]], Union[int, float]]:
+        self, x                                        
+    )                                                    :
         """
         Predict values for a single data point or an RDD of points
         using the model trained.
@@ -616,7 +616,7 @@ class SVMModel(LinearClassificationModel):
             return 1 if margin > self._threshold else 0
 
     @since("1.4.0")
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """
         Save this model to the given path.
         """
@@ -629,7 +629,7 @@ class SVMModel(LinearClassificationModel):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "SVMModel":
+    def load(cls, sc              , path     )              :
         """
         Load a model from the given path.
         """
@@ -654,17 +654,17 @@ class SVMWithSGD:
     @classmethod
     def train(
         cls,
-        data: RDD[LabeledPoint],
-        iterations: int = 100,
-        step: float = 1.0,
-        regParam: float = 0.01,
-        miniBatchFraction: float = 1.0,
-        initialWeights: Optional["VectorLike"] = None,
-        regType: str = "l2",
-        intercept: bool = False,
-        validateData: bool = True,
-        convergenceTol: float = 0.001,
-    ) -> SVMModel:
+        data                   ,
+        iterations      = 100,
+        step        = 1.0,
+        regParam        = 0.01,
+        miniBatchFraction        = 1.0,
+        initialWeights                         = None,
+        regType      = "l2",
+        intercept       = False,
+        validateData       = True,
+        convergenceTol        = 0.001,
+    )            :
         """
         Train a support vector machine on the given data.
 
@@ -711,7 +711,7 @@ class SVMWithSGD:
             (default: 0.001)
         """
 
-        def train(rdd: RDD[LabeledPoint], i: Vector) -> Iterable[Any]:
+        def train(rdd                   , i        )                 :
             return callMLlibFunc(
                 "trainSVMModelWithSGD",
                 rdd,
@@ -785,23 +785,23 @@ class NaiveBayesModel(Saveable, Loader["NaiveBayesModel"]):
     ...     pass
     """
 
-    def __init__(self, labels: numpy.ndarray, pi: numpy.ndarray, theta: numpy.ndarray) -> None:
+    def __init__(self, labels               , pi               , theta               )        :
         self.labels = labels
         self.pi = pi
         self.theta = theta
 
     @overload
-    def predict(self, x: "VectorLike") -> numpy.float64:
+    def predict(self, x              )                 :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[numpy.float64]:
+    def predict(self, x                   )                      :
         ...
 
     @since("0.9.0")
     def predict(
-        self, x: Union["VectorLike", RDD["VectorLike"]]
-    ) -> Union[numpy.float64, RDD[numpy.float64]]:
+        self, x                                        
+    )                                            :
         """
         Return the most likely class for a data vector
         or an RDD of vectors
@@ -813,7 +813,7 @@ class NaiveBayesModel(Saveable, Loader["NaiveBayesModel"]):
             numpy.argmax(self.pi + x.dot(self.theta.transpose()))  # type: ignore[attr-defined]
         ]
 
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """
         Save this model to the given path.
         """
@@ -829,7 +829,7 @@ class NaiveBayesModel(Saveable, Loader["NaiveBayesModel"]):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "NaiveBayesModel":
+    def load(cls, sc              , path     )                     :
         """
         Load a model from the given path.
         """
@@ -853,7 +853,7 @@ class NaiveBayes:
     """
 
     @classmethod
-    def train(cls, data: RDD[LabeledPoint], lambda_: float = 1.0) -> NaiveBayesModel:
+    def train(cls, data                   , lambda_        = 1.0)                   :
         """
         Train a Naive Bayes model given an RDD of (label, features)
         vectors.
@@ -917,24 +917,24 @@ class StreamingLogisticRegressionWithSGD(StreamingLinearAlgorithm):
 
     def __init__(
         self,
-        stepSize: float = 0.1,
-        numIterations: int = 50,
-        miniBatchFraction: float = 1.0,
-        regParam: float = 0.0,
-        convergenceTol: float = 0.001,
-    ) -> None:
+        stepSize        = 0.1,
+        numIterations      = 50,
+        miniBatchFraction        = 1.0,
+        regParam        = 0.0,
+        convergenceTol        = 0.001,
+    )        :
         self.stepSize = stepSize
         self.numIterations = numIterations
         self.regParam = regParam
         self.miniBatchFraction = miniBatchFraction
         self.convergenceTol = convergenceTol
-        self._model: Optional[LogisticRegressionModel] = None
+        self._model                                    = None
         super(StreamingLogisticRegressionWithSGD, self).__init__(model=self._model)
 
     @since("1.5.0")
     def setInitialWeights(
-        self, initialWeights: "VectorLike"
-    ) -> "StreamingLogisticRegressionWithSGD":
+        self, initialWeights              
+    )                                        :
         """
         Set the initial value of weights.
 
@@ -949,11 +949,11 @@ class StreamingLogisticRegressionWithSGD(StreamingLinearAlgorithm):
         return self
 
     @since("1.5.0")
-    def trainOn(self, dstream: "DStream[LabeledPoint]") -> None:
+    def trainOn(self, dstream                         )        :
         """Train the model on the incoming dstream."""
         self._validate(dstream)
 
-        def update(rdd: RDD[LabeledPoint]) -> None:
+        def update(rdd                   )        :
             # LogisticRegressionWithSGD.train raises an error for an empty RDD.
             if not rdd.isEmpty():
                 self._model = LogisticRegressionWithSGD.train(
@@ -969,7 +969,7 @@ class StreamingLogisticRegressionWithSGD(StreamingLinearAlgorithm):
         dstream.foreachRDD(update)
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import SparkSession
     import pyspark.mllib.classification

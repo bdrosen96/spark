@@ -32,8 +32,8 @@ class PandasMapOpsMixin:
     """
 
     def mapInPandas(
-        self, func: "PandasMapIterFunction", schema: Union[StructType, str]
-    ) -> "DataFrame":
+        self, func                         , schema                        
+    )               :
         """
         Maps an iterator of batches in the current :class:`DataFrame` using a Python native
         function that takes and outputs a pandas DataFrame, and returns the result as a
@@ -93,8 +93,8 @@ class PandasMapOpsMixin:
         return DataFrame(jdf, self.sparkSession)
 
     def mapInArrow(
-        self, func: "ArrowMapIterFunction", schema: Union[StructType, str]
-    ) -> "DataFrame":
+        self, func                        , schema                        
+    )               :
         """
         Maps an iterator of batches in the current :class:`DataFrame` using a Python native
         function that takes and outputs a PyArrow's `RecordBatch`, and returns the result as a
@@ -156,7 +156,7 @@ class PandasMapOpsMixin:
         return DataFrame(jdf, self.sparkSession)
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import SparkSession
     import pyspark.sql.pandas.map_ops

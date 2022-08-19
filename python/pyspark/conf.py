@@ -107,14 +107,14 @@ class SparkConf:
     spark.home=/path
     """
 
-    _jconf: Optional[JavaObject]
-    _conf: Optional[Dict[str, str]]
+    #_jconf: Optional[JavaObject]
+    #_conf: Optional[Dict[str, str]]
 
     def __init__(
         self,
-        loadDefaults: bool = True,
-        _jvm: Optional[JVMView] = None,
-        _jconf: Optional[JavaObject] = None,
+        loadDefaults       = True,
+        _jvm                    = None,
+        _jconf                       = None,
     ):
         """
         Create a new Spark configuration.
@@ -135,7 +135,7 @@ class SparkConf:
                 self._jconf = None
                 self._conf = {}
 
-    def set(self, key: str, value: str) -> "SparkConf":
+    def set(self, key     , value     )               :
         """Set a configuration property."""
         # Try to set self._jconf first if JVM is created, set self._conf if JVM is not created yet.
         if self._jconf is not None:
@@ -145,41 +145,41 @@ class SparkConf:
             self._conf[key] = str(value)
         return self
 
-    def setIfMissing(self, key: str, value: str) -> "SparkConf":
+    def setIfMissing(self, key     , value     )               :
         """Set a configuration property, if not already set."""
         if self.get(key) is None:
             self.set(key, value)
         return self
 
-    def setMaster(self, value: str) -> "SparkConf":
+    def setMaster(self, value     )               :
         """Set master URL to connect to."""
         self.set("spark.master", value)
         return self
 
-    def setAppName(self, value: str) -> "SparkConf":
+    def setAppName(self, value     )               :
         """Set application name."""
         self.set("spark.app.name", value)
         return self
 
-    def setSparkHome(self, value: str) -> "SparkConf":
+    def setSparkHome(self, value     )               :
         """Set path where Spark is installed on worker nodes."""
         self.set("spark.home", value)
         return self
 
     @overload
-    def setExecutorEnv(self, key: str, value: str) -> "SparkConf":
+    def setExecutorEnv(self, key     , value     )               :
         ...
 
     @overload
-    def setExecutorEnv(self, *, pairs: List[Tuple[str, str]]) -> "SparkConf":
+    def setExecutorEnv(self, *, pairs                       )               :
         ...
 
     def setExecutorEnv(
         self,
-        key: Optional[str] = None,
-        value: Optional[str] = None,
-        pairs: Optional[List[Tuple[str, str]]] = None,
-    ) -> "SparkConf":
+        key                = None,
+        value                = None,
+        pairs                                  = None,
+    )               :
         """Set an environment variable to be passed to executors."""
         if (key is not None and pairs is not None) or (key is None and pairs is None):
             raise RuntimeError("Either pass one key-value pair or a list of pairs")
@@ -190,7 +190,7 @@ class SparkConf:
                 self.set("spark.executorEnv.{}".format(k), v)
         return self
 
-    def setAll(self, pairs: List[Tuple[str, str]]) -> "SparkConf":
+    def setAll(self, pairs                       )               :
         """
         Set multiple parameters, passed as a list of key-value pairs.
 
@@ -204,18 +204,18 @@ class SparkConf:
         return self
 
     @overload
-    def get(self, key: str) -> Optional[str]:
+    def get(self, key     )                 :
         ...
 
     @overload
-    def get(self, key: str, defaultValue: None) -> Optional[str]:
+    def get(self, key     , defaultValue      )                 :
         ...
 
     @overload
-    def get(self, key: str, defaultValue: str) -> str:
+    def get(self, key     , defaultValue     )       :
         ...
 
-    def get(self, key: str, defaultValue: Optional[str] = None) -> Optional[str]:
+    def get(self, key     , defaultValue                = None)                 :
         """Get the configured value for some key, or return a default otherwise."""
         if defaultValue is None:  # Py4J doesn't call the right get() if we pass None
             if self._jconf is not None:
@@ -232,7 +232,7 @@ class SparkConf:
                 assert self._conf is not None
                 return self._conf.get(key, defaultValue)
 
-    def getAll(self) -> List[Tuple[str, str]]:
+    def getAll(self)                         :
         """Get all values as a list of key-value pairs."""
         if self._jconf is not None:
             return [(elem._1(), elem._2()) for elem in cast(JavaObject, self._jconf).getAll()]
@@ -240,7 +240,7 @@ class SparkConf:
             assert self._conf is not None
             return list(self._conf.items())
 
-    def contains(self, key: str) -> bool:
+    def contains(self, key     )        :
         """Does this configuration contain a given key?"""
         if self._jconf is not None:
             return self._jconf.contains(key)
@@ -248,7 +248,7 @@ class SparkConf:
             assert self._conf is not None
             return key in self._conf
 
-    def toDebugString(self) -> str:
+    def toDebugString(self)       :
         """
         Returns a printable version of the configuration, as a list of
         key=value pairs, one per line.
@@ -260,7 +260,7 @@ class SparkConf:
             return "\n".join("%s=%s" % (k, v) for k, v in self._conf.items())
 
 
-def _test() -> None:
+def _test()        :
     import doctest
 
     (failure_count, test_count) = doctest.testmod(optionflags=doctest.ELLIPSIS)

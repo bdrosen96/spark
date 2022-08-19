@@ -1046,7 +1046,7 @@ class ScalarPandasUDFTests(ReusedSQLTestCase):
 
     def test_type_annotation(self):
         # Regression test to check if type hints can be used. See SPARK-23569.
-        def noop(col: pd.Series) -> pd.Series:
+        def noop(col           )             :
             return col
 
         df = self.spark.range(1).select(pandas_udf(f=noop, returnType="bigint")("id"))

@@ -59,7 +59,7 @@ from pyspark.pandas.window import Expanding, ExpandingGroupby, Rolling, RollingG
 from pyspark.instrumentation_utils import _attach
 
 
-def attach(logger_module: Union[str, ModuleType]) -> None:
+def attach(logger_module                        )        :
     """
     Attach the usage logger.
 

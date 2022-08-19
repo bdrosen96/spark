@@ -44,10 +44,10 @@ class StringOps(DataTypeOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "strings"
 
-    def add(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def add(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, str):
             return cast(
@@ -61,7 +61,7 @@ class StringOps(DataTypeOps):
         else:
             raise TypeError("Addition can not be applied to given types.")
 
-    def mul(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def mul(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, int):
             return cast(
@@ -79,7 +79,7 @@ class StringOps(DataTypeOps):
         else:
             raise TypeError("Multiplication can not be applied to given types.")
 
-    def radd(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def radd(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, str):
             return cast(
@@ -91,7 +91,7 @@ class StringOps(DataTypeOps):
         else:
             raise TypeError("Addition can not be applied to given types.")
 
-    def rmul(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rmul(self, left              , right     )                 :
         _sanitize_list_like(right)
         if isinstance(right, int):
             return cast(
@@ -103,31 +103,31 @@ class StringOps(DataTypeOps):
         else:
             raise TypeError("Multiplication can not be applied to given types.")
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__lt__)(left, right)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__le__)(left, right)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__ge__)(left, right)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__gt__)(left, right)
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, spark_type = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype):
@@ -157,6 +157,6 @@ class StringExtensionOps(StringOps):
     and dtype StringDtype.
     """
 
-    def restore(self, col: pd.Series) -> pd.Series:
+    def restore(self, col           )             :
         """Restore column when to_pandas."""
         return col.astype(self.dtype)

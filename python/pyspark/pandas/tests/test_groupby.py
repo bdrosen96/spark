@@ -2028,7 +2028,7 @@ class GroupByTest(PandasOnSparkTestCase, TestUtils):
         )
         psdf = ps.from_pandas(pdf)
 
-        def add_max1(x) -> ps.DataFrame[int, int, int]:
+        def add_max1(x)                               :
             return x + x.min()
 
         # Type hints set the default column names, and we use default index for
@@ -2041,7 +2041,7 @@ class GroupByTest(PandasOnSparkTestCase, TestUtils):
 
         def add_max2(
             x,
-        ) -> ps.DataFrame[slice("a", int), slice("b", int), slice("c", int)]:  # noqa: F405
+        )                                                                   :  # noqa: F405
             return x + x.min()
 
         actual = psdf.groupby("b").apply(add_max2).sort_index()
@@ -2051,7 +2051,7 @@ class GroupByTest(PandasOnSparkTestCase, TestUtils):
         self.assert_eq(sorted(actual["c"].to_numpy()), sorted(expected["c"].to_numpy()))
 
     def test_apply_negative(self):
-        def func(_) -> ps.Series[int]:
+        def func(_)                  :
             return pd.Series([1])  # type: ignore[return-value]
 
         with self.assertRaisesRegex(TypeError, "Series as a return type hint at frame groupby"):
@@ -2127,7 +2127,7 @@ class GroupByTest(PandasOnSparkTestCase, TestUtils):
 
         acc = ps.utils.default_session().sparkContext.accumulator(0)
 
-        def sum_with_acc_frame(x) -> ps.DataFrame[np.float64, np.float64]:
+        def sum_with_acc_frame(x)                                        :
             nonlocal acc
             acc += 1
             return np.sum(x)
@@ -2137,7 +2137,7 @@ class GroupByTest(PandasOnSparkTestCase, TestUtils):
         self.assert_eq(actual, pdf.groupby("d").apply(sum).sort_index().reset_index(drop=True))
         self.assert_eq(acc.value, 2)
 
-        def sum_with_acc_series(x) -> np.float64:
+        def sum_with_acc_series(x)              :
             nonlocal acc
             acc += 1
             return np.sum(x)
@@ -2253,7 +2253,7 @@ class GroupByTest(PandasOnSparkTestCase, TestUtils):
         with self.assertRaisesRegex(TypeError, "str object is not callable"):
             psdf.groupby("a").transform("sum")
 
-        def udf(col) -> int:
+        def udf(col)       :
             return col + 10
 
         with self.assertRaisesRegex(

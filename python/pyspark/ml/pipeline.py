@@ -64,14 +64,14 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
     .. versionadded:: 1.3.0
     """
 
-    stages: Param[List["PipelineStage"]] = Param(
+    stages                               = Param(
         Params._dummy(), "stages", "a list of pipeline stages"
     )
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
-    def __init__(self, *, stages: Optional[List["PipelineStage"]] = None):
+    def __init__(self, *, stages                                  = None):
         """
         __init__(self, \\*, stages=None)
         """
@@ -79,7 +79,7 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
         kwargs = self._input_kwargs
         self.setParams(**kwargs)
 
-    def setStages(self, value: List["PipelineStage"]) -> "Pipeline":
+    def setStages(self, value                       )              :
         """
         Set pipeline stages.
 
@@ -99,7 +99,7 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
         return self._set(stages=value)
 
     @since("1.3.0")
-    def getStages(self) -> List["PipelineStage"]:
+    def getStages(self)                         :
         """
         Get pipeline stages.
         """
@@ -107,7 +107,7 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
 
     @keyword_only
     @since("1.3.0")
-    def setParams(self, *, stages: Optional[List["PipelineStage"]] = None) -> "Pipeline":
+    def setParams(self, *, stages                                  = None)              :
         """
         setParams(self, \\*, stages=None)
         Sets params for Pipeline.
@@ -115,7 +115,7 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _fit(self, dataset: DataFrame) -> "PipelineModel":
+    def _fit(self, dataset           )                   :
         stages = self.getStages()
         for stage in stages:
             if not (isinstance(stage, Estimator) or isinstance(stage, Transformer)):
@@ -124,7 +124,7 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
         for i, stage in enumerate(stages):
             if isinstance(stage, Estimator):
                 indexOfLastEstimator = i
-        transformers: List[Transformer] = []
+        transformers                    = []
         for i, stage in enumerate(stages):
             if i <= indexOfLastEstimator:
                 if isinstance(stage, Transformer):
@@ -139,7 +139,7 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
                 transformers.append(cast(Transformer, stage))
         return PipelineModel(transformers)
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "Pipeline":
+    def copy(self, extra                       = None)              :
         """
         Creates a copy of this instance.
 
@@ -162,7 +162,7 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
         return that.setStages(stages)
 
     @since("2.0.0")
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns an MLWriter instance for this ML instance."""
         allStagesAreJava = PipelineSharedReadWrite.checkStagesForJava(self.getStages())
         if allStagesAreJava:
@@ -171,12 +171,12 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
 
     @classmethod
     @since("2.0.0")
-    def read(cls) -> "PipelineReader":
+    def read(cls)                    :
         """Returns an MLReader instance for this class."""
         return PipelineReader(cls)
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "Pipeline":
+    def _from_java(cls, java_stage              )              :
         """
         Given a Java Pipeline, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -184,14 +184,14 @@ class Pipeline(Estimator["PipelineModel"], MLReadable["Pipeline"], MLWritable):
         # Create a new instance of this stage.
         py_stage = cls()
         # Load information from java_stage to the instance.
-        py_stages: List["PipelineStage"] = [
+        py_stages                        = [
             JavaParams._from_java(s) for s in java_stage.getStages()
         ]
         py_stage.setStages(py_stages)
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java Pipeline.  Used for ML persistence.
 
@@ -221,11 +221,11 @@ class PipelineWriter(MLWriter):
     (Private) Specialization of :py:class:`MLWriter` for :py:class:`Pipeline` types
     """
 
-    def __init__(self, instance: Pipeline):
+    def __init__(self, instance          ):
         super(PipelineWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         stages = self.instance.getStages()
         PipelineSharedReadWrite.validateStages(stages)
         PipelineSharedReadWrite.saveImpl(self.instance, stages, self.sc, path)
@@ -237,11 +237,11 @@ class PipelineReader(MLReader[Pipeline]):
     (Private) Specialization of :py:class:`MLReader` for :py:class:`Pipeline` types
     """
 
-    def __init__(self, cls: Type[Pipeline]):
+    def __init__(self, cls                ):
         super(PipelineReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> Pipeline:
+    def load(self, path     )            :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if "language" not in metadata["paramMap"] or metadata["paramMap"]["language"] != "Python":
             return JavaMLReader(cast(Type["JavaMLReadable[Pipeline]"], self.cls)).load(path)
@@ -256,11 +256,11 @@ class PipelineModelWriter(MLWriter):
     (Private) Specialization of :py:class:`MLWriter` for :py:class:`PipelineModel` types
     """
 
-    def __init__(self, instance: "PipelineModel"):
+    def __init__(self, instance                 ):
         super(PipelineModelWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         stages = self.instance.stages
         PipelineSharedReadWrite.validateStages(cast(List["PipelineStage"], stages))
         PipelineSharedReadWrite.saveImpl(
@@ -274,11 +274,11 @@ class PipelineModelReader(MLReader["PipelineModel"]):
     (Private) Specialization of :py:class:`MLReader` for :py:class:`PipelineModel` types
     """
 
-    def __init__(self, cls: Type["PipelineModel"]):
+    def __init__(self, cls                       ):
         super(PipelineModelReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> "PipelineModel":
+    def load(self, path     )                   :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if "language" not in metadata["paramMap"] or metadata["paramMap"]["language"] != "Python":
             return JavaMLReader(cast(Type["JavaMLReadable[PipelineModel]"], self.cls)).load(path)
@@ -295,16 +295,16 @@ class PipelineModel(Model, MLReadable["PipelineModel"], MLWritable):
     .. versionadded:: 1.3.0
     """
 
-    def __init__(self, stages: List[Transformer]):
+    def __init__(self, stages                   ):
         super(PipelineModel, self).__init__()
         self.stages = stages
 
-    def _transform(self, dataset: DataFrame) -> DataFrame:
+    def _transform(self, dataset           )             :
         for t in self.stages:
             dataset = t.transform(dataset)
         return dataset
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "PipelineModel":
+    def copy(self, extra                       = None)                   :
         """
         Creates a copy of this instance.
 
@@ -319,7 +319,7 @@ class PipelineModel(Model, MLReadable["PipelineModel"], MLWritable):
         return PipelineModel(stages)
 
     @since("2.0.0")
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns an MLWriter instance for this ML instance."""
         allStagesAreJava = PipelineSharedReadWrite.checkStagesForJava(
             cast(List["PipelineStage"], self.stages)
@@ -330,24 +330,24 @@ class PipelineModel(Model, MLReadable["PipelineModel"], MLWritable):
 
     @classmethod
     @since("2.0.0")
-    def read(cls) -> PipelineModelReader:
+    def read(cls)                       :
         """Returns an MLReader instance for this class."""
         return PipelineModelReader(cls)
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "PipelineModel":
+    def _from_java(cls, java_stage              )                   :
         """
         Given a Java PipelineModel, create and return a Python wrapper of it.
         Used for ML persistence.
         """
         # Load information from java_stage to the instance.
-        py_stages: List[Transformer] = [JavaParams._from_java(s) for s in java_stage.stages()]
+        py_stages                    = [JavaParams._from_java(s) for s in java_stage.stages()]
         # Create a new instance of this stage.
         py_stage = cls(py_stages)
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java PipelineModel.  Used for ML persistence.
 
@@ -379,11 +379,11 @@ class PipelineSharedReadWrite:
     """
 
     @staticmethod
-    def checkStagesForJava(stages: List["PipelineStage"]) -> bool:
+    def checkStagesForJava(stages                       )        :
         return all(isinstance(stage, JavaMLWritable) for stage in stages)
 
     @staticmethod
-    def validateStages(stages: List["PipelineStage"]) -> None:
+    def validateStages(stages                       )        :
         """
         Check that all stages are Writable
         """
@@ -398,11 +398,11 @@ class PipelineSharedReadWrite:
 
     @staticmethod
     def saveImpl(
-        instance: Union[Pipeline, PipelineModel],
-        stages: List["PipelineStage"],
-        sc: SparkContext,
-        path: str,
-    ) -> None:
+        instance                                ,
+        stages                       ,
+        sc              ,
+        path     ,
+    )        :
         """
         Save metadata and stages for a :py:class:`Pipeline` or :py:class:`PipelineModel`
         - save metadata to path/metadata
@@ -419,8 +419,8 @@ class PipelineSharedReadWrite:
 
     @staticmethod
     def load(
-        metadata: Dict[str, Any], sc: SparkContext, path: str
-    ) -> Tuple[str, List["PipelineStage"]]:
+        metadata                , sc              , path     
+    )                                     :
         """
         Load metadata and stages for a :py:class:`Pipeline` or :py:class:`PipelineModel`
 
@@ -436,12 +436,12 @@ class PipelineSharedReadWrite:
             stagePath = PipelineSharedReadWrite.getStagePath(
                 stageUid, index, len(stageUids), stagesDir
             )
-            stage: "PipelineStage" = DefaultParamsReader.loadParamsInstance(stagePath, sc)
+            stage                  = DefaultParamsReader.loadParamsInstance(stagePath, sc)
             stages.append(stage)
         return (metadata["uid"], stages)
 
     @staticmethod
-    def getStagePath(stageUid: str, stageIdx: int, numStages: int, stagesDir: str) -> str:
+    def getStagePath(stageUid     , stageIdx     , numStages     , stagesDir     )       :
         """
         Get path for saving the given stage.
         """

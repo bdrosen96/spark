@@ -41,21 +41,21 @@ class SparkIndexOpsMethods(Generic[IndexOpsLike], metaclass=ABCMeta):
     """Spark related features. Usually, the features here are missing in pandas
     but Spark has it."""
 
-    def __init__(self, data: IndexOpsLike):
+    def __init__(self, data              ):
         self._data = data
 
     @property
-    def data_type(self) -> DataType:
+    def data_type(self)            :
         """Returns the data type as defined by Spark, as a Spark DataType object."""
         return self._data._internal.spark_type_for(self._data._column_label)
 
     @property
-    def nullable(self) -> bool:
+    def nullable(self)        :
         """Returns the nullability as defined by Spark."""
         return self._data._internal.spark_column_nullable_for(self._data._column_label)
 
     @property
-    def column(self) -> Column:
+    def column(self)          :
         """
         Spark Column object representing the Series/Index.
 
@@ -64,7 +64,7 @@ class SparkIndexOpsMethods(Generic[IndexOpsLike], metaclass=ABCMeta):
         """
         return self._data._internal.spark_column_for(self._data._column_label)
 
-    def transform(self, func: Callable[[Column], Column]) -> IndexOpsLike:
+    def transform(self, func                            )                :
         """
         Applies a function that takes and returns a Spark column. It allows to natively
         apply a Spark function and column APIs with the Spark column internally used
@@ -131,12 +131,12 @@ class SparkIndexOpsMethods(Generic[IndexOpsLike], metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def analyzed(self) -> IndexOpsLike:
+    def analyzed(self)                :
         pass
 
 
 class SparkSeriesMethods(SparkIndexOpsMethods["ps.Series"]):
-    def apply(self, func: Callable[[Column], Column]) -> "ps.Series":
+    def apply(self, func                            )               :
         """
         Applies a function that takes and returns a Spark column. It allows to natively
         apply a Spark function and column APIs with the Spark column internally used
@@ -203,7 +203,7 @@ class SparkSeriesMethods(SparkIndexOpsMethods["ps.Series"]):
         return first_series(DataFrame(sdf)).rename(self._data.name)
 
     @property
-    def analyzed(self) -> "ps.Series":
+    def analyzed(self)               :
         """
         Returns a new Series with the analyzed Spark DataFrame.
 
@@ -258,7 +258,7 @@ class SparkSeriesMethods(SparkIndexOpsMethods["ps.Series"]):
 
 class SparkIndexMethods(SparkIndexOpsMethods["ps.Index"]):
     @property
-    def analyzed(self) -> "ps.Index":
+    def analyzed(self)              :
         """
         Returns a new Index with the analyzed Spark DataFrame.
 
@@ -305,10 +305,10 @@ class SparkFrameMethods:
     """Spark related features. Usually, the features here are missing in pandas
     but Spark has it."""
 
-    def __init__(self, frame: "ps.DataFrame"):
+    def __init__(self, frame                ):
         self._psdf = frame
 
-    def schema(self, index_col: Optional[Union[str, List[str]]] = None) -> StructType:
+    def schema(self, index_col                                  = None)              :
         """
         Returns the underlying Spark schema.
 
@@ -339,7 +339,7 @@ class SparkFrameMethods:
         """
         return self.frame(index_col).schema
 
-    def print_schema(self, index_col: Optional[Union[str, List[str]]] = None) -> None:
+    def print_schema(self, index_col                                  = None)        :
         """
         Prints out the underlying Spark schema in the tree format.
 
@@ -382,7 +382,7 @@ class SparkFrameMethods:
         """
         self.frame(index_col).printSchema()
 
-    def frame(self, index_col: Optional[Union[str, List[str]]] = None) -> SparkDataFrame:
+    def frame(self, index_col                                  = None)                  :
         """
         Return the current DataFrame as a Spark DataFrame.  :meth:`DataFrame.spark.frame` is an
         alias of  :meth:`DataFrame.to_spark`.
@@ -509,7 +509,7 @@ class SparkFrameMethods:
             ]
             return psdf._internal.spark_frame.select(new_index_scols + data_columns)
 
-    def cache(self) -> "CachedDataFrame":
+    def cache(self)                     :
         """
         Yields and caches the current DataFrame.
 
@@ -560,8 +560,8 @@ class SparkFrameMethods:
         return CachedDataFrame(self._psdf._internal)
 
     def persist(
-        self, storage_level: StorageLevel = StorageLevel.MEMORY_AND_DISK
-    ) -> "CachedDataFrame":
+        self, storage_level               = StorageLevel.MEMORY_AND_DISK
+    )                     :
         """
         Yields and caches the current DataFrame with a specific StorageLevel.
         If a StogeLevel is not given, the `MEMORY_AND_DISK` level is used by default like PySpark.
@@ -637,7 +637,7 @@ class SparkFrameMethods:
         )
         return CachedDataFrame(self._psdf._internal, storage_level=storage_level)
 
-    def hint(self, name: str, *parameters: "PrimitiveType") -> "ps.DataFrame":
+    def hint(self, name     , *parameters                 )                  :
         """
         Specifies some hint on the current DataFrame.
 
@@ -676,13 +676,13 @@ class SparkFrameMethods:
 
     def to_table(
         self,
-        name: str,
-        format: Optional[str] = None,
-        mode: str = "overwrite",
-        partition_cols: Optional[Union[str, List[str]]] = None,
-        index_col: Optional[Union[str, List[str]]] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> None:
+        name     ,
+        format                = None,
+        mode      = "overwrite",
+        partition_cols                                  = None,
+        index_col                                  = None,
+        **options                         ,
+    )        :
         """
         Write the DataFrame into a Spark table. :meth:`DataFrame.spark.to_table`
         is an alias of :meth:`DataFrame.to_table`.
@@ -751,13 +751,13 @@ class SparkFrameMethods:
 
     def to_spark_io(
         self,
-        path: Optional[str] = None,
-        format: Optional[str] = None,
-        mode: str = "overwrite",
-        partition_cols: Optional[Union[str, List[str]]] = None,
-        index_col: Optional[Union[str, List[str]]] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> None:
+        path                = None,
+        format                = None,
+        mode      = "overwrite",
+        partition_cols                                  = None,
+        index_col                                  = None,
+        **options                         ,
+    )        :
         """Write the DataFrame out to a Spark data source. :meth:`DataFrame.spark.to_spark_io`
         is an alias of :meth:`DataFrame.to_spark_io`.
 
@@ -822,7 +822,7 @@ class SparkFrameMethods:
             path=path, format=format, mode=mode, partitionBy=partition_cols, **options
         )
 
-    def explain(self, extended: Optional[bool] = None, mode: Optional[str] = None) -> None:
+    def explain(self, extended                 = None, mode                = None)        :
         """
         Prints the underlying (logical and physical) Spark plans to the console for debugging
         purpose.
@@ -879,9 +879,9 @@ class SparkFrameMethods:
 
     def apply(
         self,
-        func: Callable[[SparkDataFrame], SparkDataFrame],
-        index_col: Optional[Union[str, List[str]]] = None,
-    ) -> "ps.DataFrame":
+        func                                            ,
+        index_col                                  = None,
+    )                  :
         """
         Applies a function that takes and returns a Spark DataFrame. It allows natively
         apply a Spark function and column APIs with the Spark column internally used
@@ -943,7 +943,7 @@ class SparkFrameMethods:
             )
         return output.pandas_api(index_col)
 
-    def repartition(self, num_partitions: int) -> "ps.DataFrame":
+    def repartition(self, num_partitions     )                  :
         """
         Returns a new DataFrame partitioned by the given partitioning expressions. The
         resulting DataFrame is hash partitioned.
@@ -985,7 +985,7 @@ class SparkFrameMethods:
         repartitioned_sdf = internal.spark_frame.repartition(num_partitions)
         return DataFrame(internal.with_new_sdf(repartitioned_sdf))
 
-    def coalesce(self, num_partitions: int) -> "ps.DataFrame":
+    def coalesce(self, num_partitions     )                  :
         """
         Returns a new DataFrame that has exactly `num_partitions` partitions.
 
@@ -1036,7 +1036,7 @@ class SparkFrameMethods:
         coalesced_sdf = internal.spark_frame.coalesce(num_partitions)
         return DataFrame(internal.with_new_sdf(coalesced_sdf))
 
-    def checkpoint(self, eager: bool = True) -> "ps.DataFrame":
+    def checkpoint(self, eager       = True)                  :
         """Returns a checkpointed version of this DataFrame.
 
         Checkpointing can be used to truncate the logical plan of this DataFrame, which is
@@ -1073,7 +1073,7 @@ class SparkFrameMethods:
         checkpointed_sdf = internal.spark_frame.checkpoint(eager)
         return DataFrame(internal.with_new_sdf(checkpointed_sdf))
 
-    def local_checkpoint(self, eager: bool = True) -> "ps.DataFrame":
+    def local_checkpoint(self, eager       = True)                  :
         """Returns a locally checkpointed version of this DataFrame.
 
         Checkpointing can be used to truncate the logical plan of this DataFrame, which is
@@ -1112,7 +1112,7 @@ class SparkFrameMethods:
         return DataFrame(internal.with_new_sdf(checkpointed_sdf))
 
     @property
-    def analyzed(self) -> "ps.DataFrame":
+    def analyzed(self)                  :
         """
         Returns a new DataFrame with the analyzed Spark DataFrame.
 
@@ -1168,11 +1168,11 @@ class CachedSparkFrameMethods(SparkFrameMethods):
     """Spark related features for cached DataFrame. This is usually created via
     `df.spark.cache()`."""
 
-    def __init__(self, frame: "CachedDataFrame"):
+    def __init__(self, frame                   ):
         super().__init__(frame)
 
     @property
-    def storage_level(self) -> StorageLevel:
+    def storage_level(self)                :
         """
         Return the storage level of this cache.
 
@@ -1203,7 +1203,7 @@ class CachedSparkFrameMethods(SparkFrameMethods):
         """
         return self._psdf._cached.storageLevel
 
-    def unpersist(self) -> None:
+    def unpersist(self)        :
         """
         The `unpersist` function is used to uncache the pandas-on-Spark DataFrame when it
         is not used with `with` statement.
@@ -1226,7 +1226,7 @@ class CachedSparkFrameMethods(SparkFrameMethods):
             self._psdf._cached.unpersist()
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import shutil

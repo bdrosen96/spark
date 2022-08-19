@@ -30,7 +30,7 @@ except ImportError:
 
 
 class StatCounter:
-    def __init__(self, values: Optional[Iterable[float]] = None):
+    def __init__(self, values                            = None):
         if values is None:
             values = list()
         self.n = 0  # Running count of our values
@@ -43,7 +43,7 @@ class StatCounter:
             self.merge(v)
 
     # Add a value into this StatCounter, updating the internal statistics.
-    def merge(self, value: float) -> "StatCounter":
+    def merge(self, value       )                 :
         delta = value - self.mu
         self.n += 1
         self.mu += delta / self.n
@@ -54,7 +54,7 @@ class StatCounter:
         return self
 
     # Merge another StatCounter into this one, adding up the internal statistics.
-    def mergeStats(self, other: "StatCounter") -> "StatCounter":
+    def mergeStats(self, other               )                 :
         if not isinstance(other, StatCounter):
             raise TypeError("Can only merge StatCounter but got %s" % type(other))
 
@@ -85,26 +85,26 @@ class StatCounter:
         return self
 
     # Clone this StatCounter
-    def copy(self) -> "StatCounter":
+    def copy(self)                 :
         return copy.deepcopy(self)
 
-    def count(self) -> int:
+    def count(self)       :
         return int(self.n)
 
-    def mean(self) -> float:
+    def mean(self)         :
         return self.mu
 
-    def sum(self) -> float:
+    def sum(self)         :
         return self.n * self.mu
 
-    def min(self) -> float:
+    def min(self)         :
         return self.minValue
 
-    def max(self) -> float:
+    def max(self)         :
         return self.maxValue
 
     # Return the variance of the values.
-    def variance(self) -> float:
+    def variance(self)         :
         if self.n == 0:
             return float("nan")
         else:
@@ -114,24 +114,24 @@ class StatCounter:
     # Return the sample variance, which corrects for bias in estimating the variance by dividing
     # by N-1 instead of N.
     #
-    def sampleVariance(self) -> float:
+    def sampleVariance(self)         :
         if self.n <= 1:
             return float("nan")
         else:
             return self.m2 / (self.n - 1)
 
     # Return the standard deviation of the values.
-    def stdev(self) -> float:
+    def stdev(self)         :
         return sqrt(self.variance())
 
     #
     # Return the sample standard deviation of the values, which corrects for bias in estimating the
     # variance by dividing by N-1 instead of N.
     #
-    def sampleStdev(self) -> float:
+    def sampleStdev(self)         :
         return sqrt(self.sampleVariance())
 
-    def asDict(self, sample: bool = False) -> Dict[str, float]:
+    def asDict(self, sample       = False)                    :
         """Returns the :class:`StatCounter` members as a ``dict``.
 
         Examples
@@ -155,7 +155,7 @@ class StatCounter:
             "variance": self.variance() if sample else self.sampleVariance(),
         }
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "(count: %s, mean: %s, stdev: %s, max: %s, min: %s)" % (
             self.count(),
             self.mean(),

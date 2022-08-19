@@ -40,34 +40,34 @@ class NullOps(DataTypeOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "nulls"
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__lt__)(left, right)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__le__)(left, right)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__ge__)(left, right)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__gt__)(left, right)
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, spark_type = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype):

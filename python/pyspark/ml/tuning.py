@@ -76,13 +76,13 @@ __all__ = [
 
 
 def _parallelFitTasks(
-    est: Estimator,
-    train: DataFrame,
-    eva: Evaluator,
-    validation: DataFrame,
-    epm: Sequence["ParamMap"],
-    collectSubModel: bool,
-) -> List[Callable[[], Tuple[int, float, Transformer]]]:
+    est           ,
+    train           ,
+    eva           ,
+    validation           ,
+    epm                      ,
+    collectSubModel      ,
+)                                                      :
     """
     Creates a list of callables which can be called from different threads to fit and evaluate
     an estimator in parallel. Each callable returns an `(index, metric)` pair.
@@ -109,7 +109,7 @@ def _parallelFitTasks(
     """
     modelIter = est.fitMultiple(train, epm)
 
-    def singleTask() -> Tuple[int, float, Transformer]:
+    def singleTask()                                  :
         index, model = next(modelIter)
         # TODO: duplicate evaluator to take extra params from input
         #  Note: Supporting tuning params in evaluator need update method
@@ -149,11 +149,11 @@ class ParamGridBuilder:
     True
     """
 
-    def __init__(self) -> None:
-        self._param_grid: "ParamMap" = {}
+    def __init__(self)        :
+        self._param_grid             = {}
 
     @since("1.4.0")
-    def addGrid(self, param: Param[Any], values: List[Any]) -> "ParamGridBuilder":
+    def addGrid(self, param            , values           )                      :
         """
         Sets the given parameters in this grid to fixed values.
 
@@ -168,15 +168,15 @@ class ParamGridBuilder:
         return self
 
     @overload
-    def baseOn(self, __args: "ParamMap") -> "ParamGridBuilder":
+    def baseOn(self, __args            )                      :
         ...
 
     @overload
-    def baseOn(self, *args: Tuple[Param, Any]) -> "ParamGridBuilder":
+    def baseOn(self, *args                   )                      :
         ...
 
     @since("1.4.0")
-    def baseOn(self, *args: Union["ParamMap", Tuple[Param, Any]]) -> "ParamGridBuilder":
+    def baseOn(self, *args                                      )                      :
         """
         Sets the given parameters in this grid to fixed values.
         Accepts either a parameter dictionary or a list of (parameter, value) pairs.
@@ -190,7 +190,7 @@ class ParamGridBuilder:
         return self
 
     @since("1.4.0")
-    def build(self) -> List["ParamMap"]:
+    def build(self)                    :
         """
         Builds and returns all combinations of parameters specified
         by the param grid.
@@ -199,8 +199,8 @@ class ParamGridBuilder:
         grid_values = self._param_grid.values()
 
         def to_key_value_pairs(
-            keys: Iterable[Param], values: Iterable[Any]
-        ) -> Sequence[Tuple[Param, Any]]:
+            keys                 , values               
+        )                               :
             return [(key, key.typeConverter(value)) for key, value in zip(keys, values)]
 
         return [dict(to_key_value_pairs(keys, prod)) for prod in itertools.product(*grid_values)]
@@ -211,34 +211,34 @@ class _ValidatorParams(HasSeed):
     Common params for TrainValidationSplit and CrossValidator.
     """
 
-    estimator: Param[Estimator] = Param(
+    estimator                   = Param(
         Params._dummy(), "estimator", "estimator to be cross-validated"
     )
-    estimatorParamMaps: Param[List["ParamMap"]] = Param(
+    estimatorParamMaps                          = Param(
         Params._dummy(), "estimatorParamMaps", "estimator param maps"
     )
-    evaluator: Param[Evaluator] = Param(
+    evaluator                   = Param(
         Params._dummy(),
         "evaluator",
         "evaluator used to select hyper-parameters that maximize the validator metric",
     )
 
     @since("2.0.0")
-    def getEstimator(self) -> Estimator:
+    def getEstimator(self)             :
         """
         Gets the value of estimator or its default value.
         """
         return self.getOrDefault(self.estimator)
 
     @since("2.0.0")
-    def getEstimatorParamMaps(self) -> List["ParamMap"]:
+    def getEstimatorParamMaps(self)                    :
         """
         Gets the value of estimatorParamMaps or its default value.
         """
         return self.getOrDefault(self.estimatorParamMaps)
 
     @since("2.0.0")
-    def getEvaluator(self) -> Evaluator:
+    def getEvaluator(self)             :
         """
         Gets the value of evaluator or its default value.
         """
@@ -246,15 +246,15 @@ class _ValidatorParams(HasSeed):
 
     @classmethod
     def _from_java_impl(
-        cls, java_stage: "JavaObject"
-    ) -> Tuple[Estimator, List["ParamMap"], Evaluator]:
+        cls, java_stage              
+    )                                                 :
         """
         Return Python estimator, estimatorParamMaps, and evaluator from a Java ValidatorParams.
         """
 
         # Load information from java_stage to the instance.
-        estimator: Estimator = JavaParams._from_java(java_stage.getEstimator())
-        evaluator: Evaluator = JavaParams._from_java(java_stage.getEvaluator())
+        estimator            = JavaParams._from_java(java_stage.getEstimator())
+        evaluator            = JavaParams._from_java(java_stage.getEvaluator())
         if isinstance(estimator, JavaEstimator):
             epms = [
                 estimator._transfer_param_map_from_java(epm)
@@ -270,7 +270,7 @@ class _ValidatorParams(HasSeed):
 
         return estimator, epms, evaluator
 
-    def _to_java_impl(self) -> Tuple["JavaObject", "JavaObject", "JavaObject"]:
+    def _to_java_impl(self)                                                   :
         """
         Return Java estimator, estimatorParamMaps, and evaluator from this Python instance.
         """
@@ -301,8 +301,8 @@ class _ValidatorParams(HasSeed):
 class _ValidatorSharedReadWrite:
     @staticmethod
     def meta_estimator_transfer_param_maps_to_java(
-        pyEstimator: Estimator, pyParamMaps: Sequence["ParamMap"]
-    ) -> "JavaArray":
+        pyEstimator           , pyParamMaps                      
+    )               :
         pyStages = MetaAlgorithmReadWrite.getAllNestedStages(pyEstimator)
         stagePairs = list(map(lambda stage: (stage, cast(JavaParams, stage)._to_java()), pyStages))
         sc = SparkContext._active_spark_context
@@ -335,8 +335,8 @@ class _ValidatorSharedReadWrite:
 
     @staticmethod
     def meta_estimator_transfer_param_maps_from_java(
-        pyEstimator: Estimator, javaParamMaps: "JavaArray"
-    ) -> List["ParamMap"]:
+        pyEstimator           , javaParamMaps             
+    )                    :
         pyStages = MetaAlgorithmReadWrite.getAllNestedStages(pyEstimator)
         stagePairs = list(map(lambda stage: (stage, cast(JavaParams, stage)._to_java()), pyStages))
         sc = SparkContext._active_spark_context
@@ -360,7 +360,7 @@ class _ValidatorSharedReadWrite:
                         + javaParam.name()
                     )
                 javaValue = javaPair.value()
-                pyValue: Any
+                #pyValue: Any
                 if sc._jvm.Class.forName(
                     "org.apache.spark.ml.util.DefaultParamsWritable"
                 ).isInstance(javaValue):
@@ -372,7 +372,7 @@ class _ValidatorSharedReadWrite:
         return pyParamMaps
 
     @staticmethod
-    def is_java_convertible(instance: _ValidatorParams) -> bool:
+    def is_java_convertible(instance                  )        :
         allNestedStages = MetaAlgorithmReadWrite.getAllNestedStages(instance.getEstimator())
         evaluator_convertible = isinstance(instance.getEvaluator(), JavaParams)
         estimator_convertible = all(map(lambda stage: hasattr(stage, "_to_java"), allNestedStages))
@@ -380,17 +380,17 @@ class _ValidatorSharedReadWrite:
 
     @staticmethod
     def saveImpl(
-        path: str,
-        instance: _ValidatorParams,
-        sc: SparkContext,
-        extraMetadata: Optional[Dict[str, Any]] = None,
-    ) -> None:
+        path     ,
+        instance                  ,
+        sc              ,
+        extraMetadata                           = None,
+    )        :
         numParamsNotJson = 0
         jsonEstimatorParamMaps = []
         for paramMap in instance.getEstimatorParamMaps():
             jsonParamMap = []
             for p, v in paramMap.items():
-                jsonParam: Dict[str, Any] = {"parent": p.parent, "name": p.name}
+                jsonParam                 = {"parent": p.parent, "name": p.name}
                 if (
                     (isinstance(v, Estimator) and not MetaAlgorithmReadWrite.isMetaEstimator(v))
                     or isinstance(v, Transformer)
@@ -426,12 +426,12 @@ class _ValidatorSharedReadWrite:
 
     @staticmethod
     def load(
-        path: str, sc: SparkContext, metadata: Dict[str, Any]
-    ) -> Tuple[Dict[str, Any], Estimator, Evaluator, List["ParamMap"]]:
+        path     , sc              , metadata                
+    )                                                                 :
         evaluatorPath = os.path.join(path, "evaluator")
-        evaluator: Evaluator = DefaultParamsReader.loadParamsInstance(evaluatorPath, sc)
+        evaluator            = DefaultParamsReader.loadParamsInstance(evaluatorPath, sc)
         estimatorPath = os.path.join(path, "estimator")
-        estimator: Estimator = DefaultParamsReader.loadParamsInstance(estimatorPath, sc)
+        estimator            = DefaultParamsReader.loadParamsInstance(estimatorPath, sc)
 
         uidToParams = MetaAlgorithmReadWrite.getUidMap(estimator)
         uidToParams[evaluator.uid] = evaluator
@@ -456,7 +456,7 @@ class _ValidatorSharedReadWrite:
         return metadata, estimator, evaluator, estimatorParamMaps
 
     @staticmethod
-    def validateParams(instance: _ValidatorParams) -> None:
+    def validateParams(instance                  )        :
         estiamtor = instance.getEstimator()
         evaluator = instance.getEvaluator()
         uidMap = MetaAlgorithmReadWrite.getUidMap(estiamtor)
@@ -479,7 +479,7 @@ class _ValidatorSharedReadWrite:
                     raise ValueError(paramErr + repr(param))
 
     @staticmethod
-    def getValidatorModelWriterPersistSubModelsParam(writer: MLWriter) -> bool:
+    def getValidatorModelWriterPersistSubModelsParam(writer          )        :
         if "persistsubmodels" in writer.optionMap:
             persistSubModelsParam = writer.optionMap["persistsubmodels"].lower()
             if persistSubModelsParam == "true":
@@ -495,7 +495,7 @@ class _ValidatorSharedReadWrite:
             return writer.instance.subModels is not None  # type: ignore[attr-defined]
 
 
-_save_with_persist_submodels_no_submodels_found_err: str = (
+_save_with_persist_submodels_no_submodels_found_err      = (
     "When persisting tuning models, you can only set persistSubModels to true if the tuning "
     "was done with collectSubModels set to true. To save the sub-models, try rerunning fitting "
     "with collectSubModels set to true."
@@ -504,11 +504,11 @@ _save_with_persist_submodels_no_submodels_found_err: str = (
 
 @inherit_doc
 class CrossValidatorReader(MLReader["CrossValidator"]):
-    def __init__(self, cls: Type["CrossValidator"]):
+    def __init__(self, cls                        ):
         super(CrossValidatorReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> "CrossValidator":
+    def load(self, path     )                    :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if not DefaultParamsReader.isPythonParamsInstance(metadata):
             return JavaMLReader(self.cls).load(path)  # type: ignore[arg-type]
@@ -526,22 +526,22 @@ class CrossValidatorReader(MLReader["CrossValidator"]):
 
 @inherit_doc
 class CrossValidatorWriter(MLWriter):
-    def __init__(self, instance: "CrossValidator"):
+    def __init__(self, instance                  ):
         super(CrossValidatorWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         _ValidatorSharedReadWrite.validateParams(self.instance)
         _ValidatorSharedReadWrite.saveImpl(path, self.instance, self.sc)
 
 
 @inherit_doc
 class CrossValidatorModelReader(MLReader["CrossValidatorModel"]):
-    def __init__(self, cls: Type["CrossValidatorModel"]):
+    def __init__(self, cls                             ):
         super(CrossValidatorModelReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> "CrossValidatorModel":
+    def load(self, path     )                         :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if not DefaultParamsReader.isPythonParamsInstance(metadata):
             return JavaMLReader(self.cls).load(path)  # type: ignore[arg-type]
@@ -551,7 +551,7 @@ class CrossValidatorModelReader(MLReader["CrossValidatorModel"]):
             )
             numFolds = metadata["paramMap"]["numFolds"]
             bestModelPath = os.path.join(path, "bestModel")
-            bestModel: Model = DefaultParamsReader.loadParamsInstance(bestModelPath, self.sc)
+            bestModel        = DefaultParamsReader.loadParamsInstance(bestModelPath, self.sc)
             avgMetrics = metadata["avgMetrics"]
             if "stdMetrics" in metadata:
                 stdMetrics = metadata["stdMetrics"]
@@ -590,11 +590,11 @@ class CrossValidatorModelReader(MLReader["CrossValidatorModel"]):
 
 @inherit_doc
 class CrossValidatorModelWriter(MLWriter):
-    def __init__(self, instance: "CrossValidatorModel"):
+    def __init__(self, instance                       ):
         super(CrossValidatorModelWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         _ValidatorSharedReadWrite.validateParams(self.instance)
         instance = self.instance
         persistSubModels = _ValidatorSharedReadWrite.getValidatorModelWriterPersistSubModelsParam(
@@ -625,14 +625,14 @@ class _CrossValidatorParams(_ValidatorParams):
     .. versionadded:: 3.0.0
     """
 
-    numFolds: Param[int] = Param(
+    numFolds             = Param(
         Params._dummy(),
         "numFolds",
         "number of folds for cross validation",
         typeConverter=TypeConverters.toInt,
     )
 
-    foldCol: Param[str] = Param(
+    foldCol             = Param(
         Params._dummy(),
         "foldCol",
         "Param for the column name of user "
@@ -643,19 +643,19 @@ class _CrossValidatorParams(_ValidatorParams):
         typeConverter=TypeConverters.toString,
     )
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_CrossValidatorParams, self).__init__(*args)
         self._setDefault(numFolds=3, foldCol="")
 
     @since("1.4.0")
-    def getNumFolds(self) -> int:
+    def getNumFolds(self)       :
         """
         Gets the value of numFolds or its default value.
         """
         return self.getOrDefault(self.numFolds)
 
     @since("3.1.0")
-    def getFoldCol(self) -> str:
+    def getFoldCol(self)       :
         """
         Gets the value of foldCol or its default value.
         """
@@ -716,21 +716,21 @@ class CrossValidator(
     0.8333...
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        estimator: Optional[Estimator] = None,
-        estimatorParamMaps: Optional[List["ParamMap"]] = None,
-        evaluator: Optional[Evaluator] = None,
-        numFolds: int = 3,
-        seed: Optional[int] = None,
-        parallelism: int = 1,
-        collectSubModels: bool = False,
-        foldCol: str = "",
-    ) -> None:
+        estimator                      = None,
+        estimatorParamMaps                             = None,
+        evaluator                      = None,
+        numFolds      = 3,
+        seed                = None,
+        parallelism      = 1,
+        collectSubModels       = False,
+        foldCol      = "",
+    )        :
         """
         __init__(self, \\*, estimator=None, estimatorParamMaps=None, evaluator=None, numFolds=3,\
                  seed=None, parallelism=1, collectSubModels=False, foldCol="")
@@ -745,15 +745,15 @@ class CrossValidator(
     def setParams(
         self,
         *,
-        estimator: Optional[Estimator] = None,
-        estimatorParamMaps: Optional[List["ParamMap"]] = None,
-        evaluator: Optional[Evaluator] = None,
-        numFolds: int = 3,
-        seed: Optional[int] = None,
-        parallelism: int = 1,
-        collectSubModels: bool = False,
-        foldCol: str = "",
-    ) -> "CrossValidator":
+        estimator                      = None,
+        estimatorParamMaps                             = None,
+        evaluator                      = None,
+        numFolds      = 3,
+        seed                = None,
+        parallelism      = 1,
+        collectSubModels       = False,
+        foldCol      = "",
+    )                    :
         """
         setParams(self, \\*, estimator=None, estimatorParamMaps=None, evaluator=None, numFolds=3,\
                   seed=None, parallelism=1, collectSubModels=False, foldCol=""):
@@ -763,65 +763,65 @@ class CrossValidator(
         return self._set(**kwargs)
 
     @since("2.0.0")
-    def setEstimator(self, value: Estimator) -> "CrossValidator":
+    def setEstimator(self, value           )                    :
         """
         Sets the value of :py:attr:`estimator`.
         """
         return self._set(estimator=value)
 
     @since("2.0.0")
-    def setEstimatorParamMaps(self, value: List["ParamMap"]) -> "CrossValidator":
+    def setEstimatorParamMaps(self, value                  )                    :
         """
         Sets the value of :py:attr:`estimatorParamMaps`.
         """
         return self._set(estimatorParamMaps=value)
 
     @since("2.0.0")
-    def setEvaluator(self, value: Evaluator) -> "CrossValidator":
+    def setEvaluator(self, value           )                    :
         """
         Sets the value of :py:attr:`evaluator`.
         """
         return self._set(evaluator=value)
 
     @since("1.4.0")
-    def setNumFolds(self, value: int) -> "CrossValidator":
+    def setNumFolds(self, value     )                    :
         """
         Sets the value of :py:attr:`numFolds`.
         """
         return self._set(numFolds=value)
 
     @since("3.1.0")
-    def setFoldCol(self, value: str) -> "CrossValidator":
+    def setFoldCol(self, value     )                    :
         """
         Sets the value of :py:attr:`foldCol`.
         """
         return self._set(foldCol=value)
 
-    def setSeed(self, value: int) -> "CrossValidator":
+    def setSeed(self, value     )                    :
         """
         Sets the value of :py:attr:`seed`.
         """
         return self._set(seed=value)
 
-    def setParallelism(self, value: int) -> "CrossValidator":
+    def setParallelism(self, value     )                    :
         """
         Sets the value of :py:attr:`parallelism`.
         """
         return self._set(parallelism=value)
 
-    def setCollectSubModels(self, value: bool) -> "CrossValidator":
+    def setCollectSubModels(self, value      )                    :
         """
         Sets the value of :py:attr:`collectSubModels`.
         """
         return self._set(collectSubModels=value)
 
     @staticmethod
-    def _gen_avg_and_std_metrics(metrics_all: List[List[float]]) -> Tuple[List[float], List[float]]:
+    def _gen_avg_and_std_metrics(metrics_all                   )                                   :
         avg_metrics = np.mean(metrics_all, axis=0)
         std_metrics = np.std(metrics_all, axis=0)
         return list(avg_metrics), list(std_metrics)
 
-    def _fit(self, dataset: DataFrame) -> "CrossValidatorModel":
+    def _fit(self, dataset           )                         :
         est = self.getOrDefault(self.estimator)
         epm = self.getOrDefault(self.estimatorParamMaps)
         numModels = len(epm)
@@ -864,7 +864,7 @@ class CrossValidator(
             CrossValidatorModel(bestModel, metrics, cast(List[List[Model]], subModels), std_metrics)
         )
 
-    def _kFold(self, dataset: DataFrame) -> List[Tuple[DataFrame, DataFrame]]:
+    def _kFold(self, dataset           )                                     :
         nFolds = self.getOrDefault(self.numFolds)
         foldCol = self.getOrDefault(self.foldCol)
 
@@ -884,7 +884,7 @@ class CrossValidator(
                 datasets.append((train, validation))
         else:
             # Use user-specified fold numbers.
-            def checker(foldNum: int) -> bool:
+            def checker(foldNum     )        :
                 if foldNum < 0 or foldNum >= nFolds:
                     raise ValueError(
                         "Fold number must be in range [0, %s), but got %s." % (nFolds, foldNum)
@@ -905,7 +905,7 @@ class CrossValidator(
 
         return datasets
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "CrossValidator":
+    def copy(self, extra                       = None)                    :
         """
         Creates a copy of this instance with a randomly generated uid
         and some extra params. This copies creates a deep copy of
@@ -935,7 +935,7 @@ class CrossValidator(
         return newCV
 
     @since("2.3.0")
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns an MLWriter instance for this ML instance."""
         if _ValidatorSharedReadWrite.is_java_convertible(self):
             return JavaMLWriter(self)  # type: ignore[arg-type]
@@ -943,12 +943,12 @@ class CrossValidator(
 
     @classmethod
     @since("2.3.0")
-    def read(cls) -> CrossValidatorReader:
+    def read(cls)                        :
         """Returns an MLReader instance for this class."""
         return CrossValidatorReader(cls)
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "CrossValidator":
+    def _from_java(cls, java_stage              )                    :
         """
         Given a Java CrossValidator, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -974,7 +974,7 @@ class CrossValidator(
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java CrossValidator. Used for ML persistence.
 
@@ -1018,10 +1018,10 @@ class CrossValidatorModel(
 
     def __init__(
         self,
-        bestModel: Model,
-        avgMetrics: Optional[List[float]] = None,
-        subModels: Optional[List[List[Model]]] = None,
-        stdMetrics: Optional[List[float]] = None,
+        bestModel       ,
+        avgMetrics                        = None,
+        subModels                              = None,
+        stdMetrics                        = None,
     ):
         super(CrossValidatorModel, self).__init__()
         #: best model from cross validation
@@ -1035,10 +1035,10 @@ class CrossValidatorModel(
         #: CrossValidator.estimatorParamMaps, in the corresponding order.
         self.stdMetrics = stdMetrics or []
 
-    def _transform(self, dataset: DataFrame) -> DataFrame:
+    def _transform(self, dataset           )             :
         return self.bestModel.transform(dataset)
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "CrossValidatorModel":
+    def copy(self, extra                       = None)                         :
         """
         Creates a copy of this instance with a randomly generated uid
         and some extra params. This copies the underlying bestModel,
@@ -1073,7 +1073,7 @@ class CrossValidatorModel(
         )
 
     @since("2.3.0")
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns an MLWriter instance for this ML instance."""
         if _ValidatorSharedReadWrite.is_java_convertible(self):
             return JavaMLWriter(self)  # type: ignore[arg-type]
@@ -1081,12 +1081,12 @@ class CrossValidatorModel(
 
     @classmethod
     @since("2.3.0")
-    def read(cls) -> CrossValidatorModelReader:
+    def read(cls)                             :
         """Returns an MLReader instance for this class."""
         return CrossValidatorModelReader(cls)
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "CrossValidatorModel":
+    def _from_java(cls, java_stage              )                         :
         """
         Given a Java CrossValidatorModel, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -1094,7 +1094,7 @@ class CrossValidatorModel(
         sc = SparkContext._active_spark_context
         assert sc is not None
 
-        bestModel: Model = JavaParams._from_java(java_stage.bestModel())
+        bestModel        = JavaParams._from_java(java_stage.bestModel())
         avgMetrics = _java2py(sc, java_stage.avgMetrics())
         estimator, epms, evaluator = super(CrossValidatorModel, cls)._from_java_impl(java_stage)
 
@@ -1119,7 +1119,7 @@ class CrossValidatorModel(
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java CrossValidatorModel. Used for ML persistence.
 
@@ -1164,11 +1164,11 @@ class CrossValidatorModel(
 
 @inherit_doc
 class TrainValidationSplitReader(MLReader["TrainValidationSplit"]):
-    def __init__(self, cls: Type["TrainValidationSplit"]):
+    def __init__(self, cls                              ):
         super(TrainValidationSplitReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> "TrainValidationSplit":
+    def load(self, path     )                          :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if not DefaultParamsReader.isPythonParamsInstance(metadata):
             return JavaMLReader(self.cls).load(path)  # type: ignore[arg-type]
@@ -1186,22 +1186,22 @@ class TrainValidationSplitReader(MLReader["TrainValidationSplit"]):
 
 @inherit_doc
 class TrainValidationSplitWriter(MLWriter):
-    def __init__(self, instance: "TrainValidationSplit"):
+    def __init__(self, instance                        ):
         super(TrainValidationSplitWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         _ValidatorSharedReadWrite.validateParams(self.instance)
         _ValidatorSharedReadWrite.saveImpl(path, self.instance, self.sc)
 
 
 @inherit_doc
 class TrainValidationSplitModelReader(MLReader["TrainValidationSplitModel"]):
-    def __init__(self, cls: Type["TrainValidationSplitModel"]):
+    def __init__(self, cls                                   ):
         super(TrainValidationSplitModelReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> "TrainValidationSplitModel":
+    def load(self, path     )                               :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if not DefaultParamsReader.isPythonParamsInstance(metadata):
             return JavaMLReader(self.cls).load(path)  # type: ignore[arg-type]
@@ -1210,7 +1210,7 @@ class TrainValidationSplitModelReader(MLReader["TrainValidationSplitModel"]):
                 path, self.sc, metadata
             )
             bestModelPath = os.path.join(path, "bestModel")
-            bestModel: Model = DefaultParamsReader.loadParamsInstance(bestModelPath, self.sc)
+            bestModel        = DefaultParamsReader.loadParamsInstance(bestModelPath, self.sc)
             validationMetrics = metadata["validationMetrics"]
             persistSubModels = ("persistSubModels" in metadata) and metadata["persistSubModels"]
 
@@ -1241,11 +1241,11 @@ class TrainValidationSplitModelReader(MLReader["TrainValidationSplitModel"]):
 
 @inherit_doc
 class TrainValidationSplitModelWriter(MLWriter):
-    def __init__(self, instance: "TrainValidationSplitModel"):
+    def __init__(self, instance                             ):
         super(TrainValidationSplitModelWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         _ValidatorSharedReadWrite.validateParams(self.instance)
         instance = self.instance
         persistSubModels = _ValidatorSharedReadWrite.getValidatorModelWriterPersistSubModelsParam(
@@ -1275,7 +1275,7 @@ class _TrainValidationSplitParams(_ValidatorParams):
     .. versionadded:: 3.0.0
     """
 
-    trainRatio: Param[float] = Param(
+    trainRatio               = Param(
         Params._dummy(),
         "trainRatio",
         "Param for ratio between train and\
@@ -1283,12 +1283,12 @@ class _TrainValidationSplitParams(_ValidatorParams):
         typeConverter=TypeConverters.toFloat,
     )
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_TrainValidationSplitParams, self).__init__(*args)
         self._setDefault(trainRatio=0.75)
 
     @since("2.0.0")
-    def getTrainRatio(self) -> float:
+    def getTrainRatio(self)         :
         """
         Gets the value of trainRatio or its default value.
         """
@@ -1347,20 +1347,20 @@ class TrainValidationSplit(
     0.833...
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        estimator: Optional[Estimator] = None,
-        estimatorParamMaps: Optional[List["ParamMap"]] = None,
-        evaluator: Optional[Evaluator] = None,
-        trainRatio: float = 0.75,
-        parallelism: int = 1,
-        collectSubModels: bool = False,
-        seed: Optional[int] = None,
-    ) -> None:
+        estimator                      = None,
+        estimatorParamMaps                             = None,
+        evaluator                      = None,
+        trainRatio        = 0.75,
+        parallelism      = 1,
+        collectSubModels       = False,
+        seed                = None,
+    )        :
         """
         __init__(self, \\*, estimator=None, estimatorParamMaps=None, evaluator=None, \
                  trainRatio=0.75, parallelism=1, collectSubModels=False, seed=None)
@@ -1375,14 +1375,14 @@ class TrainValidationSplit(
     def setParams(
         self,
         *,
-        estimator: Optional[Estimator] = None,
-        estimatorParamMaps: Optional[List["ParamMap"]] = None,
-        evaluator: Optional[Evaluator] = None,
-        trainRatio: float = 0.75,
-        parallelism: int = 1,
-        collectSubModels: bool = False,
-        seed: Optional[int] = None,
-    ) -> "TrainValidationSplit":
+        estimator                      = None,
+        estimatorParamMaps                             = None,
+        evaluator                      = None,
+        trainRatio        = 0.75,
+        parallelism      = 1,
+        collectSubModels       = False,
+        seed                = None,
+    )                          :
         """
         setParams(self, \\*, estimator=None, estimatorParamMaps=None, evaluator=None, \
                   trainRatio=0.75, parallelism=1, collectSubModels=False, seed=None):
@@ -1392,52 +1392,52 @@ class TrainValidationSplit(
         return self._set(**kwargs)
 
     @since("2.0.0")
-    def setEstimator(self, value: Estimator) -> "TrainValidationSplit":
+    def setEstimator(self, value           )                          :
         """
         Sets the value of :py:attr:`estimator`.
         """
         return self._set(estimator=value)
 
     @since("2.0.0")
-    def setEstimatorParamMaps(self, value: List["ParamMap"]) -> "TrainValidationSplit":
+    def setEstimatorParamMaps(self, value                  )                          :
         """
         Sets the value of :py:attr:`estimatorParamMaps`.
         """
         return self._set(estimatorParamMaps=value)
 
     @since("2.0.0")
-    def setEvaluator(self, value: Evaluator) -> "TrainValidationSplit":
+    def setEvaluator(self, value           )                          :
         """
         Sets the value of :py:attr:`evaluator`.
         """
         return self._set(evaluator=value)
 
     @since("2.0.0")
-    def setTrainRatio(self, value: float) -> "TrainValidationSplit":
+    def setTrainRatio(self, value       )                          :
         """
         Sets the value of :py:attr:`trainRatio`.
         """
         return self._set(trainRatio=value)
 
-    def setSeed(self, value: int) -> "TrainValidationSplit":
+    def setSeed(self, value     )                          :
         """
         Sets the value of :py:attr:`seed`.
         """
         return self._set(seed=value)
 
-    def setParallelism(self, value: int) -> "TrainValidationSplit":
+    def setParallelism(self, value     )                          :
         """
         Sets the value of :py:attr:`parallelism`.
         """
         return self._set(parallelism=value)
 
-    def setCollectSubModels(self, value: bool) -> "TrainValidationSplit":
+    def setCollectSubModels(self, value      )                          :
         """
         Sets the value of :py:attr:`collectSubModels`.
         """
         return self._set(collectSubModels=value)
 
-    def _fit(self, dataset: DataFrame) -> "TrainValidationSplitModel":
+    def _fit(self, dataset           )                               :
         est = self.getOrDefault(self.estimator)
         epm = self.getOrDefault(self.estimatorParamMaps)
         numModels = len(epm)
@@ -1483,7 +1483,7 @@ class TrainValidationSplit(
             )
         )
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "TrainValidationSplit":
+    def copy(self, extra                       = None)                          :
         """
         Creates a copy of this instance with a randomly generated uid
         and some extra params. This copies creates a deep copy of
@@ -1512,7 +1512,7 @@ class TrainValidationSplit(
         return newTVS
 
     @since("2.3.0")
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns an MLWriter instance for this ML instance."""
         if _ValidatorSharedReadWrite.is_java_convertible(self):
             return JavaMLWriter(self)  # type: ignore[arg-type]
@@ -1520,12 +1520,12 @@ class TrainValidationSplit(
 
     @classmethod
     @since("2.3.0")
-    def read(cls) -> TrainValidationSplitReader:
+    def read(cls)                              :
         """Returns an MLReader instance for this class."""
         return TrainValidationSplitReader(cls)
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "TrainValidationSplit":
+    def _from_java(cls, java_stage              )                          :
         """
         Given a Java TrainValidationSplit, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -1549,7 +1549,7 @@ class TrainValidationSplit(
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java TrainValidationSplit. Used for ML persistence.
 
@@ -1585,9 +1585,9 @@ class TrainValidationSplitModel(
 
     def __init__(
         self,
-        bestModel: Model,
-        validationMetrics: Optional[List[float]] = None,
-        subModels: Optional[List[Model]] = None,
+        bestModel       ,
+        validationMetrics                        = None,
+        subModels                        = None,
     ):
         super(TrainValidationSplitModel, self).__init__()
         #: best model from train validation split
@@ -1597,10 +1597,10 @@ class TrainValidationSplitModel(
         #: sub models from train validation split
         self.subModels = subModels
 
-    def _transform(self, dataset: DataFrame) -> DataFrame:
+    def _transform(self, dataset           )             :
         return self.bestModel.transform(dataset)
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "TrainValidationSplitModel":
+    def copy(self, extra                       = None)                               :
         """
         Creates a copy of this instance with a randomly generated uid
         and some extra params. This copies the underlying bestModel,
@@ -1632,7 +1632,7 @@ class TrainValidationSplitModel(
         )
 
     @since("2.3.0")
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns an MLWriter instance for this ML instance."""
         if _ValidatorSharedReadWrite.is_java_convertible(self):
             return JavaMLWriter(self)  # type: ignore[arg-type]
@@ -1640,12 +1640,12 @@ class TrainValidationSplitModel(
 
     @classmethod
     @since("2.3.0")
-    def read(cls) -> TrainValidationSplitModelReader:
+    def read(cls)                                   :
         """Returns an MLReader instance for this class."""
         return TrainValidationSplitModelReader(cls)
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "TrainValidationSplitModel":
+    def _from_java(cls, java_stage              )                               :
         """
         Given a Java TrainValidationSplitModel, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -1655,7 +1655,7 @@ class TrainValidationSplitModel(
         sc = SparkContext._active_spark_context
         assert sc is not None
 
-        bestModel: Model = JavaParams._from_java(java_stage.bestModel())
+        bestModel        = JavaParams._from_java(java_stage.bestModel())
         validationMetrics = _java2py(sc, java_stage.validationMetrics())
         estimator, epms, evaluator = super(TrainValidationSplitModel, cls)._from_java_impl(
             java_stage
@@ -1680,7 +1680,7 @@ class TrainValidationSplitModel(
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java TrainValidationSplitModel. Used for ML persistence.
 

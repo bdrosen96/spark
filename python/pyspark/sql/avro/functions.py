@@ -30,8 +30,8 @@ if TYPE_CHECKING:
 
 
 def from_avro(
-    data: "ColumnOrName", jsonFormatSchema: str, options: Optional[Dict[str, str]] = None
-) -> Column:
+    data                , jsonFormatSchema     , options                           = None
+)          :
     """
     Converts a binary column of Avro format into its corresponding catalyst value.
     The specified schema must match the read data, otherwise the behavior is undefined:
@@ -86,7 +86,7 @@ def from_avro(
     return Column(jc)
 
 
-def to_avro(data: "ColumnOrName", jsonFormatSchema: str = "") -> Column:
+def to_avro(data                , jsonFormatSchema      = "")          :
     """
     Converts a column into binary of avro format.
 
@@ -135,7 +135,7 @@ def to_avro(data: "ColumnOrName", jsonFormatSchema: str = "") -> Column:
     return Column(jc)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import sys
     from pyspark.testing.utils import search_jar

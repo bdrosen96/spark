@@ -86,11 +86,11 @@ class Int64Index(IntegerIndex):
 
     def __new__(
         cls,
-        data: Optional[Any] = None,
-        dtype: Optional[Union[str, Dtype]] = None,
-        copy: bool = False,
-        name: Optional[Name] = None,
-    ) -> "Int64Index":
+        data                = None,
+        dtype                              = None,
+        copy       = False,
+        name                 = None,
+    )                :
         if not is_hashable(name):
             raise TypeError("Index.name must be a hashable type")
 
@@ -148,11 +148,11 @@ class Float64Index(NumericIndex):
 
     def __new__(
         cls,
-        data: Optional[Any] = None,
-        dtype: Optional[Union[str, Dtype]] = None,
-        copy: bool = False,
-        name: Optional[Name] = None,
-    ) -> "Float64Index":
+        data                = None,
+        dtype                              = None,
+        copy       = False,
+        name                 = None,
+    )                  :
         if not is_hashable(name):
             raise TypeError("Index.name must be a hashable type")
 
@@ -167,7 +167,7 @@ class Float64Index(NumericIndex):
         )
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

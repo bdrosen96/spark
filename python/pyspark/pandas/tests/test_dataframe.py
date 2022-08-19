@@ -800,14 +800,14 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         self.assert_eq(result_psdf, result_pdf)
         self.assert_eq(psser, pser)
 
-        def str_lower(s) -> str:
+        def str_lower(s)       :
             return str.lower(s)
 
         self.assert_eq(
             psdf1.rename(str_lower, axis="columns"), pdf1.rename(str_lower, axis="columns")
         )
 
-        def mul10(x) -> int:
+        def mul10(x)       :
             return x * 10
 
         self.assert_eq(psdf1.rename(mul10, axis="index"), pdf1.rename(mul10, axis="index"))
@@ -4436,14 +4436,14 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
 
         with self.assertRaisesRegex(TypeError, "The given function.*1 or 'column'; however"):
 
-            def f1(_) -> ps.DataFrame[int]:
+            def f1(_)                     :
                 pass
 
             psdf.apply(f1, axis=0)
 
         with self.assertRaisesRegex(TypeError, "The given function.*0 or 'index'; however"):
 
-            def f2(_) -> ps.Series[int]:
+            def f2(_)                  :
                 pass
 
             psdf.apply(f2, axis=1)
@@ -4476,7 +4476,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         pdf = self.pdf
         psdf = ps.from_pandas(pdf)
 
-        def identify1(x) -> ps.DataFrame[int, int]:
+        def identify1(x)                          :
             return x
 
         # Type hints set the default column names, and we use default index for
@@ -4486,7 +4486,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         self.assert_eq(sorted(actual["c0"].to_numpy()), sorted(expected["a"].to_numpy()))
         self.assert_eq(sorted(actual["c1"].to_numpy()), sorted(expected["b"].to_numpy()))
 
-        def identify2(x) -> ps.DataFrame[slice("a", int), slice("b", int)]:  # noqa: F405
+        def identify2(x)                                                  :  # noqa: F405
             return x
 
         actual = psdf.apply(identify2, axis=1)
@@ -4525,7 +4525,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
 
         with self.assertRaisesRegex(TypeError, "The given function.*frame as its type hints"):
 
-            def f2(_) -> ps.Series[int]:
+            def f2(_)                  :
                 pass
 
             psdf.pandas_on_spark.apply_batch(f2)
@@ -4551,7 +4551,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         pdf = self.pdf
         psdf = ps.from_pandas(pdf)
 
-        def identify1(x) -> ps.DataFrame[int, int]:
+        def identify1(x)                          :
             return x
 
         # Type hints set the default column names, and we use default index for
@@ -4561,7 +4561,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         self.assert_eq(sorted(actual["c0"].to_numpy()), sorted(expected["a"].to_numpy()))
         self.assert_eq(sorted(actual["c1"].to_numpy()), sorted(expected["b"].to_numpy()))
 
-        def identify2(x) -> ps.DataFrame[slice("a", int), slice("b", int)]:  # noqa: F405
+        def identify2(x)                                                  :  # noqa: F405
             return x
 
         actual = psdf.pandas_on_spark.apply_batch(identify2)
@@ -4575,7 +4575,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         )
         psdf = ps.from_pandas(pdf)
 
-        def identify3(x) -> ps.DataFrame[float, [int, List[int]]]:
+        def identify3(x)                                         :
             return x
 
         actual = psdf.pandas_on_spark.apply_batch(identify3)
@@ -4590,7 +4590,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
 
             def identify4(
                 x,
-            ) -> ps.DataFrame[float, [int, ntp.NDArray[int]]]:
+            )                                                :
                 return x
 
             actual = psdf.pandas_on_spark.apply_batch(identify4)
@@ -4605,7 +4605,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         )
         psdf = ps.from_pandas(pdf)
 
-        def identify4(x) -> ps.DataFrame[[int, str], [int, List[int]]]:
+        def identify4(x)                                              :
             return x
 
         actual = psdf.pandas_on_spark.apply_batch(identify4)
@@ -4615,9 +4615,9 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
 
         def identify5(
             x,
-        ) -> ps.DataFrame[
-            [("number", int), ("color", str)], [("a", int), ("b", List[int])]  # noqa: F405
-        ]:
+        ):                 
+                                                                               # noqa: F405
+         
             return x
 
         actual = psdf.pandas_on_spark.apply_batch(identify5)
@@ -4696,7 +4696,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         pdf = self.pdf
         psdf = ps.from_pandas(pdf)
 
-        def identify1(x) -> ps.DataFrame[int, int]:
+        def identify1(x)                          :
             return x
 
         # Type hints set the default column names, and we use default index for
@@ -4706,7 +4706,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
         self.assert_eq(sorted(actual["c0"].to_numpy()), sorted(expected["a"].to_numpy()))
         self.assert_eq(sorted(actual["c1"].to_numpy()), sorted(expected["b"].to_numpy()))
 
-        def identify2(x) -> ps.DataFrame[slice("a", int), slice("b", int)]:  # noqa: F405
+        def identify2(x)                                                  :  # noqa: F405
             return x
 
         actual = psdf.pandas_on_spark.transform_batch(identify2)
@@ -4724,7 +4724,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
 
         psdf = ps.range(10)
 
-        def plus_one(pdf) -> ps.Series[np.int64]:
+        def plus_one(pdf)                       :
             return pdf.id + 1
 
         psdf["d"] = psdf.pandas_on_spark.transform_batch(plus_one)
@@ -4735,7 +4735,7 @@ class DataFrameTest(ComparisonTestBase, SQLTestUtils):
 
         psdf = ps.range(10)
 
-        def plus_one(ser) -> ps.Series[np.int64]:
+        def plus_one(ser)                       :
             return ser + 1
 
         psdf["d"] = psdf.id.pandas_on_spark.transform_batch(plus_one)

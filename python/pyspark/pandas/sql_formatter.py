@@ -41,10 +41,10 @@ _CAPTURE_SCOPES = 3
 
 
 def sql(
-    query: str,
-    index_col: Optional[Union[str, List[str]]] = None,
-    **kwargs: Any,
-) -> DataFrame:
+    query     ,
+    index_col                                  = None,
+    **kwargs     ,
+)             :
     """
     Execute a SQL query and return the result as a pandas-on-Spark DataFrame.
 
@@ -186,12 +186,12 @@ class PandasSQLStringFormatter(string.Formatter):
     query; cannot be reused across multiple SQL queries without cleaning.
     """
 
-    def __init__(self, session: SparkSession) -> None:
-        self._session: SparkSession = session
-        self._temp_views: List[Tuple[DataFrame, str]] = []
-        self._ref_sers: List[Tuple[Series, str]] = []
+    def __init__(self, session              )        :
+        self._session               = session
+        self._temp_views                              = []
+        self._ref_sers                           = []
 
-    def vformat(self, format_string: str, args: Sequence[Any], kwargs: Mapping[str, Any]) -> str:
+    def vformat(self, format_string     , args               , kwargs                   )       :
         ret = super(PandasSQLStringFormatter, self).vformat(format_string, args, kwargs)
 
         for ref, n in self._ref_sers:
@@ -200,11 +200,11 @@ class PandasSQLStringFormatter(string.Formatter):
                 raise ValueError("The series in {%s} does not refer any dataframe specified." % n)
         return ret
 
-    def get_field(self, field_name: str, args: Sequence[Any], kwargs: Mapping[str, Any]) -> Any:
+    def get_field(self, field_name     , args               , kwargs                   )       :
         obj, first = super(PandasSQLStringFormatter, self).get_field(field_name, args, kwargs)
         return self._convert_value(obj, field_name), first
 
-    def _convert_value(self, val: Any, name: str) -> Optional[str]:
+    def _convert_value(self, val     , name     )                 :
         """
         Converts the given value into a SQL string.
         """
@@ -237,14 +237,14 @@ class PandasSQLStringFormatter(string.Formatter):
         else:
             return val
 
-    def clear(self) -> None:
+    def clear(self)        :
         for _, n in self._temp_views:
             self._session.catalog.dropTempView(n)
         self._temp_views = []
         self._ref_sers = []
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

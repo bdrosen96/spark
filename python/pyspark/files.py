@@ -35,15 +35,15 @@ class SparkFiles:
     instances.
     """
 
-    _root_directory: ClassVar[Optional[str]] = None
-    _is_running_on_worker: ClassVar[bool] = False
-    _sc: ClassVar[Optional["SparkContext"]] = None
+    _root_directory                          = None
+    _is_running_on_worker                 = False
+    _sc                                     = None
 
-    def __init__(self) -> None:
+    def __init__(self)        :
         raise NotImplementedError("Do not construct SparkFiles objects")
 
     @classmethod
-    def get(cls, filename: str) -> str:
+    def get(cls, filename     )       :
         """
         Get the absolute path of a file added through :meth:`SparkContext.addFile`.
         """
@@ -51,7 +51,7 @@ class SparkFiles:
         return os.path.abspath(path)
 
     @classmethod
-    def getRootDirectory(cls) -> str:
+    def getRootDirectory(cls)       :
         """
         Get the root directory that contains files added through
         :meth:`SparkContext.addFile`.

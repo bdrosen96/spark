@@ -28,8 +28,8 @@ if TYPE_CHECKING:
 
 
 def infer_eval_type(
-    sig: Signature, type_hints: Dict[str, Any]
-) -> Union["PandasScalarUDFType", "PandasScalarIterUDFType", "PandasGroupedAggUDFType"]:
+    sig           , type_hints                
+)                                                                                      :
     """
     Infers the evaluation type in :class:`pyspark.rdd.PythonEvalType` from
     :class:`inspect.Signature` instance and type hints.
@@ -136,8 +136,8 @@ def infer_eval_type(
 
 
 def check_tuple_annotation(
-    annotation: Any, parameter_check_func: Optional[Callable[[Any], bool]] = None
-) -> bool:
+    annotation     , parameter_check_func                                  = None
+)        :
     # Tuple has _name but other types have __name__
     # Check if the name is Tuple first. After that, check the generic types.
     name = getattr(annotation, "_name", getattr(annotation, "__name__", None))
@@ -147,8 +147,8 @@ def check_tuple_annotation(
 
 
 def check_iterator_annotation(
-    annotation: Any, parameter_check_func: Optional[Callable[[Any], bool]] = None
-) -> bool:
+    annotation     , parameter_check_func                                  = None
+)        :
     name = getattr(annotation, "_name", getattr(annotation, "__name__", None))
     return name == "Iterator" and (
         parameter_check_func is None or all(map(parameter_check_func, annotation.__args__))
@@ -156,8 +156,8 @@ def check_iterator_annotation(
 
 
 def check_union_annotation(
-    annotation: Any, parameter_check_func: Optional[Callable[[Any], bool]] = None
-) -> bool:
+    annotation     , parameter_check_func                                  = None
+)        :
     import typing
 
     # Note that we cannot rely on '__origin__' in other type hints as it has changed from version

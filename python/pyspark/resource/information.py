@@ -40,14 +40,14 @@ class ResourceInformation:
     This API is evolving.
     """
 
-    def __init__(self, name: str, addresses: List[str]):
+    def __init__(self, name     , addresses           ):
         self._name = name
         self._addresses = addresses
 
     @property
-    def name(self) -> str:
+    def name(self)       :
         return self._name
 
     @property
-    def addresses(self) -> List[str]:
+    def addresses(self)             :
         return self._addresses

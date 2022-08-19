@@ -69,9 +69,9 @@ class PandasAPIOnSparkAdviceWarning(Warning):
 
 
 def same_anchor(
-    this: Union["DataFrame", "IndexOpsMixin", "InternalFrame"],
-    that: Union["DataFrame", "IndexOpsMixin", "InternalFrame"],
-) -> bool:
+    this                                                      ,
+    that                                                      ,
+)        :
     """
     Check if the anchors of the given DataFrame or Series are the same or not.
     """
@@ -104,11 +104,11 @@ def same_anchor(
 
 
 def combine_frames(
-    this: "DataFrame",
-    *args: DataFrameOrSeries,
-    how: str = "full",
-    preserve_order_column: bool = False,
-) -> "DataFrame":
+    this             ,
+    *args                   ,
+    how      = "full",
+    preserve_order_column       = False,
+)               :
     """
     This method combines `this` DataFrame with a different `that` DataFrame or
     Series from a different DataFrame.
@@ -148,8 +148,8 @@ def combine_frames(
 
     if get_option("compute.ops_on_diff_frames"):
 
-        def resolve(internal: InternalFrame, side: str) -> InternalFrame:
-            def rename(col: str) -> str:
+        def resolve(internal               , side     )                 :
+            def rename(col     )       :
                 return "__{}_{}".format(side, col)
 
             internal = internal.resolved_copy
@@ -282,7 +282,7 @@ def combine_frames(
 
         level = max(this_internal.column_labels_level, that_internal.column_labels_level)
 
-        def fill_label(label: Optional[Label]) -> List:
+        def fill_label(label                 )        :
             if label is None:
                 return ([""] * (level - 1)) + [None]
             else:
@@ -311,15 +311,15 @@ def combine_frames(
 
 
 def align_diff_frames(
-    resolve_func: Callable[
-        ["DataFrame", List[Label], List[Label]], Iterator[Tuple["Series", Label]]
-    ],
-    this: "DataFrame",
-    that: "DataFrame",
-    fillna: bool = True,
-    how: str = "full",
-    preserve_order_column: bool = False,
-) -> "DataFrame":
+    resolve_func           
+                                                                                 
+     ,
+    this             ,
+    that             ,
+    fillna       = True,
+    how      = "full",
+    preserve_order_column       = False,
+)               :
     """
     This method aligns two different DataFrames with a given `func`. Columns are resolved and
     handled within the given `func`.
@@ -388,11 +388,11 @@ def align_diff_frames(
     # 2. Apply the given function to transform the columns in a batch and keep the new columns.
     combined_column_labels = combined._internal.column_labels
 
-    that_columns_to_apply: List[Label] = []
-    this_columns_to_apply: List[Label] = []
-    additional_that_columns: List[Label] = []
-    columns_to_keep: List[Union[Series, Column]] = []
-    column_labels_to_keep: List[Label] = []
+    that_columns_to_apply              = []
+    this_columns_to_apply              = []
+    additional_that_columns              = []
+    columns_to_keep                              = []
+    column_labels_to_keep              = []
 
     for combined_label in combined_column_labels:
         for common_label in common_column_labels:
@@ -422,8 +422,8 @@ def align_diff_frames(
 
     # Should extract columns to apply and do it in a batch in case
     # it adds new columns for example.
-    columns_applied: List[Union[Series, Column]]
-    column_labels_applied: List[Label]
+    #columns_applied: List[Union[Series, Column]]
+    #column_labels_applied: List[Label]
     if len(this_columns_to_apply) > 0 or len(that_columns_to_apply) > 0:
         psser_set, column_labels_set = zip(
             *resolve_func(combined, this_columns_to_apply, that_columns_to_apply)
@@ -434,7 +434,7 @@ def align_diff_frames(
         columns_applied = []
         column_labels_applied = []
 
-    applied: DataFrame = DataFrame(
+    applied            = DataFrame(
         combined._internal.with_new_columns(
             columns_applied + columns_to_keep,
             column_labels=column_labels_applied + column_labels_to_keep,
@@ -442,7 +442,7 @@ def align_diff_frames(
     )
 
     # 3. Restore the names back and deduplicate columns.
-    this_labels: Dict[Label, Label] = {}
+    this_labels                     = {}
     # Add columns in an order of its original frame.
     for this_label in this_column_labels:
         for new_label in applied._internal.column_labels:
@@ -450,7 +450,7 @@ def align_diff_frames(
                 this_labels[new_label[1:]] = new_label
 
     # After that, we will add the rest columns.
-    other_labels: Dict[Label, Label] = {}
+    other_labels                     = {}
     for new_label in applied._internal.column_labels:
         if new_label[1:] not in this_labels:
             other_labels[new_label[1:]] = new_label
@@ -460,12 +460,12 @@ def align_diff_frames(
     return psdf
 
 
-def is_testing() -> bool:
+def is_testing()        :
     """Indicates whether Spark is currently running tests."""
     return "SPARK_TESTING" in os.environ
 
 
-def default_session() -> SparkSession:
+def default_session()                :
     spark = SparkSession.getActiveSession()
     if spark is None:
         spark = SparkSession.builder.appName("pandas-on-Spark").getOrCreate()
@@ -486,7 +486,7 @@ def default_session() -> SparkSession:
 
 
 @contextmanager
-def sql_conf(pairs: Dict[str, Any], *, spark: Optional[SparkSession] = None) -> Iterator[None]:
+def sql_conf(pairs                , *, spark                         = None)                  :
     """
     A convenient context manager to set `value` to the Spark SQL configuration `key` and
     then restores it back when it exits.
@@ -512,11 +512,11 @@ def sql_conf(pairs: Dict[str, Any], *, spark: Optional[SparkSession] = None) -> 
 
 
 def validate_arguments_and_invoke_function(
-    pobj: Union[pd.DataFrame, pd.Series],
-    pandas_on_spark_func: Callable,
-    pandas_func: Callable,
-    input_args: Dict,
-) -> Any:
+    pobj                                ,
+    pandas_on_spark_func          ,
+    pandas_func          ,
+    input_args      ,
+)       :
     """
     Invokes a pandas function.
 
@@ -573,7 +573,7 @@ def validate_arguments_and_invoke_function(
 
 
 @no_type_check
-def lazy_property(fn: Callable[[Any], Any]) -> property:
+def lazy_property(fn                      )            :
     """
     Decorator that makes a property lazy-evaluated.
 
@@ -595,12 +595,12 @@ def lazy_property(fn: Callable[[Any], Any]) -> property:
     return wrapped_lazy_property.deleter(deleter)
 
 
-def scol_for(sdf: SparkDataFrame, column_name: str) -> Column:
+def scol_for(sdf                , column_name     )          :
     """Return Spark Column for the given column name."""
     return sdf["`{}`".format(column_name)]
 
 
-def column_labels_level(column_labels: List[Label]) -> int:
+def column_labels_level(column_labels             )       :
     """Return the level of the column index."""
     if len(column_labels) == 0:
         return 1
@@ -610,7 +610,7 @@ def column_labels_level(column_labels: List[Label]) -> int:
         return list(levels)[0]
 
 
-def name_like_string(name: Optional[Name]) -> str:
+def name_like_string(name                )       :
     """
     Return the name-like strings from str or tuple of str
 
@@ -628,7 +628,7 @@ def name_like_string(name: Optional[Name]) -> str:
     >>> name_like_string(name)
     '(a, b, c)'
     """
-    label: Label
+    #label: Label
     if name is None:
         label = ("__none__",)
     elif is_list_like(name):
@@ -638,7 +638,7 @@ def name_like_string(name: Optional[Name]) -> str:
     return ("(%s)" % ", ".join(label)) if len(label) > 1 else label[0]
 
 
-def is_name_like_tuple(value: Any, allow_none: bool = True, check_type: bool = False) -> bool:
+def is_name_like_tuple(value     , allow_none       = True, check_type       = False)        :
     """
     Check the given tuple is be able to be used as a name.
 
@@ -682,8 +682,8 @@ def is_name_like_tuple(value: Any, allow_none: bool = True, check_type: bool = F
 
 
 def is_name_like_value(
-    value: Any, allow_none: bool = True, allow_tuple: bool = True, check_type: bool = False
-) -> bool:
+    value     , allow_none       = True, allow_tuple       = True, check_type       = False
+)        :
     """
     Check the given value is like a name.
 
@@ -722,7 +722,7 @@ def is_name_like_value(
         return True
 
 
-def validate_axis(axis: Optional[Axis] = 0, none_axis: int = 0) -> int:
+def validate_axis(axis                 = 0, none_axis      = 0)       :
     """Check the given axis is valid."""
     # convert to numeric axis
     axis = cast(Dict[Optional[Axis], int], {None: none_axis, "index": 0, "columns": 1}).get(
@@ -734,7 +734,7 @@ def validate_axis(axis: Optional[Axis] = 0, none_axis: int = 0) -> int:
         raise ValueError("No axis named {0}".format(axis))
 
 
-def validate_bool_kwarg(value: Any, arg_name: str) -> Optional[bool]:
+def validate_bool_kwarg(value     , arg_name     )                  :
     """Ensures that argument passed in arg_name is of type bool."""
     if not (isinstance(value, bool) or value is None):
         raise TypeError(
@@ -744,7 +744,7 @@ def validate_bool_kwarg(value: Any, arg_name: str) -> Optional[bool]:
     return value
 
 
-def validate_how(how: str) -> str:
+def validate_how(how     )       :
     """Check the given how for join is valid."""
     if how == "full":
         warnings.warn(
@@ -763,7 +763,7 @@ def validate_how(how: str) -> str:
     return how
 
 
-def validate_mode(mode: str) -> str:
+def validate_mode(mode     )       :
     """Check the given mode for writing is valid."""
     if mode in ("w", "w+"):
         # 'w' in pandas equals 'overwrite' in Spark
@@ -792,18 +792,18 @@ def validate_mode(mode: str) -> str:
 
 
 @overload
-def verify_temp_column_name(df: SparkDataFrame, column_name_or_label: str) -> str:
+def verify_temp_column_name(df                , column_name_or_label     )       :
     ...
 
 
 @overload
-def verify_temp_column_name(df: "DataFrame", column_name_or_label: Name) -> Label:
+def verify_temp_column_name(df             , column_name_or_label      )         :
     ...
 
 
 def verify_temp_column_name(
-    df: Union["DataFrame", SparkDataFrame], column_name_or_label: Union[str, Name]
-) -> Union[str, Label]:
+    df                                    , column_name_or_label                  
+)                     :
     """
     Verify that the given column name does not exist in the given pandas-on-Spark or
     Spark DataFrame.
@@ -910,7 +910,7 @@ def verify_temp_column_name(
     return column_name_or_label
 
 
-def spark_column_equals(left: Column, right: Column) -> bool:
+def spark_column_equals(left        , right        )        :
     """
     Check both `left` and `right` have the same expressions.
 
@@ -931,42 +931,42 @@ def spark_column_equals(left: Column, right: Column) -> bool:
 
 
 def compare_null_first(
-    left: Column,
-    right: Column,
-    comp: Callable[[Column, Column], Column],
-) -> Column:
+    left        ,
+    right        ,
+    comp                                    ,
+)          :
     return (left.isNotNull() & right.isNotNull() & comp(left, right)) | (
         left.isNull() & right.isNotNull()
     )
 
 
 def compare_null_last(
-    left: Column,
-    right: Column,
-    comp: Callable[[Column, Column], Column],
-) -> Column:
+    left        ,
+    right        ,
+    comp                                    ,
+)          :
     return (left.isNotNull() & right.isNotNull() & comp(left, right)) | (
         left.isNotNull() & right.isNull()
     )
 
 
 def compare_disallow_null(
-    left: Column,
-    right: Column,
-    comp: Callable[[Column, Column], Column],
-) -> Column:
+    left        ,
+    right        ,
+    comp                                    ,
+)          :
     return left.isNotNull() & right.isNotNull() & comp(left, right)
 
 
 def compare_allow_null(
-    left: Column,
-    right: Column,
-    comp: Callable[[Column, Column], Column],
-) -> Column:
+    left        ,
+    right        ,
+    comp                                    ,
+)          :
     return left.isNull() | right.isNull() | comp(left, right)
 
 
-def log_advice(message: str) -> None:
+def log_advice(message     )        :
     """
     Display advisory logs for functions to be aware of when using pandas API on Spark
     for the existing pandas/PySpark users who may not be familiar with distributed environments
@@ -975,7 +975,7 @@ def log_advice(message: str) -> None:
     warnings.warn(message, PandasAPIOnSparkAdviceWarning)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

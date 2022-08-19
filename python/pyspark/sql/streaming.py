@@ -48,12 +48,12 @@ class StreamingQuery:
     This API is evolving.
     """
 
-    def __init__(self, jsq: JavaObject) -> None:
+    def __init__(self, jsq            )        :
         self._jsq = jsq
 
     @property  # type: ignore[misc]
     @since(2.0)
-    def id(self) -> str:
+    def id(self)       :
         """Returns the unique id of this query that persists across restarts from checkpoint data.
         That is, this id is generated when a query is started for the first time, and
         will be the same every time it is restarted from checkpoint data.
@@ -64,7 +64,7 @@ class StreamingQuery:
 
     @property  # type: ignore[misc]
     @since(2.1)
-    def runId(self) -> str:
+    def runId(self)       :
         """Returns the unique id of this query that does not persist across restarts. That is, every
         query that is started (or restarted from checkpoint) will have a different runId.
         """
@@ -72,7 +72,7 @@ class StreamingQuery:
 
     @property  # type: ignore[misc]
     @since(2.0)
-    def name(self) -> str:
+    def name(self)       :
         """Returns the user-specified name of the query, or null if not specified.
         This name can be specified in the `org.apache.spark.sql.streaming.DataStreamWriter`
         as `dataframe.writeStream.queryName("query").start()`.
@@ -82,12 +82,12 @@ class StreamingQuery:
 
     @property  # type: ignore[misc]
     @since(2.0)
-    def isActive(self) -> bool:
+    def isActive(self)        :
         """Whether this streaming query is currently active or not."""
         return self._jsq.isActive()
 
     @since(2.0)
-    def awaitTermination(self, timeout: Optional[int] = None) -> Optional[bool]:
+    def awaitTermination(self, timeout                = None)                  :
         """Waits for the termination of `this` query, either by :func:`query.stop()` or by an
         exception. If the query has terminated with an exception, then the exception will be thrown.
         If `timeout` is set, it returns whether the query has terminated or not within the
@@ -108,7 +108,7 @@ class StreamingQuery:
 
     @property  # type: ignore[misc]
     @since(2.1)
-    def status(self) -> Dict[str, Any]:
+    def status(self)                  :
         """
         Returns the current status of the query.
         """
@@ -116,7 +116,7 @@ class StreamingQuery:
 
     @property  # type: ignore[misc]
     @since(2.1)
-    def recentProgress(self) -> List[Dict[str, Any]]:
+    def recentProgress(self)                        :
         """Returns an array of the most recent [[StreamingQueryProgress]] updates for this query.
         The number of progress updates retained for each stream is configured by Spark session
         configuration `spark.sql.streaming.numRecentProgressUpdates`.
@@ -124,7 +124,7 @@ class StreamingQuery:
         return [json.loads(p.json()) for p in self._jsq.recentProgress()]
 
     @property
-    def lastProgress(self) -> Optional[Dict[str, Any]]:
+    def lastProgress(self)                            :
         """
         Returns the most recent :class:`StreamingQueryProgress` update of this streaming query or
         None if there were no progress updates
@@ -141,7 +141,7 @@ class StreamingQuery:
         else:
             return None
 
-    def processAllAvailable(self) -> None:
+    def processAllAvailable(self)        :
         """Blocks until all available data in the source has been processed and committed to the
         sink. This method is intended for testing.
 
@@ -157,11 +157,11 @@ class StreamingQuery:
         return self._jsq.processAllAvailable()
 
     @since(2.0)
-    def stop(self) -> None:
+    def stop(self)        :
         """Stop this streaming query."""
         self._jsq.stop()
 
-    def explain(self, extended: bool = False) -> None:
+    def explain(self, extended       = False)        :
         """Prints the (logical and physical) plans to the console for debugging purpose.
 
         .. versionadded:: 2.1.0
@@ -193,7 +193,7 @@ class StreamingQuery:
         # We should print it in the Python process.
         print(self._jsq.explainInternal(extended))
 
-    def exception(self) -> Optional[StreamingQueryException]:
+    def exception(self)                                     :
         """
         .. versionadded:: 2.1.0
 
@@ -221,11 +221,11 @@ class StreamingQueryManager:
     This API is evolving.
     """
 
-    def __init__(self, jsqm: JavaObject) -> None:
+    def __init__(self, jsqm            )        :
         self._jsqm = jsqm
 
     @property
-    def active(self) -> List[StreamingQuery]:
+    def active(self)                        :
         """Returns a list of active queries associated with this SQLContext
 
         .. versionadded:: 2.0.0
@@ -241,7 +241,7 @@ class StreamingQueryManager:
         """
         return [StreamingQuery(jsq) for jsq in self._jsqm.active()]
 
-    def get(self, id: str) -> StreamingQuery:
+    def get(self, id     )                  :
         """Returns an active query from this SQLContext or throws exception if an active query
         with this name doesn't exist.
 
@@ -263,7 +263,7 @@ class StreamingQueryManager:
         return StreamingQuery(self._jsqm.get(id))
 
     @since(2.0)
-    def awaitAnyTermination(self, timeout: Optional[int] = None) -> Optional[bool]:
+    def awaitAnyTermination(self, timeout                = None)                  :
         """Wait until any of the queries on the associated SQLContext has terminated since the
         creation of the context, or since :func:`resetTerminated()` was called. If any query was
         terminated with an exception, then the exception will be thrown.
@@ -290,7 +290,7 @@ class StreamingQueryManager:
         else:
             return self._jsqm.awaitAnyTermination()
 
-    def resetTerminated(self) -> None:
+    def resetTerminated(self)        :
         """Forget about past terminated queries so that :func:`awaitAnyTermination()` can be used
         again to wait for new terminations.
 
@@ -316,16 +316,16 @@ class DataStreamReader(OptionUtils):
     This API is evolving.
     """
 
-    def __init__(self, spark: "SparkSession") -> None:
+    def __init__(self, spark                )        :
         self._jreader = spark._jsparkSession.readStream()
         self._spark = spark
 
-    def _df(self, jdf: JavaObject) -> "DataFrame":
+    def _df(self, jdf            )               :
         from pyspark.sql.dataframe import DataFrame
 
         return DataFrame(jdf, self._spark)
 
-    def format(self, source: str) -> "DataStreamReader":
+    def format(self, source     )                      :
         """Specifies the input data source format.
 
         .. versionadded:: 2.0.0
@@ -346,7 +346,7 @@ class DataStreamReader(OptionUtils):
         self._jreader = self._jreader.format(source)
         return self
 
-    def schema(self, schema: Union[StructType, str]) -> "DataStreamReader":
+    def schema(self, schema                        )                      :
         """Specifies the input schema.
 
         Some data sources (e.g. JSON) can infer the input schema automatically from data.
@@ -382,7 +382,7 @@ class DataStreamReader(OptionUtils):
             raise TypeError("schema should be StructType or string")
         return self
 
-    def option(self, key: str, value: "OptionalPrimitiveType") -> "DataStreamReader":
+    def option(self, key     , value                         )                      :
         """Adds an input option for the underlying data source.
 
         .. versionadded:: 2.0.0
@@ -398,7 +398,7 @@ class DataStreamReader(OptionUtils):
         self._jreader = self._jreader.option(key, to_str(value))
         return self
 
-    def options(self, **options: "OptionalPrimitiveType") -> "DataStreamReader":
+    def options(self, **options                         )                      :
         """Adds input options for the underlying data source.
 
         .. versionadded:: 2.0.0
@@ -417,11 +417,11 @@ class DataStreamReader(OptionUtils):
 
     def load(
         self,
-        path: Optional[str] = None,
-        format: Optional[str] = None,
-        schema: Optional[Union[StructType, str]] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> "DataFrame":
+        path                = None,
+        format                = None,
+        schema                                   = None,
+        **options                         ,
+    )               :
         """Loads a data stream from a data source and returns it as a
         :class:`DataFrame <pyspark.sql.DataFrame>`.
 
@@ -470,29 +470,29 @@ class DataStreamReader(OptionUtils):
 
     def json(
         self,
-        path: str,
-        schema: Optional[Union[StructType, str]] = None,
-        primitivesAsString: Optional[Union[bool, str]] = None,
-        prefersDecimal: Optional[Union[bool, str]] = None,
-        allowComments: Optional[Union[bool, str]] = None,
-        allowUnquotedFieldNames: Optional[Union[bool, str]] = None,
-        allowSingleQuotes: Optional[Union[bool, str]] = None,
-        allowNumericLeadingZero: Optional[Union[bool, str]] = None,
-        allowBackslashEscapingAnyCharacter: Optional[Union[bool, str]] = None,
-        mode: Optional[str] = None,
-        columnNameOfCorruptRecord: Optional[str] = None,
-        dateFormat: Optional[str] = None,
-        timestampFormat: Optional[str] = None,
-        multiLine: Optional[Union[bool, str]] = None,
-        allowUnquotedControlChars: Optional[Union[bool, str]] = None,
-        lineSep: Optional[str] = None,
-        locale: Optional[str] = None,
-        dropFieldIfAllNull: Optional[Union[bool, str]] = None,
-        encoding: Optional[str] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-        allowNonNumericNumbers: Optional[Union[bool, str]] = None,
-    ) -> "DataFrame":
+        path     ,
+        schema                                   = None,
+        primitivesAsString                             = None,
+        prefersDecimal                             = None,
+        allowComments                             = None,
+        allowUnquotedFieldNames                             = None,
+        allowSingleQuotes                             = None,
+        allowNumericLeadingZero                             = None,
+        allowBackslashEscapingAnyCharacter                             = None,
+        mode                = None,
+        columnNameOfCorruptRecord                = None,
+        dateFormat                = None,
+        timestampFormat                = None,
+        multiLine                             = None,
+        allowUnquotedControlChars                             = None,
+        lineSep                = None,
+        locale                = None,
+        dropFieldIfAllNull                             = None,
+        encoding                = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+        allowNonNumericNumbers                             = None,
+    )               :
         """
         Loads a JSON file stream and returns the results as a :class:`DataFrame`.
 
@@ -564,11 +564,11 @@ class DataStreamReader(OptionUtils):
 
     def orc(
         self,
-        path: str,
-        mergeSchema: Optional[bool] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-    ) -> "DataFrame":
+        path     ,
+        mergeSchema                 = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+    )               :
         """Loads a ORC file stream, returning the result as a :class:`DataFrame`.
 
         .. versionadded:: 2.3.0
@@ -602,13 +602,13 @@ class DataStreamReader(OptionUtils):
 
     def parquet(
         self,
-        path: str,
-        mergeSchema: Optional[bool] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-        datetimeRebaseMode: Optional[Union[bool, str]] = None,
-        int96RebaseMode: Optional[Union[bool, str]] = None,
-    ) -> "DataFrame":
+        path     ,
+        mergeSchema                 = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+        datetimeRebaseMode                             = None,
+        int96RebaseMode                             = None,
+    )               :
         """
         Loads a Parquet file stream, returning the result as a :class:`DataFrame`.
 
@@ -650,12 +650,12 @@ class DataStreamReader(OptionUtils):
 
     def text(
         self,
-        path: str,
-        wholetext: bool = False,
-        lineSep: Optional[str] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-    ) -> "DataFrame":
+        path     ,
+        wholetext       = False,
+        lineSep                = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+    )               :
         """
         Loads a text file stream and returns a :class:`DataFrame` whose schema starts with a
         string column named "value", and followed by partitioned columns if there
@@ -705,38 +705,38 @@ class DataStreamReader(OptionUtils):
 
     def csv(
         self,
-        path: str,
-        schema: Optional[Union[StructType, str]] = None,
-        sep: Optional[str] = None,
-        encoding: Optional[str] = None,
-        quote: Optional[str] = None,
-        escape: Optional[str] = None,
-        comment: Optional[str] = None,
-        header: Optional[Union[bool, str]] = None,
-        inferSchema: Optional[Union[bool, str]] = None,
-        ignoreLeadingWhiteSpace: Optional[Union[bool, str]] = None,
-        ignoreTrailingWhiteSpace: Optional[Union[bool, str]] = None,
-        nullValue: Optional[str] = None,
-        nanValue: Optional[str] = None,
-        positiveInf: Optional[str] = None,
-        negativeInf: Optional[str] = None,
-        dateFormat: Optional[str] = None,
-        timestampFormat: Optional[str] = None,
-        maxColumns: Optional[Union[int, str]] = None,
-        maxCharsPerColumn: Optional[Union[int, str]] = None,
-        maxMalformedLogPerPartition: Optional[Union[int, str]] = None,
-        mode: Optional[str] = None,
-        columnNameOfCorruptRecord: Optional[str] = None,
-        multiLine: Optional[Union[bool, str]] = None,
-        charToEscapeQuoteEscaping: Optional[Union[bool, str]] = None,
-        enforceSchema: Optional[Union[bool, str]] = None,
-        emptyValue: Optional[str] = None,
-        locale: Optional[str] = None,
-        lineSep: Optional[str] = None,
-        pathGlobFilter: Optional[Union[bool, str]] = None,
-        recursiveFileLookup: Optional[Union[bool, str]] = None,
-        unescapedQuoteHandling: Optional[str] = None,
-    ) -> "DataFrame":
+        path     ,
+        schema                                   = None,
+        sep                = None,
+        encoding                = None,
+        quote                = None,
+        escape                = None,
+        comment                = None,
+        header                             = None,
+        inferSchema                             = None,
+        ignoreLeadingWhiteSpace                             = None,
+        ignoreTrailingWhiteSpace                             = None,
+        nullValue                = None,
+        nanValue                = None,
+        positiveInf                = None,
+        negativeInf                = None,
+        dateFormat                = None,
+        timestampFormat                = None,
+        maxColumns                            = None,
+        maxCharsPerColumn                            = None,
+        maxMalformedLogPerPartition                            = None,
+        mode                = None,
+        columnNameOfCorruptRecord                = None,
+        multiLine                             = None,
+        charToEscapeQuoteEscaping                             = None,
+        enforceSchema                             = None,
+        emptyValue                = None,
+        locale                = None,
+        lineSep                = None,
+        pathGlobFilter                             = None,
+        recursiveFileLookup                             = None,
+        unescapedQuoteHandling                = None,
+    )               :
         r"""Loads a CSV file stream and returns the result as a :class:`DataFrame`.
 
         This function will go through the input once to determine the input schema if
@@ -811,7 +811,7 @@ class DataStreamReader(OptionUtils):
         else:
             raise TypeError("path can be only a single string")
 
-    def table(self, tableName: str) -> "DataFrame":
+    def table(self, tableName     )               :
         """Define a Streaming DataFrame on a Table. The DataSource corresponding to the table should
         support streaming mode.
 
@@ -854,17 +854,17 @@ class DataStreamWriter:
     This API is evolving.
     """
 
-    def __init__(self, df: "DataFrame") -> None:
+    def __init__(self, df             )        :
         self._df = df
         self._spark = df.sparkSession
         self._jwrite = df._jdf.writeStream()
 
-    def _sq(self, jsq: JavaObject) -> StreamingQuery:
+    def _sq(self, jsq            )                  :
         from pyspark.sql.streaming import StreamingQuery
 
         return StreamingQuery(jsq)
 
-    def outputMode(self, outputMode: str) -> "DataStreamWriter":
+    def outputMode(self, outputMode     )                      :
         """Specifies how data of a streaming DataFrame/Dataset is written to a streaming sink.
 
         .. versionadded:: 2.0.0
@@ -892,7 +892,7 @@ class DataStreamWriter:
         self._jwrite = self._jwrite.outputMode(outputMode)
         return self
 
-    def format(self, source: str) -> "DataStreamWriter":
+    def format(self, source     )                      :
         """Specifies the underlying output data source.
 
         .. versionadded:: 2.0.0
@@ -913,7 +913,7 @@ class DataStreamWriter:
         self._jwrite = self._jwrite.format(source)
         return self
 
-    def option(self, key: str, value: "OptionalPrimitiveType") -> "DataStreamWriter":
+    def option(self, key     , value                         )                      :
         """Adds an output option for the underlying data source.
 
         .. versionadded:: 2.0.0
@@ -925,7 +925,7 @@ class DataStreamWriter:
         self._jwrite = self._jwrite.option(key, to_str(value))
         return self
 
-    def options(self, **options: "OptionalPrimitiveType") -> "DataStreamWriter":
+    def options(self, **options                         )                      :
         """Adds output options for the underlying data source.
 
         .. versionadded:: 2.0.0
@@ -939,14 +939,14 @@ class DataStreamWriter:
         return self
 
     @overload
-    def partitionBy(self, *cols: str) -> "DataStreamWriter":
+    def partitionBy(self, *cols     )                      :
         ...
 
     @overload
-    def partitionBy(self, __cols: List[str]) -> "DataStreamWriter":
+    def partitionBy(self, __cols           )                      :
         ...
 
-    def partitionBy(self, *cols: str) -> "DataStreamWriter":  # type: ignore[misc]
+    def partitionBy(self, *cols     )                      :  # type: ignore[misc]
         """Partitions the output by the given columns on the file system.
 
         If specified, the output is laid out on the file system similar
@@ -968,7 +968,7 @@ class DataStreamWriter:
         self._jwrite = self._jwrite.partitionBy(_to_seq(self._spark._sc, cols))
         return self
 
-    def queryName(self, queryName: str) -> "DataStreamWriter":
+    def queryName(self, queryName     )                      :
         """Specifies the name of the :class:`StreamingQuery` that can be started with
         :func:`start`. This name must be unique among all the currently active queries
         in the associated SparkSession.
@@ -994,29 +994,29 @@ class DataStreamWriter:
         return self
 
     @overload
-    def trigger(self, *, processingTime: str) -> "DataStreamWriter":
+    def trigger(self, *, processingTime     )                      :
         ...
 
     @overload
-    def trigger(self, *, once: bool) -> "DataStreamWriter":
+    def trigger(self, *, once      )                      :
         ...
 
     @overload
-    def trigger(self, *, continuous: str) -> "DataStreamWriter":
+    def trigger(self, *, continuous     )                      :
         ...
 
     @overload
-    def trigger(self, *, availableNow: bool) -> "DataStreamWriter":
+    def trigger(self, *, availableNow      )                      :
         ...
 
     def trigger(
         self,
         *,
-        processingTime: Optional[str] = None,
-        once: Optional[bool] = None,
-        continuous: Optional[str] = None,
-        availableNow: Optional[bool] = None,
-    ) -> "DataStreamWriter":
+        processingTime                = None,
+        once                 = None,
+        continuous                = None,
+        availableNow                 = None,
+    )                      :
         """Set the trigger for the stream query. If this is not set it will run the query as fast
         as possible, which is equivalent to setting the trigger to ``processingTime='0 seconds'``.
 
@@ -1096,14 +1096,14 @@ class DataStreamWriter:
         return self
 
     @overload
-    def foreach(self, f: Callable[[Row], None]) -> "DataStreamWriter":
+    def foreach(self, f                       )                      :
         ...
 
     @overload
-    def foreach(self, f: "SupportsProcess") -> "DataStreamWriter":
+    def foreach(self, f                   )                      :
         ...
 
-    def foreach(self, f: Union[Callable[[Row], None], "SupportsProcess"]) -> "DataStreamWriter":
+    def foreach(self, f                                                 )                      :
         """
         Sets the output of the streaming query to be processed using the provided writer ``f``.
         This is often used to write the output of a streaming query to arbitrary storage systems.
@@ -1204,7 +1204,7 @@ class DataStreamWriter:
             # The provided object is a callable function that is supposed to be called on each row.
             # Construct a function that takes an iterator and calls the provided function on each
             # row.
-            def func_without_process(_: Any, iterator: Iterator) -> Iterator:
+            def func_without_process(_     , iterator          )            :
                 for x in iterator:
                     f(x)  # type: ignore[operator]
                 return iter([])
@@ -1222,7 +1222,7 @@ class DataStreamWriter:
             if not callable(getattr(f, "process")):
                 raise TypeError("Attribute 'process' in provided object is not callable")
 
-            def doesMethodExist(method_name: str) -> bool:
+            def doesMethodExist(method_name     )        :
                 exists = hasattr(f, method_name)
                 if exists and not callable(getattr(f, method_name)):
                     raise TypeError(
@@ -1233,7 +1233,7 @@ class DataStreamWriter:
             open_exists = doesMethodExist("open")
             close_exists = doesMethodExist("close")
 
-            def func_with_open_process_close(partition_id: Any, iterator: Iterator) -> Iterator:
+            def func_with_open_process_close(partition_id     , iterator          )            :
                 epoch_id = cast(TaskContext, TaskContext.get()).getLocalProperty(
                     "streaming.sql.batchId"
                 )
@@ -1276,7 +1276,7 @@ class DataStreamWriter:
         self._jwrite.foreach(jForeachWriter)
         return self
 
-    def foreachBatch(self, func: Callable[["DataFrame", int], None]) -> "DataStreamWriter":
+    def foreachBatch(self, func                                    )                      :
         """
         Sets the output of the streaming query to be processed using the provided
         function. This is supported only the in the micro-batch execution modes (that is, when the
@@ -1314,13 +1314,13 @@ class DataStreamWriter:
 
     def start(
         self,
-        path: Optional[str] = None,
-        format: Optional[str] = None,
-        outputMode: Optional[str] = None,
-        partitionBy: Optional[Union[str, List[str]]] = None,
-        queryName: Optional[str] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> StreamingQuery:
+        path                = None,
+        format                = None,
+        outputMode                = None,
+        partitionBy                                  = None,
+        queryName                = None,
+        **options                         ,
+    )                  :
         """Streams the contents of the :class:`DataFrame` to a data source.
 
         The data source is specified by the ``format`` and a set of ``options``.
@@ -1392,13 +1392,13 @@ class DataStreamWriter:
 
     def toTable(
         self,
-        tableName: str,
-        format: Optional[str] = None,
-        outputMode: Optional[str] = None,
-        partitionBy: Optional[Union[str, List[str]]] = None,
-        queryName: Optional[str] = None,
-        **options: "OptionalPrimitiveType",
-    ) -> StreamingQuery:
+        tableName     ,
+        format                = None,
+        outputMode                = None,
+        partitionBy                                  = None,
+        queryName                = None,
+        **options                         ,
+    )                  :
         """
         Starts the execution of the streaming query, which will continually output results to the
         given table as new data arrives.
@@ -1468,7 +1468,7 @@ class DataStreamWriter:
         return self._sq(self._jwrite.toTable(tableName))
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import os
     import tempfile

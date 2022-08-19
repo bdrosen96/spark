@@ -277,7 +277,7 @@ class PandasUDFTests(ReusedSQLTestCase):
         import pandas as pd
 
         @pandas_udf(DayTimeIntervalType(DayTimeIntervalType.DAY, DayTimeIntervalType.SECOND))
-        def noop(s: pd.Series) -> pd.Series:
+        def noop(s           )             :
             assert s.iloc[0] == datetime.timedelta(microseconds=123)
             return s
 

@@ -34,15 +34,15 @@ class SQLStringFormatter(string.Formatter):
     query; cannot be reused across multiple SQL queries without cleaning.
     """
 
-    def __init__(self, session: "SparkSession") -> None:
-        self._session: "SparkSession" = session
-        self._temp_views: List[Tuple[DataFrame, str]] = []
+    def __init__(self, session                )        :
+        self._session                 = session
+        self._temp_views                              = []
 
-    def get_field(self, field_name: str, args: Sequence[Any], kwargs: Mapping[str, Any]) -> Any:
+    def get_field(self, field_name     , args               , kwargs                   )       :
         obj, first = super(SQLStringFormatter, self).get_field(field_name, args, kwargs)
         return self._convert_value(obj, field_name), first
 
-    def _convert_value(self, val: Any, field_name: str) -> Optional[str]:
+    def _convert_value(self, val     , field_name     )                 :
         """
         Converts the given value into a SQL string.
         """
@@ -78,7 +78,7 @@ class SQLStringFormatter(string.Formatter):
         else:
             return val
 
-    def clear(self) -> None:
+    def clear(self)        :
         for _, n in self._temp_views:
             self._session.catalog.dropTempView(n)
         self._temp_views = []

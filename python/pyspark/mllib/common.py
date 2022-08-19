@@ -40,7 +40,7 @@ _float_str_mapping = {
 }
 
 
-def _new_smart_decode(obj: Any) -> str:
+def _new_smart_decode(obj     )       :
     if isinstance(obj, float):
         s = str(obj)
         return _float_str_mapping.get(s, s)
@@ -61,7 +61,7 @@ _picklable_classes = [
 
 
 # this will call the MLlib version of pythonToJava()
-def _to_java_object_rdd(rdd: RDD) -> JavaObject:
+def _to_java_object_rdd(rdd     )              :
     """Return a JavaRDD of Object by unpickling
 
     It will convert each Python object into Java object by Pickle, whenever the
@@ -72,7 +72,7 @@ def _to_java_object_rdd(rdd: RDD) -> JavaObject:
     return rdd.ctx._jvm.org.apache.spark.mllib.api.python.SerDe.pythonToJava(rdd._jrdd, True)
 
 
-def _py2java(sc: SparkContext, obj: Any) -> JavaObject:
+def _py2java(sc              , obj     )              :
     """Convert Python object into Java"""
     if isinstance(obj, RDD):
         obj = _to_java_object_rdd(obj)
@@ -93,7 +93,7 @@ def _py2java(sc: SparkContext, obj: Any) -> JavaObject:
     return obj
 
 
-def _java2py(sc: SparkContext, r: "JavaObjectOrPickleDump", encoding: str = "bytes") -> Any:
+def _java2py(sc              , r                          , encoding      = "bytes")       :
     if isinstance(r, JavaObject):
         clsName = r.getClass().getSimpleName()
         # convert RDD into JavaRDD
@@ -124,14 +124,14 @@ def _java2py(sc: SparkContext, r: "JavaObjectOrPickleDump", encoding: str = "byt
 
 
 def callJavaFunc(
-    sc: pyspark.context.SparkContext, func: Callable[..., "JavaObjectOrPickleDump"], *args: Any
-) -> Any:
+    sc                              , func                                         , *args     
+)       :
     """Call Java Function"""
     java_args = [_py2java(sc, a) for a in args]
     return _java2py(sc, func(*java_args))
 
 
-def callMLlibFunc(name: str, *args: Any) -> Any:
+def callMLlibFunc(name     , *args     )       :
     """Call API in PythonMLLibAPI"""
     sc = SparkContext.getOrCreate()
     assert sc._jvm is not None
@@ -144,20 +144,20 @@ class JavaModelWrapper:
     Wrapper for the model in JVM
     """
 
-    def __init__(self, java_model: JavaObject):
+    def __init__(self, java_model            ):
         self._sc = SparkContext.getOrCreate()
         self._java_model = java_model
 
-    def __del__(self) -> None:
+    def __del__(self)        :
         assert self._sc._gateway is not None
         self._sc._gateway.detach(self._java_model)
 
-    def call(self, name: str, *a: Any) -> Any:
+    def call(self, name     , *a     )       :
         """Call method of java_model"""
         return callJavaFunc(self._sc, getattr(self._java_model, name), *a)
 
 
-def inherit_doc(cls: "C") -> "C":
+def inherit_doc(cls     )       :
     """
     A decorator that makes a class inherit documentation from its parents.
     """

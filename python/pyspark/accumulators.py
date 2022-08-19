@@ -38,12 +38,12 @@ pickleSer = CPickleSerializer()
 
 # Holds accumulators registered on the current machine, keyed by ID. This is then used to send
 # the local accumulator updates back to the driver program at the end of a task.
-_accumulatorRegistry: Dict[int, "Accumulator"] = {}
+_accumulatorRegistry                           = {}
 
 
 def _deserialize_accumulator(
-    aid: int, zero_value: T, accum_param: "AccumulatorParam[T]"
-) -> "Accumulator[T]":
+    aid     , zero_value   , accum_param                       
+)                    :
     from pyspark.accumulators import _accumulatorRegistry
 
     # If this certain accumulator was deserialized, don't overwrite it.
@@ -116,7 +116,7 @@ class Accumulator(Generic[T]):
     TypeError: ...
     """
 
-    def __init__(self, aid: int, value: T, accum_param: "AccumulatorParam[T]"):
+    def __init__(self, aid     , value   , accum_param                       ):
         """Create a new Accumulator with a given initial value and AccumulatorParam object"""
         from pyspark.accumulators import _accumulatorRegistry
 
@@ -128,41 +128,41 @@ class Accumulator(Generic[T]):
 
     def __reduce__(
         self,
-    ) -> Tuple[
-        Callable[[int, T, "AccumulatorParam[T]"], "Accumulator[T]"],
-        Tuple[int, T, "AccumulatorParam[T]"],
-    ]:
+    ):          
+                                                                    
+                                             
+     
         """Custom serialization; saves the zero value from our AccumulatorParam"""
         param = self.accum_param
         return (_deserialize_accumulator, (self.aid, param.zero(self._value), param))
 
     @property
-    def value(self) -> T:
+    def value(self)     :
         """Get the accumulator's value; only usable in driver program"""
         if self._deserialized:
             raise RuntimeError("Accumulator.value cannot be accessed inside tasks")
         return self._value
 
     @value.setter
-    def value(self, value: T) -> None:
+    def value(self, value   )        :
         """Sets the accumulator's value; only usable in driver program"""
         if self._deserialized:
             raise RuntimeError("Accumulator.value cannot be accessed inside tasks")
         self._value = value
 
-    def add(self, term: T) -> None:
+    def add(self, term   )        :
         """Adds a term to this accumulator's value"""
         self._value = self.accum_param.addInPlace(self._value, term)
 
-    def __iadd__(self, term: T) -> "Accumulator[T]":
+    def __iadd__(self, term   )                    :
         """The += operator; adds a term to this accumulator's value"""
         self.add(term)
         return self
 
-    def __str__(self) -> str:
+    def __str__(self)       :
         return str(self._value)
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "Accumulator<id=%i, value=%s>" % (self.aid, self._value)
 
 
@@ -193,14 +193,14 @@ class AccumulatorParam(Generic[T]):
     [7.0, 8.0, 9.0]
     """
 
-    def zero(self, value: T) -> T:
+    def zero(self, value   )     :
         """
         Provide a "zero value" for the type, compatible in dimensions with the
         provided `value` (e.g., a zero vector)
         """
         raise NotImplementedError
 
-    def addInPlace(self, value1: T, value2: T) -> T:
+    def addInPlace(self, value1   , value2   )     :
         """
         Add two values of the accumulator's data type, returning a new value;
         for efficiency, can also update `value1` in place and return it.
@@ -216,13 +216,13 @@ class AddingAccumulatorParam(AccumulatorParam[U]):
     as a parameter.
     """
 
-    def __init__(self, zero_value: U):
+    def __init__(self, zero_value   ):
         self.zero_value = zero_value
 
-    def zero(self, value: U) -> U:
+    def zero(self, value   )     :
         return self.zero_value
 
-    def addInPlace(self, value1: U, value2: U) -> U:
+    def addInPlace(self, value1   , value2   )     :
         value1 += value2  # type: ignore[operator]
         return value1
 
@@ -240,12 +240,12 @@ class _UpdateRequestHandler(SocketServer.StreamRequestHandler):
     server is shutdown.
     """
 
-    def handle(self) -> None:
+    def handle(self)        :
         from pyspark.accumulators import _accumulatorRegistry
 
         auth_token = self.server.auth_token  # type: ignore[attr-defined]
 
-        def poll(func: Callable[[], bool]) -> None:
+        def poll(func                    )        :
             while not self.server.server_shutdown:  # type: ignore[attr-defined]
                 # Poll every 1 second for new data -- don't block in case of shutdown.
                 r, _, _ = select.select([self.rfile], [], [], 1)
@@ -253,7 +253,7 @@ class _UpdateRequestHandler(SocketServer.StreamRequestHandler):
                     if func():
                         break
 
-        def accum_updates() -> bool:
+        def accum_updates()        :
             num_updates = read_int(self.rfile)
             for _ in range(num_updates):
                 (aid, update) = pickleSer._read_with_length(self.rfile)
@@ -262,8 +262,8 @@ class _UpdateRequestHandler(SocketServer.StreamRequestHandler):
             self.wfile.write(struct.pack("!b", 1))
             return False
 
-        def authenticate_and_accum_updates() -> bool:
-            received_token: Union[bytes, str] = self.rfile.read(len(auth_token))
+        def authenticate_and_accum_updates()        :
+            received_token                    = self.rfile.read(len(auth_token))
             if isinstance(received_token, bytes):
                 received_token = received_token.decode("utf-8")
             if received_token == auth_token:
@@ -284,9 +284,9 @@ class _UpdateRequestHandler(SocketServer.StreamRequestHandler):
 class AccumulatorServer(SocketServer.TCPServer):
     def __init__(
         self,
-        server_address: Tuple[str, int],
-        RequestHandlerClass: Type["socketserver.BaseRequestHandler"],
-        auth_token: str,
+        server_address                 ,
+        RequestHandlerClass                                         ,
+        auth_token     ,
     ):
         SocketServer.TCPServer.__init__(self, server_address, RequestHandlerClass)
         self.auth_token = auth_token
@@ -297,13 +297,13 @@ class AccumulatorServer(SocketServer.TCPServer):
     """
     server_shutdown = False
 
-    def shutdown(self) -> None:
+    def shutdown(self)        :
         self.server_shutdown = True
         SocketServer.TCPServer.shutdown(self)
         self.server_close()
 
 
-def _start_update_server(auth_token: str) -> AccumulatorServer:
+def _start_update_server(auth_token     )                     :
     """Start a TCP server to receive accumulator updates in a daemon thread, and returns it"""
     server = AccumulatorServer(("localhost", 0), _UpdateRequestHandler, auth_token)
     thread = threading.Thread(target=server.serve_forever)

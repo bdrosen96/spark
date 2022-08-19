@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 __all__ = ["Window", "WindowSpec"]
 
 
-def _to_java_cols(cols: Tuple[Union["ColumnOrName", List["ColumnOrName_"]], ...]) -> int:
+def _to_java_cols(cols                                                          )       :
     sc = SparkContext._active_spark_context
     if len(cols) == 1 and isinstance(cols[0], list):
         cols = cols[0]  # type: ignore[assignment]
@@ -63,15 +63,15 @@ class Window:
     _PRECEDING_THRESHOLD = max(-sys.maxsize, _JAVA_MIN_LONG)
     _FOLLOWING_THRESHOLD = min(sys.maxsize, _JAVA_MAX_LONG)
 
-    unboundedPreceding: int = _JAVA_MIN_LONG
+    unboundedPreceding      = _JAVA_MIN_LONG
 
-    unboundedFollowing: int = _JAVA_MAX_LONG
+    unboundedFollowing      = _JAVA_MAX_LONG
 
-    currentRow: int = 0
+    currentRow      = 0
 
     @staticmethod
     @since(1.4)
-    def partitionBy(*cols: Union["ColumnOrName", List["ColumnOrName_"]]) -> "WindowSpec":
+    def partitionBy(*cols                                              )                :
         """
         Creates a :class:`WindowSpec` with the partitioning defined.
         """
@@ -82,7 +82,7 @@ class Window:
 
     @staticmethod
     @since(1.4)
-    def orderBy(*cols: Union["ColumnOrName", List["ColumnOrName_"]]) -> "WindowSpec":
+    def orderBy(*cols                                              )                :
         """
         Creates a :class:`WindowSpec` with the ordering defined.
         """
@@ -92,7 +92,7 @@ class Window:
         return WindowSpec(jspec)
 
     @staticmethod
-    def rowsBetween(start: int, end: int) -> "WindowSpec":
+    def rowsBetween(start     , end     )                :
         """
         Creates a :class:`WindowSpec` with the frame boundaries defined,
         from `start` (inclusive) to `end` (inclusive).
@@ -157,7 +157,7 @@ class Window:
         return WindowSpec(jspec)
 
     @staticmethod
-    def rangeBetween(start: int, end: int) -> "WindowSpec":
+    def rangeBetween(start     , end     )                :
         """
         Creates a :class:`WindowSpec` with the frame boundaries defined,
         from `start` (inclusive) to `end` (inclusive).
@@ -235,10 +235,10 @@ class WindowSpec:
     .. versionadded:: 1.4.0
     """
 
-    def __init__(self, jspec: JavaObject) -> None:
+    def __init__(self, jspec            )        :
         self._jspec = jspec
 
-    def partitionBy(self, *cols: Union["ColumnOrName", List["ColumnOrName_"]]) -> "WindowSpec":
+    def partitionBy(self, *cols                                              )                :
         """
         Defines the partitioning columns in a :class:`WindowSpec`.
 
@@ -251,7 +251,7 @@ class WindowSpec:
         """
         return WindowSpec(self._jspec.partitionBy(_to_java_cols(cols)))
 
-    def orderBy(self, *cols: Union["ColumnOrName", List["ColumnOrName_"]]) -> "WindowSpec":
+    def orderBy(self, *cols                                              )                :
         """
         Defines the ordering columns in a :class:`WindowSpec`.
 
@@ -264,7 +264,7 @@ class WindowSpec:
         """
         return WindowSpec(self._jspec.orderBy(_to_java_cols(cols)))
 
-    def rowsBetween(self, start: int, end: int) -> "WindowSpec":
+    def rowsBetween(self, start     , end     )                :
         """
         Defines the frame boundaries, from `start` (inclusive) to `end` (inclusive).
 
@@ -295,7 +295,7 @@ class WindowSpec:
             end = Window.unboundedFollowing
         return WindowSpec(self._jspec.rowsBetween(start, end))
 
-    def rangeBetween(self, start: int, end: int) -> "WindowSpec":
+    def rangeBetween(self, start     , end     )                :
         """
         Defines the frame boundaries, from `start` (inclusive) to `end` (inclusive).
 
@@ -327,7 +327,7 @@ class WindowSpec:
         return WindowSpec(self._jspec.rangeBetween(start, end))
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import pyspark.sql.window
 

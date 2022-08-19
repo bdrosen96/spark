@@ -38,21 +38,21 @@ class KernelDensity:
     array([ 0.12938758,  0.12938758])
     """
 
-    def __init__(self) -> None:
-        self._bandwidth: float = 1.0
-        self._sample: Optional[RDD[float]] = None
+    def __init__(self)        :
+        self._bandwidth        = 1.0
+        self._sample                       = None
 
-    def setBandwidth(self, bandwidth: float) -> None:
+    def setBandwidth(self, bandwidth       )        :
         """Set bandwidth of each sample. Defaults to 1.0"""
         self._bandwidth = bandwidth
 
-    def setSample(self, sample: RDD[float]) -> None:
+    def setSample(self, sample            )        :
         """Set sample points from the population. Should be a RDD"""
         if not isinstance(sample, RDD):
             raise TypeError("samples should be a RDD, received %s" % type(sample))
         self._sample = sample
 
-    def estimate(self, points: Iterable[float]) -> ndarray:
+    def estimate(self, points                 )           :
         """Estimate the probability density at points"""
         points = list(points)
         densities = callMLlibFunc("estimateKernelDensity", self._sample, self._bandwidth, points)

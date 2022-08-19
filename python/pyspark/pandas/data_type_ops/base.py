@@ -64,7 +64,7 @@ if extension_object_dtypes_available:
     from pandas import BooleanDtype, StringDtype
 
 
-def is_valid_operand_for_numeric_arithmetic(operand: Any, *, allow_bool: bool = True) -> bool:
+def is_valid_operand_for_numeric_arithmetic(operand     , *, allow_bool       = True)        :
     """Check whether the `operand` is valid for arithmetic operations against numerics."""
     from pyspark.pandas.base import IndexOpsMixin
 
@@ -82,8 +82,8 @@ def is_valid_operand_for_numeric_arithmetic(operand: Any, *, allow_bool: bool = 
 
 
 def transform_boolean_operand_to_numeric(
-    operand: Any, *, spark_type: Optional[DataType] = None
-) -> Any:
+    operand     , *, spark_type                     = None
+)       :
     """Transform boolean operand to numeric.
 
     If the `operand` is:
@@ -110,8 +110,8 @@ def transform_boolean_operand_to_numeric(
 
 
 def _as_categorical_type(
-    index_ops: IndexOpsLike, dtype: CategoricalDtype, spark_type: DataType
-) -> IndexOpsLike:
+    index_ops              , dtype                  , spark_type          
+)                :
     """Cast `index_ops` to categorical dtype, given `dtype` and `spark_type`."""
     assert isinstance(dtype, CategoricalDtype)
     if dtype.categories is None:
@@ -139,7 +139,7 @@ def _as_categorical_type(
         )
 
 
-def _as_bool_type(index_ops: IndexOpsLike, dtype: Dtype) -> IndexOpsLike:
+def _as_bool_type(index_ops              , dtype       )                :
     """Cast `index_ops` to BooleanType Spark type, given `dtype`."""
     spark_type = BooleanType()
     if isinstance(dtype, extension_dtypes):
@@ -154,8 +154,8 @@ def _as_bool_type(index_ops: IndexOpsLike, dtype: Dtype) -> IndexOpsLike:
 
 
 def _as_string_type(
-    index_ops: IndexOpsLike, dtype: Dtype, *, null_str: str = str(None)
-) -> IndexOpsLike:
+    index_ops              , dtype       , *, null_str      = str(None)
+)                :
     """Cast `index_ops` to StringType Spark type, given `dtype` and `null_str`,
     representing null Spark column. Note that `null_str` is for non-extension dtypes only.
     """
@@ -170,7 +170,7 @@ def _as_string_type(
     )
 
 
-def _as_other_type(index_ops: IndexOpsLike, dtype: Dtype, spark_type: DataType) -> IndexOpsLike:
+def _as_other_type(index_ops              , dtype       , spark_type          )                :
     """Cast `index_ops` to a `dtype` (`spark_type`) that needs no pre-processing.
 
     Destination types that need pre-processing: CategoricalDtype, BooleanType, and StringType.
@@ -188,13 +188,13 @@ def _as_other_type(index_ops: IndexOpsLike, dtype: Dtype, spark_type: DataType) 
     return index_ops._with_new_scol(scol, field=InternalField(dtype=dtype))
 
 
-def _sanitize_list_like(operand: Any) -> None:
+def _sanitize_list_like(operand     )        :
     """Raise TypeError if operand is list-like."""
     if isinstance(operand, (list, tuple, dict, set)):
         raise TypeError("The operation can not be applied to %s." % type(operand).__name__)
 
 
-def _is_valid_for_logical_operator(right: Any) -> bool:
+def _is_valid_for_logical_operator(right     )        :
     from pyspark.pandas.base import IndexOpsMixin
 
     return isinstance(right, (int, bool)) or (
@@ -206,7 +206,7 @@ def _is_valid_for_logical_operator(right: Any) -> bool:
     )
 
 
-def _is_boolean_type(right: Any) -> bool:
+def _is_boolean_type(right     )        :
     from pyspark.pandas.base import IndexOpsMixin
 
     return isinstance(right, bool) or (
@@ -217,7 +217,7 @@ def _is_boolean_type(right: Any) -> bool:
 class DataTypeOps(object, metaclass=ABCMeta):
     """The base class for binary operations of pandas-on-Spark objects (of different data types)."""
 
-    def __new__(cls, dtype: Dtype, spark_type: DataType) -> "DataTypeOps":
+    def __new__(cls, dtype       , spark_type          )                 :
         from pyspark.pandas.data_type_ops.binary_ops import BinaryOps
         from pyspark.pandas.data_type_ops.boolean_ops import BooleanOps, BooleanExtensionOps
         from pyspark.pandas.data_type_ops.categorical_ops import CategoricalOps
@@ -288,96 +288,96 @@ class DataTypeOps(object, metaclass=ABCMeta):
         else:
             raise TypeError("Type %s was not understood." % dtype)
 
-    def __init__(self, dtype: Dtype, spark_type: DataType):
+    def __init__(self, dtype       , spark_type          ):
         self.dtype = dtype
         self.spark_type = spark_type
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         raise NotImplementedError()
 
-    def add(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def add(self, left              , right     )                 :
         raise TypeError("Addition can not be applied to %s." % self.pretty_name)
 
-    def sub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def sub(self, left              , right     )                 :
         raise TypeError("Subtraction can not be applied to %s." % self.pretty_name)
 
-    def mul(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def mul(self, left              , right     )                 :
         raise TypeError("Multiplication can not be applied to %s." % self.pretty_name)
 
-    def truediv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def truediv(self, left              , right     )                 :
         raise TypeError("True division can not be applied to %s." % self.pretty_name)
 
-    def floordiv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def floordiv(self, left              , right     )                 :
         raise TypeError("Floor division can not be applied to %s." % self.pretty_name)
 
-    def mod(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def mod(self, left              , right     )                 :
         raise TypeError("Modulo can not be applied to %s." % self.pretty_name)
 
-    def pow(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def pow(self, left              , right     )                 :
         raise TypeError("Exponentiation can not be applied to %s." % self.pretty_name)
 
-    def radd(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def radd(self, left              , right     )                 :
         raise TypeError("Addition can not be applied to %s." % self.pretty_name)
 
-    def rsub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rsub(self, left              , right     )                 :
         raise TypeError("Subtraction can not be applied to %s." % self.pretty_name)
 
-    def rmul(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rmul(self, left              , right     )                 :
         raise TypeError("Multiplication can not be applied to %s." % self.pretty_name)
 
-    def rtruediv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rtruediv(self, left              , right     )                 :
         raise TypeError("True division can not be applied to %s." % self.pretty_name)
 
-    def rfloordiv(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rfloordiv(self, left              , right     )                 :
         raise TypeError("Floor division can not be applied to %s." % self.pretty_name)
 
-    def rmod(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rmod(self, left              , right     )                 :
         raise TypeError("Modulo can not be applied to %s." % self.pretty_name)
 
-    def rpow(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rpow(self, left              , right     )                 :
         raise TypeError("Exponentiation can not be applied to %s." % self.pretty_name)
 
-    def __and__(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def __and__(self, left              , right     )                 :
         raise TypeError("Bitwise and can not be applied to %s." % self.pretty_name)
 
-    def xor(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def xor(self, left              , right     )                 :
         raise TypeError("Bitwise xor can not be applied to %s." % self.pretty_name)
 
-    def __or__(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def __or__(self, left              , right     )                 :
         raise TypeError("Bitwise or can not be applied to %s." % self.pretty_name)
 
-    def rand(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rand(self, left              , right     )                 :
         _sanitize_list_like(right)
         return left.__and__(right)
 
-    def rxor(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rxor(self, left              , right     )                 :
         _sanitize_list_like(right)
         return left ^ right
 
-    def ror(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ror(self, left              , right     )                 :
         _sanitize_list_like(right)
         return left.__or__(right)
 
-    def neg(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def neg(self, operand              )                :
         raise TypeError("Unary - can not be applied to %s." % self.pretty_name)
 
-    def abs(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def abs(self, operand              )                :
         raise TypeError("abs() can not be applied to %s." % self.pretty_name)
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         raise TypeError("< can not be applied to %s." % self.pretty_name)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         raise TypeError("<= can not be applied to %s." % self.pretty_name)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         raise TypeError("> can not be applied to %s." % self.pretty_name)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         raise TypeError(">= can not be applied to %s." % self.pretty_name)
 
-    def eq(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def eq(self, left              , right     )                 :
         if isinstance(right, (list, tuple)):
             from pyspark.pandas.series import first_series, scol_for
             from pyspark.pandas.frame import DataFrame
@@ -470,25 +470,25 @@ class DataTypeOps(object, metaclass=ABCMeta):
 
             return column_op(Column.__eq__)(left, right)
 
-    def ne(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ne(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
 
         return column_op(Column.__ne__)(left, right)
 
-    def invert(self, operand: IndexOpsLike) -> IndexOpsLike:
+    def invert(self, operand              )                :
         raise TypeError("Unary ~ can not be applied to %s." % self.pretty_name)
 
-    def restore(self, col: pd.Series) -> pd.Series:
+    def restore(self, col           )             :
         """Restore column when to_pandas."""
         return col
 
-    def prepare(self, col: pd.Series) -> pd.Series:
+    def prepare(self, col           )             :
         """Prepare column when from_pandas."""
         return col.replace({np.nan: None})
 
-    def isnull(self, index_ops: IndexOpsLike) -> IndexOpsLike:
+    def isnull(self, index_ops              )                :
         return index_ops._with_new_scol(
             index_ops.spark.column.isNull(),
             field=index_ops._internal.data_fields[0].copy(
@@ -496,8 +496,8 @@ class DataTypeOps(object, metaclass=ABCMeta):
             ),
         )
 
-    def nan_to_null(self, index_ops: IndexOpsLike) -> IndexOpsLike:
+    def nan_to_null(self, index_ops              )                :
         return index_ops.copy()
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         raise TypeError("astype can not be applied to %s." % self.pretty_name)

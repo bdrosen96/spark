@@ -32,7 +32,7 @@ import pandas as pd
 from pandas.api.types import CategoricalDtype, pandas_dtype  # type: ignore[attr-defined]
 from pandas.api.extensions import ExtensionDtype
 
-extension_dtypes: Tuple[type, ...]
+#extension_dtypes: Tuple[type, ...]
 try:
     from pandas import Int8Dtype, Int16Dtype, Int32Dtype, Int64Dtype
 
@@ -75,52 +75,52 @@ if typing.TYPE_CHECKING:
 
 # A column of data, with the data type.
 class SeriesType(Generic[T]):
-    def __init__(self, dtype: Dtype, spark_type: types.DataType):
+    def __init__(self, dtype       , spark_type                ):
         self.dtype = dtype
         self.spark_type = spark_type
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "SeriesType[{}]".format(self.spark_type)
 
 
 class DataFrameType:
     def __init__(
         self,
-        index_fields: List["InternalField"],
-        data_fields: List["InternalField"],
+        index_fields                       ,
+        data_fields                       ,
     ):
         self.index_fields = index_fields
         self.data_fields = data_fields
         self.fields = index_fields + data_fields
 
     @property
-    def dtypes(self) -> List[Dtype]:
+    def dtypes(self)               :
         return [field.dtype for field in self.fields]
 
     @property
-    def spark_type(self) -> types.StructType:
+    def spark_type(self)                    :
         return types.StructType([field.struct_field for field in self.fields])
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "DataFrameType[{}]".format(self.spark_type)
 
 
 # The type is a scalar type that is furthermore understood by Spark.
 class ScalarType:
-    def __init__(self, dtype: Dtype, spark_type: types.DataType):
+    def __init__(self, dtype       , spark_type                ):
         self.dtype = dtype
         self.spark_type = spark_type
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "ScalarType[{}]".format(self.spark_type)
 
 
 # The type is left unspecified or we do not know about this type.
 class UnknownType:
-    def __init__(self, tpe: Any):
+    def __init__(self, tpe     ):
         self.tpe = tpe
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "UnknownType[{}]".format(self.tpe)
 
 
@@ -137,8 +137,8 @@ class NameTypeHolder:
 
 
 def as_spark_type(
-    tpe: Union[str, type, Dtype], *, raise_error: bool = True, prefer_timestamp_ntz: bool = False
-) -> types.DataType:
+    tpe                         , *, raise_error       = True, prefer_timestamp_ntz       = False
+)                  :
     """
     Given a Python type, returns the equivalent spark type.
     Accepts:
@@ -251,8 +251,8 @@ def as_spark_type(
 
 
 def spark_type_to_pandas_dtype(
-    spark_type: types.DataType, *, use_extension_dtypes: bool = False
-) -> Dtype:
+    spark_type                , *, use_extension_dtypes       = False
+)         :
     """Return the given Spark DataType to pandas dtype."""
 
     if use_extension_dtypes and extension_dtypes_available:
@@ -299,7 +299,7 @@ def spark_type_to_pandas_dtype(
         return np.dtype(to_arrow_type(spark_type).to_pandas_dtype())
 
 
-def pandas_on_spark_type(tpe: Union[str, type, Dtype]) -> Tuple[Dtype, types.DataType]:
+def pandas_on_spark_type(tpe                         )                                :
     """
     Convert input into a pandas only dtype object or a numpy dtype object,
     and its corresponding Spark DataType.
@@ -341,8 +341,8 @@ def pandas_on_spark_type(tpe: Union[str, type, Dtype]) -> Tuple[Dtype, types.Dat
 
 
 def infer_pd_series_spark_type(
-    pser: pd.Series, dtype: Dtype, prefer_timestamp_ntz: bool = False
-) -> types.DataType:
+    pser           , dtype       , prefer_timestamp_ntz       = False
+)                  :
     """Infer Spark DataType from pandas Series dtype.
 
     :param pser: :class:`pandas.Series` to be inferred
@@ -368,7 +368,7 @@ def infer_pd_series_spark_type(
         return as_spark_type(dtype, prefer_timestamp_ntz=prefer_timestamp_ntz)
 
 
-def infer_return_type(f: Callable) -> Union[SeriesType, DataFrameType, ScalarType, UnknownType]:
+def infer_return_type(f          )                                                             :
     """
     Infer the return type from the return type annotation of the given function.
 
@@ -642,7 +642,7 @@ def infer_return_type(f: Callable) -> Union[SeriesType, DataFrameType, ScalarTyp
 #   this logic and migrate to it with implementing the typing module in pandas API on Spark.
 
 
-def create_type_for_series_type(param: Any) -> Type[SeriesType]:
+def create_type_for_series_type(param     )                    :
     """
     Supported syntax:
 
@@ -651,7 +651,7 @@ def create_type_for_series_type(param: Any) -> Type[SeriesType]:
     """
     from pyspark.pandas.typedef import NameTypeHolder
 
-    new_class: Type[NameTypeHolder]
+    #new_class: Type[NameTypeHolder]
     if isinstance(param, ExtensionDtype):
         new_class = type(NameTypeHolder.short_name, (NameTypeHolder,), {})
         new_class.tpe = param  # type: ignore[assignment]
@@ -664,7 +664,7 @@ def create_type_for_series_type(param: Any) -> Type[SeriesType]:
 # TODO: Remove this variadic-generic hack by tuple once ww drop Python up to 3.9.
 #   See also PEP 646. One problem is that pandas doesn't inherits Generic[T]
 #   so we might have to leave this hack only for monkey-patching pandas DataFrame.
-def create_tuple_for_frame_type(params: Any) -> object:
+def create_tuple_for_frame_type(params     )          :
     """
     This is a workaround to support variadic generic in DataFrame.
 
@@ -717,7 +717,7 @@ def create_tuple_for_frame_type(params: Any) -> object:
     return Tuple[_to_type_holders(params)]
 
 
-def _to_type_holders(params: Any) -> Tuple:
+def _to_type_holders(params     )         :
     from pyspark.pandas.typedef import NameTypeHolder, IndexNameTypeHolder
 
     is_with_index = (
@@ -736,7 +736,7 @@ def _to_type_holders(params: Any) -> Tuple:
         #   DataFrame[(index_name, index_type), zip(names, types)]
         #   DataFrame[[(index_name, index_type), ...], [(name, type), ...]]
         #   DataFrame[zip(index_names, index_types), zip(names, types)]
-        def is_list_of_pairs(p: Any) -> bool:
+        def is_list_of_pairs(p     )        :
             return (
                 isinstance(p, list)
                 and len(p) >= 1
@@ -772,8 +772,8 @@ def _to_type_holders(params: Any) -> Tuple:
 
 
 def _new_type_holders(
-    params: Any, holder_clazz: Type[Union[NameTypeHolder, IndexNameTypeHolder]]
-) -> Tuple:
+    params     , holder_clazz                                                  
+)         :
     if isinstance(params, zip):
         #   DataFrame[zip(names, types)]
         params = tuple(slice(name, tpe) for name, tpe in params)  # type: ignore[misc, has-type]
@@ -800,7 +800,7 @@ def _new_type_holders(
         # DataFrame["id": int, "A": int]
         new_params = []
         for param in params:
-            new_param: Type[Union[NameTypeHolder, IndexNameTypeHolder]] = type(
+            new_param                                                   = type(
                 holder_clazz.short_name, (holder_clazz,), {}
             )
             new_param.name = param.start
@@ -815,7 +815,7 @@ def _new_type_holders(
         # DataFrame[float, float]
         new_types = []
         for param in params:
-            new_type: Type[Union[NameTypeHolder, IndexNameTypeHolder]] = type(
+            new_type                                                   = type(
                 holder_clazz.short_name, (holder_clazz,), {}
             )
             if isinstance(param, ExtensionDtype):
@@ -843,7 +843,7 @@ def _new_type_holders(
         )
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import sys
     import pyspark.pandas.typedef.typehints

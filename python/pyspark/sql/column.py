@@ -44,19 +44,19 @@ if TYPE_CHECKING:
 __all__ = ["Column"]
 
 
-def _create_column_from_literal(literal: Union["LiteralType", "DecimalLiteral"]) -> "Column":
+def _create_column_from_literal(literal                                        )            :
     sc = SparkContext._active_spark_context
     assert sc is not None and sc._jvm is not None
     return sc._jvm.functions.lit(literal)
 
 
-def _create_column_from_name(name: str) -> "Column":
+def _create_column_from_name(name     )            :
     sc = SparkContext._active_spark_context
     assert sc is not None and sc._jvm is not None
     return sc._jvm.functions.col(name)
 
 
-def _to_java_column(col: "ColumnOrName") -> JavaObject:
+def _to_java_column(col                )              :
     if isinstance(col, Column):
         jcol = col._jc
     elif isinstance(col, str):
@@ -72,10 +72,10 @@ def _to_java_column(col: "ColumnOrName") -> JavaObject:
 
 
 def _to_seq(
-    sc: SparkContext,
-    cols: Iterable["ColumnOrName"],
-    converter: Optional[Callable[["ColumnOrName"], JavaObject]] = None,
-) -> JavaObject:
+    sc              ,
+    cols                          ,
+    converter                                                   = None,
+)              :
     """
     Convert a list of Column (or names) into a JVM Seq of Column.
 
@@ -89,10 +89,10 @@ def _to_seq(
 
 
 def _to_list(
-    sc: SparkContext,
-    cols: List["ColumnOrName"],
-    converter: Optional[Callable[["ColumnOrName"], JavaObject]] = None,
-) -> JavaObject:
+    sc              ,
+    cols                      ,
+    converter                                                   = None,
+)              :
     """
     Convert a list of Column (or names) into a JVM (Scala) List of Column.
 
@@ -106,12 +106,12 @@ def _to_list(
 
 
 def _unary_op(
-    name: str,
-    doc: str = "unary operator",
-) -> Callable[["Column"], "Column"]:
+    name     ,
+    doc      = "unary operator",
+)                                  :
     """Create a method for given unary operator"""
 
-    def _(self: "Column") -> "Column":
+    def _(self          )            :
         jc = getattr(self._jc, name)()
         return Column(jc)
 
@@ -119,8 +119,8 @@ def _unary_op(
     return _
 
 
-def _func_op(name: str, doc: str = "") -> Callable[["Column"], "Column"]:
-    def _(self: "Column") -> "Column":
+def _func_op(name     , doc      = "")                                  :
+    def _(self          )            :
         sc = SparkContext._active_spark_context
         assert sc is not None and sc._jvm is not None
         jc = getattr(sc._jvm.functions, name)(self._jc)
@@ -131,11 +131,11 @@ def _func_op(name: str, doc: str = "") -> Callable[["Column"], "Column"]:
 
 
 def _bin_func_op(
-    name: str,
-    reverse: bool = False,
-    doc: str = "binary function",
-) -> Callable[["Column", Union["Column", "LiteralType", "DecimalLiteral"]], "Column"]:
-    def _(self: "Column", other: Union["Column", "LiteralType", "DecimalLiteral"]) -> "Column":
+    name     ,
+    reverse       = False,
+    doc      = "binary function",
+)                                                                                    :
+    def _(self          , other                                                  )            :
         sc = SparkContext._active_spark_context
         assert sc is not None and sc._jvm is not None
         fn = getattr(sc._jvm.functions, name)
@@ -148,17 +148,17 @@ def _bin_func_op(
 
 
 def _bin_op(
-    name: str,
-    doc: str = "binary operator",
-) -> Callable[
-    ["Column", Union["Column", "LiteralType", "DecimalLiteral", "DateTimeLiteral"]], "Column"
-]:
+    name     ,
+    doc      = "binary operator",
+):             
+                                                                                             
+ 
     """Create a method for given binary operator"""
 
     def _(
-        self: "Column",
-        other: Union["Column", "LiteralType", "DecimalLiteral", "DateTimeLiteral"],
-    ) -> "Column":
+        self          ,
+        other                                                                     ,
+    )            :
         jc = other._jc if isinstance(other, Column) else other
         njc = getattr(self._jc, name)(jc)
         return Column(njc)
@@ -168,12 +168,12 @@ def _bin_op(
 
 
 def _reverse_op(
-    name: str,
-    doc: str = "binary operator",
-) -> Callable[["Column", Union["LiteralType", "DecimalLiteral"]], "Column"]:
+    name     ,
+    doc      = "binary operator",
+)                                                                          :
     """Create a method for binary operator (this object is on right side)"""
 
-    def _(self: "Column", other: Union["LiteralType", "DecimalLiteral"]) -> "Column":
+    def _(self          , other                                        )            :
         jother = _create_column_from_literal(other)
         jc = getattr(jother, name)(self._jc)
         return Column(jc)
@@ -201,7 +201,7 @@ class Column:
     .. versionadded:: 1.3.0
     """
 
-    def __init__(self, jc: JavaObject) -> None:
+    def __init__(self, jc            )        :
         self._jc = jc
 
     # arithmetic operators
@@ -250,15 +250,15 @@ class Column:
     # logistic operators
     def __eq__(  # type: ignore[override]
         self,
-        other: Union["Column", "LiteralType", "DecimalLiteral", "DateTimeLiteral"],
-    ) -> "Column":
+        other                                                                     ,
+    )            :
         """binary function"""
         return _bin_op("equalTo")(self, other)
 
     def __ne__(  # type: ignore[override]
         self,
-        other: Any,
-    ) -> "Column":
+        other     ,
+    )            :
         """binary function"""
         return _bin_op("notEqual")(self, other)
 
@@ -338,7 +338,7 @@ class Column:
     __ror__ = _bin_op("or")
 
     # container operators
-    def __contains__(self, item: Any) -> None:
+    def __contains__(self, item     )        :
         raise ValueError(
             "Cannot apply 'in' operator against a column: please use 'contains' "
             "in a string column or 'array_contains' function for an array column."
@@ -398,7 +398,7 @@ class Column:
     bitwiseAND = _bin_op("bitwiseAND", _bitwiseAND_doc)
     bitwiseXOR = _bin_op("bitwiseXOR", _bitwiseXOR_doc)
 
-    def getItem(self, key: Any) -> "Column":
+    def getItem(self, key     )            :
         """
         An expression that gets an item at position ``ordinal`` out of a list,
         or gets an item by key out of a dict.
@@ -424,7 +424,7 @@ class Column:
             )
         return self[key]
 
-    def getField(self, name: Any) -> "Column":
+    def getField(self, name     )            :
         """
         An expression that gets a field by name in a :class:`StructType`.
 
@@ -456,7 +456,7 @@ class Column:
             )
         return self[name]
 
-    def withField(self, fieldName: str, col: "Column") -> "Column":
+    def withField(self, fieldName     , col          )            :
         """
         An expression that adds/replaces a field in :class:`StructType` by name.
 
@@ -488,7 +488,7 @@ class Column:
 
         return Column(self._jc.withField(fieldName, col._jc))
 
-    def dropFields(self, *fieldNames: str) -> "Column":
+    def dropFields(self, *fieldNames     )            :
         """
         An expression that drops fields in :class:`StructType` by name.
         This is a no-op if schema doesn't contain field name(s).
@@ -543,12 +543,12 @@ class Column:
         jc = self._jc.dropFields(_to_seq(sc, fieldNames))
         return Column(jc)
 
-    def __getattr__(self, item: Any) -> "Column":
+    def __getattr__(self, item     )            :
         if item.startswith("__"):
             raise AttributeError(item)
         return self[item]
 
-    def __getitem__(self, k: Any) -> "Column":
+    def __getitem__(self, k     )            :
         if isinstance(k, slice):
             if k.step is not None:
                 raise ValueError("slice with step is not supported.")
@@ -556,7 +556,7 @@ class Column:
         else:
             return _bin_op("apply")(self, k)
 
-    def __iter__(self) -> None:
+    def __iter__(self)        :
         raise TypeError("Column is not iterable")
 
     # string methods
@@ -663,14 +663,14 @@ class Column:
     endswith = _bin_op("endsWith", _endswith_doc)
 
     @overload
-    def substr(self, startPos: int, length: int) -> "Column":
+    def substr(self, startPos     , length     )            :
         ...
 
     @overload
-    def substr(self, startPos: "Column", length: "Column") -> "Column":
+    def substr(self, startPos          , length          )            :
         ...
 
-    def substr(self, startPos: Union[int, "Column"], length: Union[int, "Column"]) -> "Column":
+    def substr(self, startPos                      , length                      )            :
         """
         Return a :class:`Column` which is a substring of the column.
 
@@ -704,7 +704,7 @@ class Column:
             raise TypeError("Unexpected type: %s" % type(startPos))
         return Column(jc)
 
-    def isin(self, *cols: Any) -> "Column":
+    def isin(self, *cols     )            :
         """
         A boolean expression that is evaluated to true if the value of this
         expression is contained by the evaluated values of the arguments.
@@ -839,7 +839,7 @@ class Column:
     isNull = _unary_op("isNull", _isNull_doc)
     isNotNull = _unary_op("isNotNull", _isNotNull_doc)
 
-    def alias(self, *alias: str, **kwargs: Any) -> "Column":
+    def alias(self, *alias     , **kwargs     )            :
         """
         Returns this column aliased with a new name or names (in the case of expressions that
         return more than one column, such as explode).
@@ -888,7 +888,7 @@ class Column:
 
     name = copy_func(alias, sinceversion=2.0, doc=":func:`name` is an alias for :func:`alias`.")
 
-    def cast(self, dataType: Union[DataType, str]) -> "Column":
+    def cast(self, dataType                      )            :
         """
         Casts the column into type ``dataType``.
 
@@ -917,9 +917,9 @@ class Column:
 
     def between(
         self,
-        lowerBound: Union["Column", "LiteralType", "DateTimeLiteral", "DecimalLiteral"],
-        upperBound: Union["Column", "LiteralType", "DateTimeLiteral", "DecimalLiteral"],
-    ) -> "Column":
+        lowerBound                                                                     ,
+        upperBound                                                                     ,
+    )            :
         """
         True if the current column is between the lower bound and upper bound, inclusive.
 
@@ -937,7 +937,7 @@ class Column:
         """
         return (self >= lowerBound) & (self <= upperBound)
 
-    def when(self, condition: "Column", value: Any) -> "Column":
+    def when(self, condition          , value     )            :
         """
         Evaluates a list of conditions and returns one of multiple possible result expressions.
         If :func:`Column.otherwise` is not invoked, None is returned for unmatched conditions.
@@ -972,7 +972,7 @@ class Column:
         jc = self._jc.when(condition._jc, v)
         return Column(jc)
 
-    def otherwise(self, value: Any) -> "Column":
+    def otherwise(self, value     )            :
         """
         Evaluates a list of conditions and returns one of multiple possible result expressions.
         If :func:`Column.otherwise` is not invoked, None is returned for unmatched conditions.
@@ -1003,7 +1003,7 @@ class Column:
         jc = self._jc.otherwise(v)
         return Column(jc)
 
-    def over(self, window: "WindowSpec") -> "Column":
+    def over(self, window              )            :
         """
         Define a windowing column.
 
@@ -1040,7 +1040,7 @@ class Column:
         jc = self._jc.over(window._jspec)
         return Column(jc)
 
-    def __nonzero__(self) -> None:
+    def __nonzero__(self)        :
         raise ValueError(
             "Cannot convert column into bool: please use '&' for 'and', '|' for 'or', "
             "'~' for 'not' when building DataFrame boolean expressions."
@@ -1048,11 +1048,11 @@ class Column:
 
     __bool__ = __nonzero__
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "Column<'%s'>" % self._jc.toString()
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import SparkSession
     import pyspark.sql.column

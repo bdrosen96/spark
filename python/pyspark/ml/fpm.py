@@ -37,10 +37,10 @@ class _FPGrowthParams(HasPredictionCol):
     .. versionadded:: 3.0.0
     """
 
-    itemsCol: Param[str] = Param(
+    itemsCol             = Param(
         Params._dummy(), "itemsCol", "items column name", typeConverter=TypeConverters.toString
     )
-    minSupport: Param[float] = Param(
+    minSupport               = Param(
         Params._dummy(),
         "minSupport",
         "Minimal support level of the frequent pattern. [0.0, 1.0]. "
@@ -48,7 +48,7 @@ class _FPGrowthParams(HasPredictionCol):
         + "times will be output in the frequent itemsets.",
         typeConverter=TypeConverters.toFloat,
     )
-    numPartitions: Param[int] = Param(
+    numPartitions             = Param(
         Params._dummy(),
         "numPartitions",
         "Number of partitions (at least 1) used by parallel FP-growth. "
@@ -56,7 +56,7 @@ class _FPGrowthParams(HasPredictionCol):
         + "and partition number of the input dataset is used.",
         typeConverter=TypeConverters.toInt,
     )
-    minConfidence: Param[float] = Param(
+    minConfidence               = Param(
         Params._dummy(),
         "minConfidence",
         "Minimal confidence for generating Association Rule. [0.0, 1.0]. "
@@ -65,31 +65,31 @@ class _FPGrowthParams(HasPredictionCol):
         typeConverter=TypeConverters.toFloat,
     )
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_FPGrowthParams, self).__init__(*args)
         self._setDefault(
             minSupport=0.3, minConfidence=0.8, itemsCol="items", predictionCol="prediction"
         )
 
-    def getItemsCol(self) -> str:
+    def getItemsCol(self)       :
         """
         Gets the value of itemsCol or its default value.
         """
         return self.getOrDefault(self.itemsCol)
 
-    def getMinSupport(self) -> float:
+    def getMinSupport(self)         :
         """
         Gets the value of minSupport or its default value.
         """
         return self.getOrDefault(self.minSupport)
 
-    def getNumPartitions(self) -> int:
+    def getNumPartitions(self)       :
         """
         Gets the value of :py:attr:`numPartitions` or its default value.
         """
         return self.getOrDefault(self.numPartitions)
 
-    def getMinConfidence(self) -> float:
+    def getMinConfidence(self)         :
         """
         Gets the value of minConfidence or its default value.
         """
@@ -104,21 +104,21 @@ class FPGrowthModel(JavaModel, _FPGrowthParams, JavaMLWritable, JavaMLReadable["
     """
 
     @since("3.0.0")
-    def setItemsCol(self, value: str) -> "FPGrowthModel":
+    def setItemsCol(self, value     )                   :
         """
         Sets the value of :py:attr:`itemsCol`.
         """
         return self._set(itemsCol=value)
 
     @since("3.0.0")
-    def setMinConfidence(self, value: float) -> "FPGrowthModel":
+    def setMinConfidence(self, value       )                   :
         """
         Sets the value of :py:attr:`minConfidence`.
         """
         return self._set(minConfidence=value)
 
     @since("3.0.0")
-    def setPredictionCol(self, value: str) -> "FPGrowthModel":
+    def setPredictionCol(self, value     )                   :
         """
         Sets the value of :py:attr:`predictionCol`.
         """
@@ -126,7 +126,7 @@ class FPGrowthModel(JavaModel, _FPGrowthParams, JavaMLWritable, JavaMLReadable["
 
     @property  # type: ignore[misc]
     @since("2.2.0")
-    def freqItemsets(self) -> DataFrame:
+    def freqItemsets(self)             :
         """
         DataFrame with two columns:
         * `items` - Itemset of the same type as the input column.
@@ -136,7 +136,7 @@ class FPGrowthModel(JavaModel, _FPGrowthParams, JavaMLWritable, JavaMLReadable["
 
     @property  # type: ignore[misc]
     @since("2.2.0")
-    def associationRules(self) -> DataFrame:
+    def associationRules(self)             :
         """
         DataFrame with four columns:
         * `antecedent`  - Array of the same type as the input column.
@@ -235,17 +235,17 @@ class FPGrowth(
     >>> fpm.transform(data).take(1) == model2.transform(data).take(1)
     True
     """
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        minSupport: float = 0.3,
-        minConfidence: float = 0.8,
-        itemsCol: str = "items",
-        predictionCol: str = "prediction",
-        numPartitions: Optional[int] = None,
+        minSupport        = 0.3,
+        minConfidence        = 0.8,
+        itemsCol      = "items",
+        predictionCol      = "prediction",
+        numPartitions                = None,
     ):
         """
         __init__(self, \\*, minSupport=0.3, minConfidence=0.8, itemsCol="items", \
@@ -261,12 +261,12 @@ class FPGrowth(
     def setParams(
         self,
         *,
-        minSupport: float = 0.3,
-        minConfidence: float = 0.8,
-        itemsCol: str = "items",
-        predictionCol: str = "prediction",
-        numPartitions: Optional[int] = None,
-    ) -> "FPGrowth":
+        minSupport        = 0.3,
+        minConfidence        = 0.8,
+        itemsCol      = "items",
+        predictionCol      = "prediction",
+        numPartitions                = None,
+    )              :
         """
         setParams(self, \\*, minSupport=0.3, minConfidence=0.8, itemsCol="items", \
                   predictionCol="prediction", numPartitions=None)
@@ -274,37 +274,37 @@ class FPGrowth(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def setItemsCol(self, value: str) -> "FPGrowth":
+    def setItemsCol(self, value     )              :
         """
         Sets the value of :py:attr:`itemsCol`.
         """
         return self._set(itemsCol=value)
 
-    def setMinSupport(self, value: float) -> "FPGrowth":
+    def setMinSupport(self, value       )              :
         """
         Sets the value of :py:attr:`minSupport`.
         """
         return self._set(minSupport=value)
 
-    def setNumPartitions(self, value: int) -> "FPGrowth":
+    def setNumPartitions(self, value     )              :
         """
         Sets the value of :py:attr:`numPartitions`.
         """
         return self._set(numPartitions=value)
 
-    def setMinConfidence(self, value: float) -> "FPGrowth":
+    def setMinConfidence(self, value       )              :
         """
         Sets the value of :py:attr:`minConfidence`.
         """
         return self._set(minConfidence=value)
 
-    def setPredictionCol(self, value: str) -> "FPGrowth":
+    def setPredictionCol(self, value     )              :
         """
         Sets the value of :py:attr:`predictionCol`.
         """
         return self._set(predictionCol=value)
 
-    def _create_model(self, java_model: "JavaObject") -> FPGrowthModel:
+    def _create_model(self, java_model              )                 :
         return FPGrowthModel(java_model)
 
 
@@ -354,9 +354,9 @@ class PrefixSpan(JavaParams):
     ...
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
-    minSupport: Param[float] = Param(
+    minSupport               = Param(
         Params._dummy(),
         "minSupport",
         "The minimal support level of the "
@@ -365,14 +365,14 @@ class PrefixSpan(JavaParams):
         typeConverter=TypeConverters.toFloat,
     )
 
-    maxPatternLength: Param[int] = Param(
+    maxPatternLength             = Param(
         Params._dummy(),
         "maxPatternLength",
         "The maximal length of the sequential pattern. Must be > 0.",
         typeConverter=TypeConverters.toInt,
     )
 
-    maxLocalProjDBSize: Param[int] = Param(
+    maxLocalProjDBSize             = Param(
         Params._dummy(),
         "maxLocalProjDBSize",
         "The maximum number of items (including delimiters used in the "
@@ -383,7 +383,7 @@ class PrefixSpan(JavaParams):
         typeConverter=TypeConverters.toInt,
     )
 
-    sequenceCol: Param[str] = Param(
+    sequenceCol             = Param(
         Params._dummy(),
         "sequenceCol",
         "The name of the sequence column in "
@@ -395,10 +395,10 @@ class PrefixSpan(JavaParams):
     def __init__(
         self,
         *,
-        minSupport: float = 0.1,
-        maxPatternLength: int = 10,
-        maxLocalProjDBSize: int = 32000000,
-        sequenceCol: str = "sequence",
+        minSupport        = 0.1,
+        maxPatternLength      = 10,
+        maxLocalProjDBSize      = 32000000,
+        sequenceCol      = "sequence",
     ):
         """
         __init__(self, \\*, minSupport=0.1, maxPatternLength=10, maxLocalProjDBSize=32000000, \
@@ -417,11 +417,11 @@ class PrefixSpan(JavaParams):
     def setParams(
         self,
         *,
-        minSupport: float = 0.1,
-        maxPatternLength: int = 10,
-        maxLocalProjDBSize: int = 32000000,
-        sequenceCol: str = "sequence",
-    ) -> "PrefixSpan":
+        minSupport        = 0.1,
+        maxPatternLength      = 10,
+        maxLocalProjDBSize      = 32000000,
+        sequenceCol      = "sequence",
+    )                :
         """
         setParams(self, \\*, minSupport=0.1, maxPatternLength=10, maxLocalProjDBSize=32000000, \
                   sequenceCol="sequence")
@@ -430,62 +430,62 @@ class PrefixSpan(JavaParams):
         return self._set(**kwargs)
 
     @since("3.0.0")
-    def setMinSupport(self, value: float) -> "PrefixSpan":
+    def setMinSupport(self, value       )                :
         """
         Sets the value of :py:attr:`minSupport`.
         """
         return self._set(minSupport=value)
 
     @since("3.0.0")
-    def getMinSupport(self) -> float:
+    def getMinSupport(self)         :
         """
         Gets the value of minSupport or its default value.
         """
         return self.getOrDefault(self.minSupport)
 
     @since("3.0.0")
-    def setMaxPatternLength(self, value: int) -> "PrefixSpan":
+    def setMaxPatternLength(self, value     )                :
         """
         Sets the value of :py:attr:`maxPatternLength`.
         """
         return self._set(maxPatternLength=value)
 
     @since("3.0.0")
-    def getMaxPatternLength(self) -> int:
+    def getMaxPatternLength(self)       :
         """
         Gets the value of maxPatternLength or its default value.
         """
         return self.getOrDefault(self.maxPatternLength)
 
     @since("3.0.0")
-    def setMaxLocalProjDBSize(self, value: int) -> "PrefixSpan":
+    def setMaxLocalProjDBSize(self, value     )                :
         """
         Sets the value of :py:attr:`maxLocalProjDBSize`.
         """
         return self._set(maxLocalProjDBSize=value)
 
     @since("3.0.0")
-    def getMaxLocalProjDBSize(self) -> int:
+    def getMaxLocalProjDBSize(self)       :
         """
         Gets the value of maxLocalProjDBSize or its default value.
         """
         return self.getOrDefault(self.maxLocalProjDBSize)
 
     @since("3.0.0")
-    def setSequenceCol(self, value: str) -> "PrefixSpan":
+    def setSequenceCol(self, value     )                :
         """
         Sets the value of :py:attr:`sequenceCol`.
         """
         return self._set(sequenceCol=value)
 
     @since("3.0.0")
-    def getSequenceCol(self) -> str:
+    def getSequenceCol(self)       :
         """
         Gets the value of sequenceCol or its default value.
         """
         return self.getOrDefault(self.sequenceCol)
 
-    def findFrequentSequentialPatterns(self, dataset: DataFrame) -> DataFrame:
+    def findFrequentSequentialPatterns(self, dataset           )             :
         """
         Finds the complete set of frequent sequential patterns in the input sequences of itemsets.
 

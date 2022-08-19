@@ -28,7 +28,7 @@ __all__ = ["KinesisUtils", "InitialPositionInStream", "utf8_decoder"]
 T = TypeVar("T")
 
 
-def utf8_decoder(s: Optional[bytes]) -> Optional[str]:
+def utf8_decoder(s                 )                 :
     """Decode the unicode as UTF-8"""
     if s is None:
         return None
@@ -39,62 +39,62 @@ class KinesisUtils:
     @staticmethod
     @overload
     def createStream(
-        ssc: StreamingContext,
-        kinesisAppName: str,
-        streamName: str,
-        endpointUrl: str,
-        regionName: str,
-        initialPositionInStream: str,
-        checkpointInterval: int,
-        storageLevel: StorageLevel = ...,
-        awsAccessKeyId: Optional[str] = ...,
-        awsSecretKey: Optional[str] = ...,
+        ssc                  ,
+        kinesisAppName     ,
+        streamName     ,
+        endpointUrl     ,
+        regionName     ,
+        initialPositionInStream     ,
+        checkpointInterval     ,
+        storageLevel               = ...,
+        awsAccessKeyId                = ...,
+        awsSecretKey                = ...,
         *,
-        stsAssumeRoleArn: Optional[str] = ...,
-        stsSessionName: Optional[str] = ...,
-        stsExternalId: Optional[str] = ...,
-    ) -> "DStream[Optional[str]]":
+        stsAssumeRoleArn                = ...,
+        stsSessionName                = ...,
+        stsExternalId                = ...,
+    )                            :
         ...
 
     @staticmethod
     @overload
     def createStream(
-        ssc: StreamingContext,
-        kinesisAppName: str,
-        streamName: str,
-        endpointUrl: str,
-        regionName: str,
-        initialPositionInStream: str,
-        checkpointInterval: int,
-        storageLevel: StorageLevel = ...,
-        awsAccessKeyId: Optional[str] = ...,
-        awsSecretKey: Optional[str] = ...,
-        decoder: Callable[[Optional[bytes]], T] = ...,
-        stsAssumeRoleArn: Optional[str] = ...,
-        stsSessionName: Optional[str] = ...,
-        stsExternalId: Optional[str] = ...,
-    ) -> "DStream[T]":
+        ssc                  ,
+        kinesisAppName     ,
+        streamName     ,
+        endpointUrl     ,
+        regionName     ,
+        initialPositionInStream     ,
+        checkpointInterval     ,
+        storageLevel               = ...,
+        awsAccessKeyId                = ...,
+        awsSecretKey                = ...,
+        decoder                                 = ...,
+        stsAssumeRoleArn                = ...,
+        stsSessionName                = ...,
+        stsExternalId                = ...,
+    )                :
         ...
 
     @staticmethod
     def createStream(
-        ssc: StreamingContext,
-        kinesisAppName: str,
-        streamName: str,
-        endpointUrl: str,
-        regionName: str,
-        initialPositionInStream: str,
-        checkpointInterval: int,
-        storageLevel: StorageLevel = StorageLevel.MEMORY_AND_DISK_2,
-        awsAccessKeyId: Optional[str] = None,
-        awsSecretKey: Optional[str] = None,
-        decoder: Union[
-            Callable[[Optional[bytes]], T], Callable[[Optional[bytes]], Optional[str]]
-        ] = utf8_decoder,
-        stsAssumeRoleArn: Optional[str] = None,
-        stsSessionName: Optional[str] = None,
-        stsExternalId: Optional[str] = None,
-    ) -> Union["DStream[Union[T, Optional[str]]]", "DStream[T]"]:
+        ssc                  ,
+        kinesisAppName     ,
+        streamName     ,
+        endpointUrl     ,
+        regionName     ,
+        initialPositionInStream     ,
+        checkpointInterval     ,
+        storageLevel               = StorageLevel.MEMORY_AND_DISK_2,
+        awsAccessKeyId                = None,
+        awsSecretKey                = None,
+        decoder        
+                                                                                      
+          = utf8_decoder,
+        stsAssumeRoleArn                = None,
+        stsSessionName                = None,
+        stsExternalId                = None,
+    )                                                           :
         """
         Create an input stream that pulls messages from a Kinesis stream. This uses the
         Kinesis Client Library (KCL) to pull messages from Kinesis.
@@ -185,7 +185,7 @@ class KinesisUtils:
             stsSessionName,
             stsExternalId,
         )
-        stream: DStream = DStream(jstream, ssc, NoOpSerializer())
+        stream          = DStream(jstream, ssc, NoOpSerializer())
         return stream.map(lambda v: decoder(v))
 
 

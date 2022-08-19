@@ -57,7 +57,7 @@ if TYPE_CHECKING:
     from pyspark.pandas.series import Series
 
 
-def should_alignment_for_column_op(self: SeriesOrIndex, other: SeriesOrIndex) -> bool:
+def should_alignment_for_column_op(self               , other               )        :
     from pyspark.pandas.series import Series
 
     if isinstance(self, Series) and isinstance(other, Series):
@@ -67,8 +67,8 @@ def should_alignment_for_column_op(self: SeriesOrIndex, other: SeriesOrIndex) ->
 
 
 def align_diff_index_ops(
-    func: Callable[..., Column], this_index_ops: SeriesOrIndex, *args: Any
-) -> SeriesOrIndex:
+    func                       , this_index_ops               , *args     
+)                 :
     """
     Align the `IndexOpsMixin` objects and apply the function.
 
@@ -178,7 +178,7 @@ def align_diff_index_ops(
                 ).rename(that_series.name)
 
 
-def booleanize_null(scol: Column, f: Callable[..., Column]) -> Column:
+def booleanize_null(scol        , f                       )          :
     """
     Booleanize Null in Spark Column
     """
@@ -195,7 +195,7 @@ def booleanize_null(scol: Column, f: Callable[..., Column]) -> Column:
     return scol
 
 
-def column_op(f: Callable[..., Column]) -> Callable[..., SeriesOrIndex]:
+def column_op(f                       )                                :
     """
     A decorator that wraps APIs taking/returning Spark Column so that pandas-on-Spark Series can be
     supported too. If this decorator is used for the `f` function that takes Spark Column and
@@ -208,7 +208,7 @@ def column_op(f: Callable[..., Column]) -> Callable[..., SeriesOrIndex]:
     """
 
     @wraps(f)
-    def wrapper(self: SeriesOrIndex, *args: Any) -> SeriesOrIndex:
+    def wrapper(self               , *args     )                 :
         from pyspark.pandas.indexes.base import Index
         from pyspark.pandas.series import Series
 
@@ -252,9 +252,9 @@ def column_op(f: Callable[..., Column]) -> Callable[..., SeriesOrIndex]:
     return wrapper
 
 
-def numpy_column_op(f: Callable[..., Column]) -> Callable[..., SeriesOrIndex]:
+def numpy_column_op(f                       )                                :
     @wraps(f)
-    def wrapper(self: SeriesOrIndex, *args: Any) -> SeriesOrIndex:
+    def wrapper(self               , *args     )                 :
         # PySpark does not support NumPy type out of the box. For now, we convert NumPy types
         # into some primitive types understandable in PySpark.
         new_args = []
@@ -277,54 +277,54 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def _internal(self) -> InternalFrame:
+    def _internal(self)                 :
         pass
 
     @property
     @abstractmethod
-    def _psdf(self) -> DataFrame:
+    def _psdf(self)             :
         pass
 
     @abstractmethod
     def _with_new_scol(
-        self: IndexOpsLike, scol: Column, *, field: Optional[InternalField] = None
-    ) -> IndexOpsLike:
+        self              , scol        , *, field                          = None
+    )                :
         pass
 
     @property
     @abstractmethod
-    def _column_label(self) -> Optional[Label]:
+    def _column_label(self)                   :
         pass
 
     @property
     @abstractmethod
-    def spark(self: IndexOpsLike) -> SparkIndexOpsMethods[IndexOpsLike]:
+    def spark(self              )                                      :
         pass
 
     @property
-    def _dtype_op(self) -> "DataTypeOps":
+    def _dtype_op(self)                 :
         from pyspark.pandas.data_type_ops.base import DataTypeOps
 
         return DataTypeOps(self.dtype, self.spark.data_type)
 
     @abstractmethod
-    def copy(self: IndexOpsLike) -> IndexOpsLike:
+    def copy(self              )                :
         pass
 
     # arithmetic operators
-    def __neg__(self: IndexOpsLike) -> IndexOpsLike:
+    def __neg__(self              )                :
         return self._dtype_op.neg(self)
 
-    def __add__(self, other: Any) -> SeriesOrIndex:
+    def __add__(self, other     )                 :
         return self._dtype_op.add(self, other)
 
-    def __sub__(self, other: Any) -> SeriesOrIndex:
+    def __sub__(self, other     )                 :
         return self._dtype_op.sub(self, other)
 
-    def __mul__(self, other: Any) -> SeriesOrIndex:
+    def __mul__(self, other     )                 :
         return self._dtype_op.mul(self, other)
 
-    def __truediv__(self, other: Any) -> SeriesOrIndex:
+    def __truediv__(self, other     )                 :
         """
         __truediv__ has different behaviour between pandas and PySpark for several cases.
         1. When divide np.inf by zero, PySpark returns null whereas pandas returns np.inf
@@ -343,22 +343,22 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         """
         return self._dtype_op.truediv(self, other)
 
-    def __mod__(self, other: Any) -> SeriesOrIndex:
+    def __mod__(self, other     )                 :
         return self._dtype_op.mod(self, other)
 
-    def __radd__(self, other: Any) -> SeriesOrIndex:
+    def __radd__(self, other     )                 :
         return self._dtype_op.radd(self, other)
 
-    def __rsub__(self, other: Any) -> SeriesOrIndex:
+    def __rsub__(self, other     )                 :
         return self._dtype_op.rsub(self, other)
 
-    def __rmul__(self, other: Any) -> SeriesOrIndex:
+    def __rmul__(self, other     )                 :
         return self._dtype_op.rmul(self, other)
 
-    def __rtruediv__(self, other: Any) -> SeriesOrIndex:
+    def __rtruediv__(self, other     )                 :
         return self._dtype_op.rtruediv(self, other)
 
-    def __floordiv__(self, other: Any) -> SeriesOrIndex:
+    def __floordiv__(self, other     )                 :
         """
         __floordiv__ has different behaviour between pandas and PySpark for several cases.
         1. When divide np.inf by zero, PySpark returns null whereas pandas returns np.inf
@@ -377,74 +377,74 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         """
         return self._dtype_op.floordiv(self, other)
 
-    def __rfloordiv__(self, other: Any) -> SeriesOrIndex:
+    def __rfloordiv__(self, other     )                 :
         return self._dtype_op.rfloordiv(self, other)
 
-    def __rmod__(self, other: Any) -> SeriesOrIndex:
+    def __rmod__(self, other     )                 :
         return self._dtype_op.rmod(self, other)
 
-    def __pow__(self, other: Any) -> SeriesOrIndex:
+    def __pow__(self, other     )                 :
         return self._dtype_op.pow(self, other)
 
-    def __rpow__(self, other: Any) -> SeriesOrIndex:
+    def __rpow__(self, other     )                 :
         return self._dtype_op.rpow(self, other)
 
-    def __abs__(self: IndexOpsLike) -> IndexOpsLike:
+    def __abs__(self              )                :
         return self._dtype_op.abs(self)
 
     # comparison operators
-    def __eq__(self, other: Any) -> SeriesOrIndex:  # type: ignore[override]
+    def __eq__(self, other     )                 :  # type: ignore[override]
         # pandas always returns False for all items with dict and set.
         if isinstance(other, (dict, set)):
             return self != self
         else:
             return self._dtype_op.eq(self, other)
 
-    def __ne__(self, other: Any) -> SeriesOrIndex:  # type: ignore[override]
+    def __ne__(self, other     )                 :  # type: ignore[override]
         return self._dtype_op.ne(self, other)
 
-    def __lt__(self, other: Any) -> SeriesOrIndex:
+    def __lt__(self, other     )                 :
         return self._dtype_op.lt(self, other)
 
-    def __le__(self, other: Any) -> SeriesOrIndex:
+    def __le__(self, other     )                 :
         return self._dtype_op.le(self, other)
 
-    def __ge__(self, other: Any) -> SeriesOrIndex:
+    def __ge__(self, other     )                 :
         return self._dtype_op.ge(self, other)
 
-    def __gt__(self, other: Any) -> SeriesOrIndex:
+    def __gt__(self, other     )                 :
         return self._dtype_op.gt(self, other)
 
-    def __invert__(self: IndexOpsLike) -> IndexOpsLike:
+    def __invert__(self              )                :
         return self._dtype_op.invert(self)
 
     # `and`, `or`, `not` cannot be overloaded in Python,
     # so use bitwise operators as boolean operators
-    def __and__(self, other: Any) -> SeriesOrIndex:
+    def __and__(self, other     )                 :
         return self._dtype_op.__and__(self, other)
 
-    def __or__(self, other: Any) -> SeriesOrIndex:
+    def __or__(self, other     )                 :
         return self._dtype_op.__or__(self, other)
 
-    def __rand__(self, other: Any) -> SeriesOrIndex:
+    def __rand__(self, other     )                 :
         return self._dtype_op.rand(self, other)
 
-    def __ror__(self, other: Any) -> SeriesOrIndex:
+    def __ror__(self, other     )                 :
         return self._dtype_op.ror(self, other)
 
-    def __xor__(self, other: Any) -> SeriesOrIndex:
+    def __xor__(self, other     )                 :
         return self._dtype_op.xor(self, other)
 
-    def __rxor__(self, other: Any) -> SeriesOrIndex:
+    def __rxor__(self, other     )                 :
         return self._dtype_op.rxor(self, other)
 
-    def __len__(self) -> int:
+    def __len__(self)       :
         return len(self._psdf)
 
     # NDArray Compat
     def __array_ufunc__(
-        self, ufunc: Callable, method: str, *inputs: Any, **kwargs: Any
-    ) -> SeriesOrIndex:
+        self, ufunc          , method     , *inputs     , **kwargs     
+    )                 :
         from pyspark.pandas import numpy_compat
 
         # Try dunder methods first.
@@ -467,7 +467,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
             )
 
     @property
-    def dtype(self) -> Dtype:
+    def dtype(self)         :
         """Return the dtype object of the underlying data.
 
         Examples
@@ -490,7 +490,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         return self._internal.data_fields[0].dtype
 
     @property
-    def empty(self) -> bool:
+    def empty(self)        :
         """
         Returns true if the current object is empty. Otherwise, returns false.
 
@@ -506,7 +506,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         return self._internal.resolved_copy.spark_frame.rdd.isEmpty()
 
     @property
-    def hasnans(self) -> bool:
+    def hasnans(self)        :
         """
         Return True if it has any missing values. Otherwise, it returns False.
 
@@ -531,7 +531,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         return self.isnull().any()
 
     @property
-    def is_monotonic(self) -> bool:
+    def is_monotonic(self)        :
         """
         Return boolean if values in the object are monotonically increasing.
 
@@ -609,7 +609,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
     is_monotonic_increasing = is_monotonic
 
     @property
-    def is_monotonic_decreasing(self) -> bool:
+    def is_monotonic_decreasing(self)        :
         """
         Return boolean if values in the object are monotonically decreasing.
 
@@ -684,7 +684,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         """
         return self._is_monotonic("decreasing")
 
-    def _is_locally_monotonic_spark_column(self, order: str) -> Column:
+    def _is_locally_monotonic_spark_column(self, order     )          :
         window = (
             Window.partitionBy(F.col("__partition_id"))
             .orderBy(NATURAL_ORDER_COLUMN_NAME)
@@ -700,7 +700,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
                 "__origin"
             ).isNotNull()
 
-    def _is_monotonic(self, order: str) -> bool:
+    def _is_monotonic(self, order     )        :
         assert order in ("increasing", "decreasing")
 
         sdf = self._internal.spark_frame
@@ -758,7 +758,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
             return ret
 
     @property
-    def ndim(self) -> int:
+    def ndim(self)       :
         """
         Return an int representing the number of array dimensions.
 
@@ -790,7 +790,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         """
         return 1
 
-    def astype(self: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self              , dtype                         )                :
         """
         Cast a pandas-on-Spark object to a specified dtype ``dtype``.
 
@@ -826,7 +826,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         """
         return self._dtype_op.astype(self, dtype)
 
-    def isin(self: IndexOpsLike, values: Sequence[Any]) -> IndexOpsLike:
+    def isin(self              , values               )                :
         """
         Check whether `values` are contained in Series or Index.
 
@@ -887,7 +887,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         )
         return self._with_new_scol(scol=F.coalesce(scol, F.lit(False)), field=field)
 
-    def isnull(self: IndexOpsLike) -> IndexOpsLike:
+    def isnull(self              )                :
         """
         Detect existing (non-missing) values.
 
@@ -923,7 +923,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
 
     isna = isnull
 
-    def notnull(self: IndexOpsLike) -> IndexOpsLike:
+    def notnull(self              )                :
         """
         Detect existing (non-missing) values.
         Return a boolean same-sized object indicating if the values are not NA.
@@ -966,7 +966,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
     notna = notnull
 
     # TODO: axis and many arguments should be implemented.
-    def all(self, axis: Axis = 0, skipna: bool = True) -> bool:
+    def all(self, axis       = 0, skipna       = True)        :
         """
         Return whether all elements are True.
 
@@ -1053,7 +1053,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
             return ret
 
     # TODO: axis, skipna, and many arguments should be implemented.
-    def any(self, axis: Axis = 0) -> bool:
+    def any(self, axis       = 0)        :
         """
         Return whether any element is True.
 
@@ -1117,8 +1117,8 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
 
     # TODO: add frep and axis parameter
     def shift(
-        self: IndexOpsLike, periods: int = 1, fill_value: Optional[Any] = None
-    ) -> IndexOpsLike:
+        self              , periods      = 1, fill_value                = None
+    )                :
         """
         Shift Series/Index by desired number of periods.
 
@@ -1168,12 +1168,12 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         return self._shift(periods, fill_value).spark.analyzed
 
     def _shift(
-        self: IndexOpsLike,
-        periods: int,
-        fill_value: Any,
+        self              ,
+        periods     ,
+        fill_value     ,
         *,
-        part_cols: Sequence["ColumnOrName"] = (),
-    ) -> IndexOpsLike:
+        part_cols                           = (),
+    )                :
         if not isinstance(periods, int):
             raise TypeError("periods should be an int; however, got [%s]" % type(periods).__name__)
 
@@ -1190,12 +1190,12 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
     # TODO: Update Documentation for Bins Parameter when its supported
     def value_counts(
         self,
-        normalize: bool = False,
-        sort: bool = True,
-        ascending: bool = False,
-        bins: None = None,
-        dropna: bool = True,
-    ) -> "Series":
+        normalize       = False,
+        sort       = True,
+        ascending       = False,
+        bins       = None,
+        dropna       = True,
+    )            :
         """
         Return a Series containing counts of unique values.
         The resulting object will be in descending order so that the
@@ -1375,7 +1375,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
 
         return first_series(DataFrame(internal))
 
-    def nunique(self, dropna: bool = True, approx: bool = False, rsd: float = 0.05) -> int:
+    def nunique(self, dropna       = True, approx       = False, rsd        = 0.05)       :
         """
         Return number of unique elements in the object.
         Excludes NA values by default.
@@ -1429,7 +1429,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         res = self._internal.spark_frame.select([self._nunique(dropna, approx, rsd)])
         return res.collect()[0][0]
 
-    def _nunique(self, dropna: bool = True, approx: bool = False, rsd: float = 0.05) -> Column:
+    def _nunique(self, dropna       = True, approx       = False, rsd        = 0.05)          :
         colname = self._internal.data_spark_column_names[0]
         count_fn = cast(
             Callable[[Column], Column],
@@ -1445,7 +1445,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
                 ).otherwise(0)
             ).alias(colname)
 
-    def take(self: IndexOpsLike, indices: Sequence[int]) -> IndexOpsLike:
+    def take(self              , indices               )                :
         """
         Return the elements in the given *positional* indices along an axis.
 
@@ -1520,8 +1520,8 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
             return cast(IndexOpsLike, self._psdf.iloc[indices].index)
 
     def factorize(
-        self: IndexOpsLike, sort: bool = True, na_sentinel: Optional[int] = -1
-    ) -> Tuple[IndexOpsLike, pd.Index]:
+        self              , sort       = True, na_sentinel                = -1
+    )                                 :
         """
         Encode the object as an enumerated type or categorical variable.
 
@@ -1675,7 +1675,7 @@ class IndexOpsMixin(object, metaclass=ABCMeta):
         return codes, uniques
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

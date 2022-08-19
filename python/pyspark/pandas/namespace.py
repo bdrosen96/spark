@@ -130,7 +130,7 @@ __all__ = [
 ]
 
 
-def from_pandas(pobj: Union[pd.DataFrame, pd.Series, pd.Index]) -> Union[Series, DataFrame, Index]:
+def from_pandas(pobj                                          )                                   :
     """Create a pandas-on-Spark DataFrame, Series or Index from a pandas DataFrame, Series or Index.
 
     This is similar to Spark's `SparkSession.createDataFrame()` with pandas DataFrame,
@@ -161,8 +161,8 @@ _range = range  # built-in range
 
 
 def range(
-    start: int, end: Optional[int] = None, step: int = 1, num_partitions: Optional[int] = None
-) -> DataFrame:
+    start     , end                = None, step      = 1, num_partitions                = None
+)             :
     """
     Create a DataFrame with some range of numbers.
 
@@ -214,23 +214,23 @@ def range(
 
 
 def read_csv(
-    path: str,
-    sep: str = ",",
-    header: Union[str, int, None] = "infer",
-    names: Optional[Union[str, List[str]]] = None,
-    index_col: Optional[Union[str, List[str]]] = None,
-    usecols: Optional[Union[List[int], List[str], Callable[[str], bool]]] = None,
-    squeeze: bool = False,
-    mangle_dupe_cols: bool = True,
-    dtype: Optional[Union[str, Dtype, Dict[str, Union[str, Dtype]]]] = None,
-    nrows: Optional[int] = None,
-    parse_dates: bool = False,
-    quotechar: Optional[str] = None,
-    escapechar: Optional[str] = None,
-    comment: Optional[str] = None,
-    encoding: Optional[str] = None,
-    **options: Any,
-) -> Union[DataFrame, Series]:
+    path     ,
+    sep      = ",",
+    header                        = "infer",
+    names                                  = None,
+    index_col                                  = None,
+    usecols                                                               = None,
+    squeeze       = False,
+    mangle_dupe_cols       = True,
+    dtype                                                            = None,
+    nrows                = None,
+    parse_dates       = False,
+    quotechar                = None,
+    escapechar                = None,
+    comment                = None,
+    encoding                = None,
+    **options     ,
+)                            :
     """Read CSV (comma-separated) file into DataFrame or Series.
 
     Parameters
@@ -341,7 +341,7 @@ def read_csv(
         if encoding is not None:
             reader.option("encoding", encoding_mapping.get(encoding, encoding))
 
-        column_labels: Dict[Any, str]
+        #column_labels: Dict[Any, str]
         if isinstance(names, str):
             sdf = reader.schema(names).csv(path)
             column_labels = {col: col for col in sdf.columns}
@@ -364,7 +364,7 @@ def read_csv(
                 column_labels = {col: col for col in sdf.columns}
 
         if usecols is not None:
-            missing: List[Union[int, str]]
+            #missing: List[Union[int, str]]
             if callable(usecols):
                 column_labels = {
                     label: col for label, col in column_labels.items() if usecols(label)
@@ -413,8 +413,8 @@ def read_csv(
     if nrows is not None:
         sdf = sdf.limit(nrows)
 
-    index_spark_column_names: List[str]
-    index_names: List[Label]
+    #index_spark_column_names: List[str]
+    #index_names: List[Label]
     if index_col is not None:
         if isinstance(index_col, (str, int)):
             index_col = [index_col]
@@ -434,7 +434,7 @@ def read_csv(
         index_spark_column_names = []
         index_names = []
 
-    psdf: DataFrame = DataFrame(
+    psdf            = DataFrame(
         InternalFrame(
             spark_frame=sdf,
             index_spark_columns=[scol_for(sdf, col) for col in index_spark_column_names],
@@ -461,8 +461,8 @@ def read_csv(
 
 
 def read_json(
-    path: str, lines: bool = True, index_col: Optional[Union[str, List[str]]] = None, **options: Any
-) -> DataFrame:
+    path     , lines       = True, index_col                                  = None, **options     
+)             :
     """
     Convert a JSON string to DataFrame.
 
@@ -524,12 +524,12 @@ def read_json(
 
 
 def read_delta(
-    path: str,
-    version: Optional[str] = None,
-    timestamp: Optional[str] = None,
-    index_col: Optional[Union[str, List[str]]] = None,
-    **options: Any,
-) -> DataFrame:
+    path     ,
+    version                = None,
+    timestamp                = None,
+    index_col                                  = None,
+    **options     ,
+)             :
     """
     Read a Delta Lake table on some file system and return a DataFrame.
 
@@ -616,7 +616,7 @@ def read_delta(
     return read_spark_io(path, format="delta", index_col=index_col, **options)
 
 
-def read_table(name: str, index_col: Optional[Union[str, List[str]]] = None) -> DataFrame:
+def read_table(name     , index_col                                  = None)             :
     """
     Read a Spark table and return a DataFrame.
 
@@ -668,12 +668,12 @@ def read_table(name: str, index_col: Optional[Union[str, List[str]]] = None) -> 
 
 
 def read_spark_io(
-    path: Optional[str] = None,
-    format: Optional[str] = None,
-    schema: Union[str, "StructType"] = None,
-    index_col: Optional[Union[str, List[str]]] = None,
-    **options: Any,
-) -> DataFrame:
+    path                = None,
+    format                = None,
+    schema                           = None,
+    index_col                                  = None,
+    **options     ,
+)             :
     """Load a DataFrame from a Spark data source.
 
     Parameters
@@ -752,12 +752,12 @@ def read_spark_io(
 
 
 def read_parquet(
-    path: str,
-    columns: Optional[List[str]] = None,
-    index_col: Optional[List[str]] = None,
-    pandas_metadata: bool = False,
-    **options: Any,
-) -> DataFrame:
+    path     ,
+    columns                      = None,
+    index_col                      = None,
+    pandas_metadata       = False,
+    **options     ,
+)             :
     """Load a parquet object from the file path, returning a DataFrame.
 
     Parameters
@@ -819,7 +819,7 @@ def read_parquet(
         @pandas_udf(  # type: ignore[call-overload]
             "index_col array<string>, index_names array<string>"
         )
-        def read_index_metadata(pser: pd.Series) -> pd.DataFrame:
+        def read_index_metadata(pser           )                :
             binary = pser.iloc[0]
             metadata = pq.ParquetFile(pa.BufferReader(binary)).metadata.metadata
             if b"pandas" in metadata:
@@ -871,7 +871,7 @@ def read_parquet(
     return psdf
 
 
-def read_clipboard(sep: str = r"\s+", **kwargs: Any) -> DataFrame:
+def read_clipboard(sep      = r"\s+", **kwargs     )             :
     r"""
     Read text from clipboard and pass to read_csv. See read_csv for the
     full argument list
@@ -894,32 +894,32 @@ def read_clipboard(sep: str = r"\s+", **kwargs: Any) -> DataFrame:
 
 
 def read_excel(
-    io: Union[str, Any],
-    sheet_name: Union[str, int, List[Union[str, int]], None] = 0,
-    header: Union[int, List[int]] = 0,
-    names: Optional[List] = None,
-    index_col: Optional[List[int]] = None,
-    usecols: Optional[Union[int, str, List[Union[int, str]], Callable[[str], bool]]] = None,
-    squeeze: bool = False,
-    dtype: Optional[Dict[str, Union[str, Dtype]]] = None,
-    engine: Optional[str] = None,
-    converters: Optional[Dict] = None,
-    true_values: Optional[Any] = None,
-    false_values: Optional[Any] = None,
-    skiprows: Optional[Union[int, List[int]]] = None,
-    nrows: Optional[int] = None,
-    na_values: Optional[Any] = None,
-    keep_default_na: bool = True,
-    verbose: bool = False,
-    parse_dates: Union[bool, List, Dict] = False,
-    date_parser: Optional[Callable] = None,
-    thousands: Optional[str] = None,
-    comment: Optional[str] = None,
-    skipfooter: int = 0,
-    convert_float: bool = True,
-    mangle_dupe_cols: bool = True,
-    **kwds: Any,
-) -> Union[DataFrame, Series, Dict[str, Union[DataFrame, Series]]]:
+    io                 ,
+    sheet_name                                               = 0,
+    header                        = 0,
+    names                 = None,
+    index_col                      = None,
+    usecols                                                                          = None,
+    squeeze       = False,
+    dtype                                         = None,
+    engine                = None,
+    converters                 = None,
+    true_values                = None,
+    false_values                = None,
+    skiprows                                  = None,
+    nrows                = None,
+    na_values                = None,
+    keep_default_na       = True,
+    verbose       = False,
+    parse_dates                          = False,
+    date_parser                     = None,
+    thousands                = None,
+    comment                = None,
+    skipfooter      = 0,
+    convert_float       = True,
+    mangle_dupe_cols       = True,
+    **kwds     ,
+)                                                                 :
     """
     Read an Excel file into a pandas-on-Spark DataFrame or Series.
 
@@ -1121,8 +1121,8 @@ def read_excel(
     """
 
     def pd_read_excel(
-        io_or_bin: Any, sn: Union[str, int, List[Union[str, int]], None], sq: bool
-    ) -> pd.DataFrame:
+        io_or_bin     , sn                                              , sq      
+    )                :
         return pd.read_excel(
             io=BytesIO(io_or_bin) if isinstance(io_or_bin, (bytes, bytearray)) else io_or_bin,
             sheet_name=sn,
@@ -1173,9 +1173,9 @@ def read_excel(
     else:
 
         def read_excel_on_spark(
-            pdf_or_pser: Union[pd.DataFrame, pd.Series],
-            sn: Union[str, int, List[Union[str, int]], None],
-        ) -> Union[DataFrame, Series]:
+            pdf_or_pser                                ,
+            sn                                              ,
+        )                            :
             if isinstance(pdf_or_pser, pd.Series):
                 pdf = pdf_or_pser.to_frame()
             else:
@@ -1186,7 +1186,7 @@ def read_excel(
                 as_nullable_spark_type(psdf._internal.spark_frame.drop(*HIDDEN_COLUMNS).schema)
             )
 
-            def output_func(pdf: pd.DataFrame) -> pd.DataFrame:
+            def output_func(pdf              )                :
                 pdf = pd.concat(
                     [pd_read_excel(bin, sn=sn, sq=False) for bin in pdf[pdf.columns[0]]]
                 )
@@ -1225,22 +1225,22 @@ def read_excel(
 
 
 def read_html(
-    io: Union[str, Any],
-    match: str = ".+",
-    flavor: Optional[str] = None,
-    header: Optional[Union[int, List[int]]] = None,
-    index_col: Optional[Union[int, List[int]]] = None,
-    skiprows: Optional[Union[int, List[int], slice]] = None,
-    attrs: Optional[Dict[str, str]] = None,
-    parse_dates: bool = False,
-    thousands: str = ",",
-    encoding: Optional[str] = None,
-    decimal: str = ".",
-    converters: Optional[Dict] = None,
-    na_values: Optional[Any] = None,
-    keep_default_na: bool = True,
-    displayed_only: bool = True,
-) -> List[DataFrame]:
+    io                 ,
+    match      = ".+",
+    flavor                = None,
+    header                                  = None,
+    index_col                                  = None,
+    skiprows                                         = None,
+    attrs                           = None,
+    parse_dates       = False,
+    thousands      = ",",
+    encoding                = None,
+    decimal      = ".",
+    converters                 = None,
+    na_values                = None,
+    keep_default_na       = True,
+    displayed_only       = True,
+)                   :
     r"""Read HTML tables into a ``list`` of ``DataFrame`` objects.
 
     Parameters
@@ -1362,13 +1362,13 @@ def read_html(
 
 # TODO: add `coerce_float` and 'parse_dates' parameters
 def read_sql_table(
-    table_name: str,
-    con: str,
-    schema: Optional[str] = None,
-    index_col: Optional[Union[str, List[str]]] = None,
-    columns: Optional[Union[str, List[str]]] = None,
-    **options: Any,
-) -> DataFrame:
+    table_name     ,
+    con     ,
+    schema                = None,
+    index_col                                  = None,
+    columns                                  = None,
+    **options     ,
+)             :
     """
     Read SQL database table into a DataFrame.
 
@@ -1419,7 +1419,7 @@ def read_sql_table(
     reader.options(**options)
     sdf = reader.format("jdbc").load()
     index_spark_columns, index_names = _get_index_map(sdf, index_col)
-    psdf: DataFrame = DataFrame(
+    psdf            = DataFrame(
         InternalFrame(
             spark_frame=sdf, index_spark_columns=index_spark_columns, index_names=index_names
         )
@@ -1433,8 +1433,8 @@ def read_sql_table(
 
 # TODO: add `coerce_float`, `params`, and 'parse_dates' parameters
 def read_sql_query(
-    sql: str, con: str, index_col: Optional[Union[str, List[str]]] = None, **options: Any
-) -> DataFrame:
+    sql     , con     , index_col                                  = None, **options     
+)             :
     """Read SQL query into a DataFrame.
 
     Returns a DataFrame corresponding to the result set of the query
@@ -1488,12 +1488,12 @@ def read_sql_query(
 
 # TODO: add `coerce_float`, `params`, and 'parse_dates' parameters
 def read_sql(
-    sql: str,
-    con: str,
-    index_col: Optional[Union[str, List[str]]] = None,
-    columns: Optional[Union[str, List[str]]] = None,
-    **options: Any,
-) -> DataFrame:
+    sql     ,
+    con     ,
+    index_col                                  = None,
+    columns                                  = None,
+    **options     ,
+)             :
     """
     Read SQL query or database table into a DataFrame.
 
@@ -1550,11 +1550,11 @@ def read_sql(
 @no_type_check
 def to_datetime(
     arg,
-    errors: str = "raise",
-    format: Optional[str] = None,
-    unit: Optional[str] = None,
-    infer_datetime_format: bool = False,
-    origin: str = "unix",
+    errors      = "raise",
+    format                = None,
+    unit                = None,
+    infer_datetime_format       = False,
+    origin      = "unix",
 ):
     """
     Convert argument to datetime.
@@ -1694,8 +1694,8 @@ def to_datetime(
     }
 
     def pandas_to_datetime(
-        pser_or_pdf: Union[pd.DataFrame, pd.Series], cols: Optional[List[str]] = None
-    ) -> Series[np.datetime64]:
+        pser_or_pdf                                , cols                      = None
+    )                         :
         if isinstance(pser_or_pdf, pd.DataFrame):
             pser_or_pdf = pser_or_pdf[cols]
         return pd.to_datetime(
@@ -1731,16 +1731,16 @@ def to_datetime(
 
 
 def date_range(
-    start: Union[str, Any] = None,
-    end: Union[str, Any] = None,
-    periods: Optional[int] = None,
-    freq: Optional[Union[str, DateOffset]] = None,
-    tz: Optional[Union[str, tzinfo]] = None,
-    normalize: bool = False,
-    name: Optional[str] = None,
-    closed: Optional[str] = None,
-    **kwargs: Any,
-) -> DatetimeIndex:
+    start                  = None,
+    end                  = None,
+    periods                = None,
+    freq                                   = None,
+    tz                               = None,
+    normalize       = False,
+    name                = None,
+    closed                = None,
+    **kwargs     ,
+)                 :
     """
     Return a fixed frequency DatetimeIndex.
 
@@ -1896,8 +1896,8 @@ def date_range(
 @no_type_check
 def to_timedelta(
     arg,
-    unit: Optional[str] = None,
-    errors: str = "raise",
+    unit                = None,
+    errors      = "raise",
 ):
     """
     Convert argument to timedelta.
@@ -1965,7 +1965,7 @@ def to_timedelta(
                    dtype='timedelta64[ns]', freq=None)
     """
 
-    def pandas_to_timedelta(pser: pd.Series) -> np.timedelta64:
+    def pandas_to_timedelta(pser           )                  :
         return pd.to_timedelta(
             arg=pser,
             unit=unit,
@@ -1984,13 +1984,13 @@ def to_timedelta(
 
 
 def timedelta_range(
-    start: Union[str, Any] = None,
-    end: Union[str, Any] = None,
-    periods: Optional[int] = None,
-    freq: Optional[Union[str, DateOffset]] = None,
-    name: Optional[str] = None,
-    closed: Optional[str] = None,
-) -> TimedeltaIndex:
+    start                  = None,
+    end                  = None,
+    periods                = None,
+    freq                                   = None,
+    name                = None,
+    closed                = None,
+)                  :
     """
     Return a fixed frequency TimedeltaIndex, with day as the default frequency.
 
@@ -2071,15 +2071,15 @@ def timedelta_range(
 
 
 def get_dummies(
-    data: Union[DataFrame, Series],
-    prefix: Optional[Union[str, List[str], Dict[str, str]]] = None,
-    prefix_sep: str = "_",
-    dummy_na: bool = False,
-    columns: Optional[Union[Name, List[Name]]] = None,
-    sparse: bool = False,
-    drop_first: bool = False,
-    dtype: Optional[Union[str, Dtype]] = None,
-) -> DataFrame:
+    data                          ,
+    prefix                                                  = None,
+    prefix_sep      = "_",
+    dummy_na       = False,
+    columns                                    = None,
+    sparse       = False,
+    drop_first       = False,
+    dtype                              = None,
+)             :
     """
     Convert categorical variable into dummy/indicator variables, also
     known as one hot encoding.
@@ -2277,7 +2277,7 @@ def get_dummies(
         if drop_first:
             values = values[1:]
 
-        def column_name(v: Any) -> Name:
+        def column_name(v     )        :
             if prefix is None or cast(List[str], prefix)[i] == "":
                 return v
             else:
@@ -2297,12 +2297,12 @@ def get_dummies(
 
 # TODO: there are many parameters to implement and support. See pandas's pd.concat.
 def concat(
-    objs: List[Union[DataFrame, Series]],
-    axis: Axis = 0,
-    join: str = "outer",
-    ignore_index: bool = False,
-    sort: bool = False,
-) -> Union[Series, DataFrame]:
+    objs                                ,
+    axis       = 0,
+    join      = "outer",
+    ignore_index       = False,
+    sort       = False,
+)                            :
     """
     Concatenate pandas-on-Spark objects along a particular axis with optional set logic
     along the other axes.
@@ -2474,13 +2474,13 @@ def concat(
         raise ValueError("Only can inner (intersect) or outer (union) join the other axis.")
 
     axis = validate_axis(axis)
-    psdf: DataFrame
+    #psdf: DataFrame
     if axis == 1:
-        psdfs: List[DataFrame] = [
+        psdfs                  = [
             obj.to_frame() if isinstance(obj, Series) else obj for obj in objs
         ]
 
-        level: int = min(psdf._internal.column_labels_level for psdf in psdfs)
+        level      = min(psdf._internal.column_labels_level for psdf in psdfs)
         psdfs = [
             DataFrame._index_normalized_frame(level, psdf)
             if psdf._internal.column_labels_level > level
@@ -2489,7 +2489,7 @@ def concat(
         ]
 
         concat_psdf = psdfs[0]
-        column_labels: List[Label] = concat_psdf._internal.column_labels.copy()
+        column_labels              = concat_psdf._internal.column_labels.copy()
 
         psdfs_not_same_anchor = []
         for psdf in psdfs[1:]:
@@ -2556,7 +2556,7 @@ def concat(
 
     # DataFrame, Series ... & Series, Series ...
     # In this case, we should return DataFrame.
-    new_objs: List[DataFrame] = []
+    new_objs                  = []
     num_series = 0
     series_names = set()
     for obj in objs:
@@ -2568,7 +2568,7 @@ def concat(
             assert isinstance(obj, DataFrame)
             new_objs.append(obj)
 
-    column_labels_levels: Set[int] = set(obj._internal.column_labels_level for obj in new_objs)
+    column_labels_levels           = set(obj._internal.column_labels_level for obj in new_objs)
     if len(column_labels_levels) != 1:
         raise ValueError("MultiIndex columns should have the same levels")
 
@@ -2589,7 +2589,7 @@ def concat(
                 )
 
     column_labels_of_psdfs = [psdf._internal.column_labels for psdf in new_objs]
-    index_names_of_psdfs: List[List[Optional[Label]]]
+    #index_names_of_psdfs: List[List[Optional[Label]]]
     if ignore_index:
         index_names_of_psdfs = [[] for _ in new_objs]
     else:
@@ -2678,7 +2678,7 @@ def concat(
         index_names = psdfs[0]._internal.index_names
         index_fields = psdfs[0]._internal.index_fields
 
-    result_psdf: DataFrame = DataFrame(
+    result_psdf            = DataFrame(
         psdfs[0]._internal.copy(
             spark_frame=concatenated,
             index_spark_columns=[scol_for(concatenated, col) for col in index_spark_column_names],
@@ -2703,12 +2703,12 @@ def concat(
 
 
 def melt(
-    frame: DataFrame,
-    id_vars: Optional[Union[Name, List[Name]]] = None,
-    value_vars: Optional[Union[Name, List[Name]]] = None,
-    var_name: Optional[Union[str, List[str]]] = None,
-    value_name: str = "value",
-) -> DataFrame:
+    frame           ,
+    id_vars                                    = None,
+    value_vars                                    = None,
+    var_name                                  = None,
+    value_name      = "value",
+)             :
     return DataFrame.melt(frame, id_vars, value_vars, var_name, value_name)
 
 
@@ -2874,16 +2874,16 @@ notnull = notna
 
 
 def merge(
-    obj: DataFrame,
-    right: DataFrame,
-    how: str = "inner",
-    on: Optional[Union[Name, List[Name]]] = None,
-    left_on: Optional[Union[Name, List[Name]]] = None,
-    right_on: Optional[Union[Name, List[Name]]] = None,
-    left_index: bool = False,
-    right_index: bool = False,
-    suffixes: Tuple[str, str] = ("_x", "_y"),
-) -> "DataFrame":
+    obj           ,
+    right           ,
+    how      = "inner",
+    on                                    = None,
+    left_on                                    = None,
+    right_on                                    = None,
+    left_index       = False,
+    right_index       = False,
+    suffixes                  = ("_x", "_y"),
+)               :
     """
     Merge DataFrame objects with a database-style join.
 
@@ -3007,21 +3007,21 @@ def merge(
 
 
 def merge_asof(
-    left: Union[DataFrame, Series],
-    right: Union[DataFrame, Series],
-    on: Optional[Name] = None,
-    left_on: Optional[Name] = None,
-    right_on: Optional[Name] = None,
-    left_index: bool = False,
-    right_index: bool = False,
-    by: Optional[Union[Name, List[Name]]] = None,
-    left_by: Optional[Union[Name, List[Name]]] = None,
-    right_by: Optional[Union[Name, List[Name]]] = None,
-    suffixes: Tuple[str, str] = ("_x", "_y"),
-    tolerance: Optional[Any] = None,
-    allow_exact_matches: bool = True,
-    direction: str = "backward",
-) -> DataFrame:
+    left                          ,
+    right                          ,
+    on                 = None,
+    left_on                 = None,
+    right_on                 = None,
+    left_index       = False,
+    right_index       = False,
+    by                                    = None,
+    left_by                                    = None,
+    right_by                                    = None,
+    suffixes                  = ("_x", "_y"),
+    tolerance                = None,
+    allow_exact_matches       = True,
+    direction      = "backward",
+)             :
     """
     Perform an asof merge.
 
@@ -3281,7 +3281,7 @@ def merge_asof(
     4 2016-05-25 13:30:00.048   GOOG  720.92       100     NaN     NaN
     """
 
-    def to_list(os: Optional[Union[Name, List[Name]]]) -> List[Label]:
+    def to_list(os                                   )               :
         if os is None:
             return []
         elif is_name_like_tuple(os):
@@ -3363,8 +3363,8 @@ def merge_asof(
     left_as_of_name = left_as_of_names[0]
     right_as_of_name = right_as_of_names[0]
 
-    def resolve(internal: InternalFrame, side: str) -> InternalFrame:
-        def rename(col: str) -> str:
+    def resolve(internal               , side     )                 :
+        def rename(col     )       :
             return "__{}_{}".format(side, col)
 
         internal = internal.resolved_copy
@@ -3433,10 +3433,10 @@ def merge_asof(
     data_columns = []
     column_labels = []
 
-    def left_scol_for(label: Label) -> Column:
+    def left_scol_for(label       )          :
         return scol_for(as_of_joined_table, left_internal.spark_column_name_for(label))
 
-    def right_scol_for(label: Label) -> Column:
+    def right_scol_for(label       )          :
         return scol_for(as_of_joined_table, right_internal.spark_column_name_for(label))
 
     for label in left_internal.column_labels:
@@ -3593,7 +3593,7 @@ def to_numeric(arg, errors="raise"):
         return pd.to_numeric(arg, errors=errors)
 
 
-def broadcast(obj: DataFrame) -> DataFrame:
+def broadcast(obj           )             :
     """
     Marks a DataFrame as small enough for use in broadcast joins.
 
@@ -3643,11 +3643,11 @@ def broadcast(obj: DataFrame) -> DataFrame:
 
 
 def read_orc(
-    path: str,
-    columns: Optional[List[str]] = None,
-    index_col: Optional[Union[str, List[str]]] = None,
-    **options: Any,
-) -> "DataFrame":
+    path     ,
+    columns                      = None,
+    index_col                                  = None,
+    **options     ,
+)               :
     """
     Load an ORC object from the file path, returning a DataFrame.
 
@@ -3701,10 +3701,10 @@ def read_orc(
 
 
 def _get_index_map(
-    sdf: SparkDataFrame, index_col: Optional[Union[str, List[str]]] = None
-) -> Tuple[Optional[List[Column]], Optional[List[Label]]]:
-    index_spark_columns: Optional[List[Column]]
-    index_names: Optional[List[Label]]
+    sdf                , index_col                                  = None
+)                                                        :
+    #index_spark_columns: Optional[List[Column]]
+    #index_names: Optional[List[Label]]
     if index_col is not None:
         if isinstance(index_col, str):
             index_col = [index_col]
@@ -3735,7 +3735,7 @@ _get_dummies_acceptable_types = _get_dummies_default_accept_types + (
 )
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import shutil

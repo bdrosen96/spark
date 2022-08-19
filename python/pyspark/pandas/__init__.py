@@ -99,7 +99,7 @@ __all__ = [  # noqa: F405
 ]
 
 
-def _auto_patch_spark() -> None:
+def _auto_patch_spark()        :
     import os
     import logging
 
@@ -123,7 +123,7 @@ _frame_has_class_getitem = False
 _series_has_class_getitem = False
 
 
-def _auto_patch_pandas() -> None:
+def _auto_patch_pandas()        :
     import pandas as pd
 
     # In order to use it in test cases.
@@ -155,7 +155,7 @@ from pyspark.pandas.namespace import *  # noqa: F403
 from pyspark.pandas.sql_formatter import sql
 
 
-def __getattr__(key: str) -> Any:
+def __getattr__(key     )       :
     if key.startswith("__"):
         raise AttributeError(key)
     if hasattr(_MissingPandasLikeGeneralFunctions, key):

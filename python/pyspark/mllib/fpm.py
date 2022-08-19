@@ -52,7 +52,7 @@ class FPGrowthModel(JavaModelWrapper, JavaSaveable, JavaLoader["FPGrowthModel"])
     """
 
     @since("1.4.0")
-    def freqItemsets(self) -> RDD["FPGrowth.FreqItemset"]:
+    def freqItemsets(self)                               :
         """
         Returns the frequent itemsets of this model.
         """
@@ -60,7 +60,7 @@ class FPGrowthModel(JavaModelWrapper, JavaSaveable, JavaLoader["FPGrowthModel"])
 
     @classmethod
     @since("2.0.0")
-    def load(cls, sc: SparkContext, path: str) -> "FPGrowthModel":
+    def load(cls, sc              , path     )                   :
         """
         Load a model from the given path.
         """
@@ -79,8 +79,8 @@ class FPGrowth:
 
     @classmethod
     def train(
-        cls, data: RDD[List[T]], minSupport: float = 0.3, numPartitions: int = -1
-    ) -> "FPGrowthModel":
+        cls, data              , minSupport        = 0.3, numPartitions      = -1
+    )                   :
         """
         Computes an FP-Growth model that contains frequent itemsets.
 
@@ -108,8 +108,8 @@ class FPGrowth:
         .. versionadded:: 1.4.0
         """
 
-        items: List[Any]
-        freq: int
+        #items: List[Any]
+        #freq: int
 
 
 @inherit_doc
@@ -133,7 +133,7 @@ class PrefixSpanModel(JavaModelWrapper, Generic[T]):
     """
 
     @since("1.6.0")
-    def freqSequences(self) -> RDD["PrefixSpan.FreqSequence"]:
+    def freqSequences(self)                                  :
         """Gets frequent sequences"""
         return self.call("getFreqSequences").map(lambda x: PrefixSpan.FreqSequence(x[0], x[1]))
 
@@ -155,11 +155,11 @@ class PrefixSpan:
     @classmethod
     def train(
         cls,
-        data: RDD[List[List[T]]],
-        minSupport: float = 0.1,
-        maxPatternLength: int = 10,
-        maxLocalProjDBSize: int = 32000000,
-    ) -> PrefixSpanModel[T]:
+        data                    ,
+        minSupport        = 0.1,
+        maxPatternLength      = 10,
+        maxLocalProjDBSize      = 32000000,
+    )                      :
         """
         Finds the complete set of frequent sequential patterns in the
         input sequences of itemsets.
@@ -199,11 +199,11 @@ class PrefixSpan:
         .. versionadded:: 1.6.0
         """
 
-        sequence: List[List[Any]]
-        freq: int
+        #sequence: List[List[Any]]
+        #freq: int
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import SparkSession
     import pyspark.mllib.fpm

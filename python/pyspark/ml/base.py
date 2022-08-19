@@ -79,17 +79,17 @@ class _FitMultipleIterator(Generic[M]):
     See :py:meth:`Estimator.fitMultiple` for more info.
     """
 
-    def __init__(self, fitSingleModel: Callable[[int], M], numModels: int):
+    def __init__(self, fitSingleModel                    , numModels     ):
         """ """
         self.fitSingleModel = fitSingleModel
         self.numModel = numModels
         self.counter = 0
         self.lock = threading.Lock()
 
-    def __iter__(self) -> Iterator[Tuple[int, M]]:
+    def __iter__(self)                           :
         return self
 
-    def __next__(self) -> Tuple[int, M]:
+    def __next__(self)                 :
         with self.lock:
             index = self.counter
             if index >= self.numModel:
@@ -97,7 +97,7 @@ class _FitMultipleIterator(Generic[M]):
             self.counter += 1
         return index, self.fitSingleModel(index)
 
-    def next(self) -> Tuple[int, M]:
+    def next(self)                 :
         """For python2 compatibility."""
         return self.__next__()
 
@@ -111,7 +111,7 @@ class Estimator(Params, Generic[M], metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def _fit(self, dataset: DataFrame) -> M:
+    def _fit(self, dataset           )     :
         """
         Fits a model to the input dataset. This is called by the default implementation of fit.
 
@@ -129,8 +129,8 @@ class Estimator(Params, Generic[M], metaclass=ABCMeta):
         raise NotImplementedError()
 
     def fitMultiple(
-        self, dataset: DataFrame, paramMaps: Sequence["ParamMap"]
-    ) -> Iterator[Tuple[int, M]]:
+        self, dataset           , paramMaps                      
+    )                           :
         """
         Fits a model to the input dataset for each param map in `paramMaps`.
 
@@ -152,26 +152,26 @@ class Estimator(Params, Generic[M], metaclass=ABCMeta):
         """
         estimator = self.copy()
 
-        def fitSingleModel(index: int) -> M:
+        def fitSingleModel(index     )     :
             return estimator.fit(dataset, paramMaps[index])
 
         return _FitMultipleIterator(fitSingleModel, len(paramMaps))
 
     @overload
-    def fit(self, dataset: DataFrame, params: Optional["ParamMap"] = ...) -> M:
+    def fit(self, dataset           , params                       = ...)     :
         ...
 
     @overload
     def fit(
-        self, dataset: DataFrame, params: Union[List["ParamMap"], Tuple["ParamMap"]]
-    ) -> List[M]:
+        self, dataset           , params                                            
+    )           :
         ...
 
     def fit(
         self,
-        dataset: DataFrame,
-        params: Optional[Union["ParamMap", List["ParamMap"], Tuple["ParamMap"]]] = None,
-    ) -> Union[M, List[M]]:
+        dataset           ,
+        params                                                                   = None,
+    )                     :
         """
         Fits a model to the input dataset with optional parameters.
 
@@ -194,7 +194,7 @@ class Estimator(Params, Generic[M], metaclass=ABCMeta):
         if params is None:
             params = dict()
         if isinstance(params, (list, tuple)):
-            models: List[Optional[M]] = [None] * len(params)
+            models                    = [None] * len(params)
             for index, model in self.fitMultiple(dataset, params):
                 models[index] = model
             return cast(List[M], models)
@@ -219,7 +219,7 @@ class Transformer(Params, metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def _transform(self, dataset: DataFrame) -> DataFrame:
+    def _transform(self, dataset           )             :
         """
         Transforms the input dataset.
 
@@ -235,7 +235,7 @@ class Transformer(Params, metaclass=ABCMeta):
         """
         raise NotImplementedError()
 
-    def transform(self, dataset: DataFrame, params: Optional["ParamMap"] = None) -> DataFrame:
+    def transform(self, dataset           , params                       = None)             :
         """
         Transforms the input dataset with optional parameters.
 
@@ -284,20 +284,20 @@ class UnaryTransformer(HasInputCol, HasOutputCol, Transformer):
     .. versionadded:: 2.3.0
     """
 
-    def setInputCol(self: P, value: str) -> P:
+    def setInputCol(self   , value     )     :
         """
         Sets the value of :py:attr:`inputCol`.
         """
         return self._set(inputCol=value)
 
-    def setOutputCol(self: P, value: str) -> P:
+    def setOutputCol(self   , value     )     :
         """
         Sets the value of :py:attr:`outputCol`.
         """
         return self._set(outputCol=value)
 
     @abstractmethod
-    def createTransformFunc(self) -> Callable[..., Any]:
+    def createTransformFunc(self)                      :
         """
         Creates the transform function using the given param map. The input param map already takes
         account of the embedded param map. So the param values should be determined
@@ -306,20 +306,20 @@ class UnaryTransformer(HasInputCol, HasOutputCol, Transformer):
         raise NotImplementedError()
 
     @abstractmethod
-    def outputDataType(self) -> DataType:
+    def outputDataType(self)            :
         """
         Returns the data type of the output column.
         """
         raise NotImplementedError()
 
     @abstractmethod
-    def validateInputType(self, inputType: DataType) -> None:
+    def validateInputType(self, inputType          )        :
         """
         Validates the input type. Throw an exception if it is invalid.
         """
         raise NotImplementedError()
 
-    def transformSchema(self, schema: StructType) -> StructType:
+    def transformSchema(self, schema            )              :
         inputType = schema[self.getInputCol()].dataType
         self.validateInputType(inputType)
         if self.getOutputCol() in schema.names:
@@ -328,7 +328,7 @@ class UnaryTransformer(HasInputCol, HasOutputCol, Transformer):
         outputFields.append(StructField(self.getOutputCol(), self.outputDataType(), nullable=False))
         return StructType(outputFields)
 
-    def _transform(self, dataset: DataFrame) -> DataFrame:
+    def _transform(self, dataset           )             :
         self.transformSchema(dataset.schema)
         transformUDF = udf(self.createTransformFunc(), self.outputDataType())
         transformedDataset = dataset.withColumn(
@@ -355,21 +355,21 @@ class Predictor(Estimator[M], _PredictorParams, metaclass=ABCMeta):
     """
 
     @since("3.0.0")
-    def setLabelCol(self: P, value: str) -> P:
+    def setLabelCol(self   , value     )     :
         """
         Sets the value of :py:attr:`labelCol`.
         """
         return self._set(labelCol=value)
 
     @since("3.0.0")
-    def setFeaturesCol(self: P, value: str) -> P:
+    def setFeaturesCol(self   , value     )     :
         """
         Sets the value of :py:attr:`featuresCol`.
         """
         return self._set(featuresCol=value)
 
     @since("3.0.0")
-    def setPredictionCol(self: P, value: str) -> P:
+    def setPredictionCol(self   , value     )     :
         """
         Sets the value of :py:attr:`predictionCol`.
         """
@@ -383,14 +383,14 @@ class PredictionModel(Model, _PredictorParams, Generic[T], metaclass=ABCMeta):
     """
 
     @since("3.0.0")
-    def setFeaturesCol(self: P, value: str) -> P:
+    def setFeaturesCol(self   , value     )     :
         """
         Sets the value of :py:attr:`featuresCol`.
         """
         return self._set(featuresCol=value)
 
     @since("3.0.0")
-    def setPredictionCol(self: P, value: str) -> P:
+    def setPredictionCol(self   , value     )     :
         """
         Sets the value of :py:attr:`predictionCol`.
         """
@@ -399,7 +399,7 @@ class PredictionModel(Model, _PredictorParams, Generic[T], metaclass=ABCMeta):
     @property  # type: ignore[misc]
     @abstractmethod
     @since("2.1.0")
-    def numFeatures(self) -> int:
+    def numFeatures(self)       :
         """
         Returns the number of features the model was trained on. If unknown, returns -1
         """
@@ -407,7 +407,7 @@ class PredictionModel(Model, _PredictorParams, Generic[T], metaclass=ABCMeta):
 
     @abstractmethod
     @since("3.0.0")
-    def predict(self, value: T) -> float:
+    def predict(self, value   )         :
         """
         Predict label for the given features.
         """

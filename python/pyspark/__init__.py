@@ -68,7 +68,7 @@ T = TypeVar("T")
 F = TypeVar("F", bound=Callable)
 
 
-def since(version: Union[str, float]) -> Callable[[F], F]:
+def since(version                   )                    :
     """
     A decorator that annotates a function to append the version of Spark the function was added.
     """
@@ -76,7 +76,7 @@ def since(version: Union[str, float]) -> Callable[[F], F]:
 
     indent_p = re.compile(r"\n( +)")
 
-    def deco(f: F) -> F:
+    def deco(f   )     :
         assert f.__doc__ is not None
 
         indents = indent_p.findall(f.__doc__)
@@ -88,11 +88,11 @@ def since(version: Union[str, float]) -> Callable[[F], F]:
 
 
 def copy_func(
-    f: F,
-    name: Optional[str] = None,
-    sinceversion: Optional[Union[str, float]] = None,
-    doc: Optional[str] = None,
-) -> F:
+    f   ,
+    name                = None,
+    sinceversion                              = None,
+    doc                = None,
+)     :
     """
     Returns a function with same code, globals, defaults, closure, and
     name (or provide a new name).
@@ -117,7 +117,7 @@ def copy_func(
     return cast(F, fn)
 
 
-def keyword_only(func: F) -> F:
+def keyword_only(func   )     :
     """
     A decorator that forces keyword arguments in the wrapped method
     and saves actual input keyword arguments in `_input_kwargs`.
@@ -128,7 +128,7 @@ def keyword_only(func: F) -> F:
     """
 
     @wraps(func)
-    def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
+    def wrapper(self     , *args     , **kwargs     )       :
         if len(args) > 0:
             raise TypeError("Method %s forces keyword arguments." % func.__name__)
         self._input_kwargs = kwargs

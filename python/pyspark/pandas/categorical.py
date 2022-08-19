@@ -64,17 +64,17 @@ class CategoricalAccessor:
     dtype: int8
     """
 
-    def __init__(self, series: "ps.Series"):
+    def __init__(self, series             ):
         if not isinstance(series.dtype, CategoricalDtype):
             raise ValueError("Cannot call CategoricalAccessor on type {}".format(series.dtype))
         self._data = series
 
     @property
-    def _dtype(self) -> CategoricalDtype:
+    def _dtype(self)                    :
         return cast(CategoricalDtype, self._data.dtype)
 
     @property
-    def categories(self) -> pd.Index:
+    def categories(self)            :
         """
         The categories of this categorical.
 
@@ -97,7 +97,7 @@ class CategoricalAccessor:
         return self._dtype.categories
 
     @categories.setter
-    def categories(self, categories: Union[pd.Index, List]) -> None:
+    def categories(self, categories                       )        :
         dtype = CategoricalDtype(categories, ordered=self.ordered)
 
         if len(self.categories) != len(dtype.categories):
@@ -113,7 +113,7 @@ class CategoricalAccessor:
         self._data._psdf._update_internal_frame(internal)
 
     @property
-    def ordered(self) -> bool:
+    def ordered(self)        :
         """
         Whether the categories have an ordered relationship.
 
@@ -136,7 +136,7 @@ class CategoricalAccessor:
         return self._dtype.ordered
 
     @property
-    def codes(self) -> "ps.Series":
+    def codes(self)               :
         """
         Return Series of codes as well as the index.
 
@@ -174,8 +174,8 @@ class CategoricalAccessor:
         ).rename()
 
     def add_categories(
-        self, new_categories: Union[pd.Index, Any, List], inplace: bool = False
-    ) -> Optional["ps.Series"]:
+        self, new_categories                            , inplace       = False
+    )                         :
         """
         Add new categories.
 
@@ -243,7 +243,7 @@ class CategoricalAccessor:
                 FutureWarning,
             )
 
-        categories: List[Any]
+        #categories: List[Any]
         if is_list_like(new_categories):
             categories = list(new_categories)
         else:
@@ -269,7 +269,7 @@ class CategoricalAccessor:
         else:
             return DataFrame(internal)._psser_for(self._data._column_label).copy()
 
-    def _set_ordered(self, *, ordered: bool, inplace: bool) -> Optional["ps.Series"]:
+    def _set_ordered(self, *, ordered      , inplace      )                         :
         from pyspark.pandas.frame import DataFrame
 
         if self.ordered == ordered:
@@ -291,7 +291,7 @@ class CategoricalAccessor:
             else:
                 return DataFrame(internal)._psser_for(self._data._column_label).copy()
 
-    def as_ordered(self, inplace: bool = False) -> Optional["ps.Series"]:
+    def as_ordered(self, inplace       = False)                         :
         """
         Set the Categorical to be ordered.
 
@@ -331,7 +331,7 @@ class CategoricalAccessor:
         """
         return self._set_ordered(ordered=True, inplace=inplace)
 
-    def as_unordered(self, inplace: bool = False) -> Optional["ps.Series"]:
+    def as_unordered(self, inplace       = False)                         :
         """
         Set the Categorical to be unordered.
 
@@ -372,8 +372,8 @@ class CategoricalAccessor:
         return self._set_ordered(ordered=False, inplace=inplace)
 
     def remove_categories(
-        self, removals: Union[pd.Index, Any, List], inplace: bool = False
-    ) -> Optional["ps.Series"]:
+        self, removals                            , inplace       = False
+    )                         :
         """
         Remove the specified categories.
 
@@ -438,7 +438,7 @@ class CategoricalAccessor:
                 FutureWarning,
             )
 
-        categories: List[Any]
+        #categories: List[Any]
         if is_list_like(removals):
             categories = [cat for cat in removals if cat is not None]
         elif removals is None:
@@ -477,7 +477,7 @@ class CategoricalAccessor:
             else:
                 return psser
 
-    def remove_unused_categories(self, inplace: bool = False) -> Optional["ps.Series"]:
+    def remove_unused_categories(self, inplace       = False)                         :
         """
         Remove categories which are not used.
 
@@ -537,8 +537,8 @@ class CategoricalAccessor:
         return self.remove_categories(removals=removals, inplace=inplace)
 
     def rename_categories(
-        self, new_categories: Union[list, dict, Callable], inplace: bool = False
-    ) -> Optional["ps.Series"]:
+        self, new_categories                             , inplace       = False
+    )                         :
         """
         Rename categories.
 
@@ -651,10 +651,10 @@ class CategoricalAccessor:
 
     def reorder_categories(
         self,
-        new_categories: Union[pd.Index, List],
-        ordered: Optional[bool] = None,
-        inplace: bool = False,
-    ) -> Optional["ps.Series"]:
+        new_categories                       ,
+        ordered                 = None,
+        inplace       = False,
+    )                         :
         """
         Reorder categories as specified in new_categories.
 
@@ -757,11 +757,11 @@ class CategoricalAccessor:
 
     def set_categories(
         self,
-        new_categories: Union[pd.Index, List],
-        ordered: Optional[bool] = None,
-        rename: bool = False,
-        inplace: bool = False,
-    ) -> Optional["ps.Series"]:
+        new_categories                       ,
+        ordered                 = None,
+        rename       = False,
+        inplace       = False,
+    )                         :
         """
         Set the categories to the specified new_categories.
 
@@ -909,7 +909,7 @@ class CategoricalAccessor:
                 return psser
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

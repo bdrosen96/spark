@@ -114,11 +114,11 @@ class CategoricalIndex(Index):
         )
 
     @property
-    def dtype(self) -> CategoricalDtype:
+    def dtype(self)                    :
         return cast(CategoricalDtype, super().dtype)
 
     @property
-    def codes(self) -> Index:
+    def codes(self)         :
         """
         The category codes of this categorical.
 
@@ -155,7 +155,7 @@ class CategoricalIndex(Index):
         ).rename(None)
 
     @property
-    def categories(self) -> pd.Index:
+    def categories(self)            :
         """
         The categories of this categorical.
 
@@ -172,7 +172,7 @@ class CategoricalIndex(Index):
         return self.dtype.categories
 
     @categories.setter
-    def categories(self, categories: Union[pd.Index, List]) -> None:
+    def categories(self, categories                       )        :
         dtype = CategoricalDtype(categories, ordered=self.ordered)
 
         if len(self.categories) != len(dtype.categories):
@@ -186,7 +186,7 @@ class CategoricalIndex(Index):
         self._psdf._update_internal_frame(internal)
 
     @property
-    def ordered(self) -> bool:
+    def ordered(self)        :
         """
         Whether the categories have an ordered relationship.
 
@@ -203,8 +203,8 @@ class CategoricalIndex(Index):
         return self.dtype.ordered
 
     def add_categories(
-        self, new_categories: Union[pd.Index, Any, List], inplace: bool = False
-    ) -> Optional["CategoricalIndex"]:
+        self, new_categories                            , inplace       = False
+    )                                :
         """
         Add new categories.
 
@@ -258,7 +258,7 @@ class CategoricalIndex(Index):
             self.to_series().cat.add_categories(new_categories=new_categories)
         ).rename(self.name)
 
-    def as_ordered(self, inplace: bool = False) -> Optional["CategoricalIndex"]:
+    def as_ordered(self, inplace       = False)                                :
         """
         Set the Categorical to be ordered.
 
@@ -289,7 +289,7 @@ class CategoricalIndex(Index):
 
         return CategoricalIndex(self.to_series().cat.as_ordered()).rename(self.name)
 
-    def as_unordered(self, inplace: bool = False) -> Optional["CategoricalIndex"]:
+    def as_unordered(self, inplace       = False)                                :
         """
         Set the Categorical to be unordered.
 
@@ -321,8 +321,8 @@ class CategoricalIndex(Index):
         return CategoricalIndex(self.to_series().cat.as_unordered()).rename(self.name)
 
     def remove_categories(
-        self, removals: Union[pd.Index, Any, List], inplace: bool = False
-    ) -> Optional["CategoricalIndex"]:
+        self, removals                            , inplace       = False
+    )                                :
         """
         Remove the specified categories.
 
@@ -373,7 +373,7 @@ class CategoricalIndex(Index):
 
         return CategoricalIndex(self.to_series().cat.remove_categories(removals)).rename(self.name)
 
-    def remove_unused_categories(self, inplace: bool = False) -> Optional["CategoricalIndex"]:
+    def remove_unused_categories(self, inplace       = False)                                :
         """
         Remove categories which are not used.
 
@@ -415,8 +415,8 @@ class CategoricalIndex(Index):
         return CategoricalIndex(self.to_series().cat.remove_unused_categories()).rename(self.name)
 
     def rename_categories(
-        self, new_categories: Union[list, dict, Callable], inplace: bool = False
-    ) -> Optional["CategoricalIndex"]:
+        self, new_categories                             , inplace       = False
+    )                                :
         """
         Rename categories.
 
@@ -488,10 +488,10 @@ class CategoricalIndex(Index):
 
     def reorder_categories(
         self,
-        new_categories: Union[pd.Index, Any, List],
-        ordered: Optional[bool] = None,
-        inplace: bool = False,
-    ) -> Optional["CategoricalIndex"]:
+        new_categories                            ,
+        ordered                 = None,
+        inplace       = False,
+    )                                :
         """
         Reorder categories as specified in new_categories.
 
@@ -550,11 +550,11 @@ class CategoricalIndex(Index):
 
     def set_categories(
         self,
-        new_categories: Union[pd.Index, List],
-        ordered: Optional[bool] = None,
-        rename: bool = False,
-        inplace: bool = False,
-    ) -> Optional["CategoricalIndex"]:
+        new_categories                       ,
+        ordered                 = None,
+        rename       = False,
+        inplace       = False,
+    )                                :
         """
         Set the categories to the specified new_categories.
 
@@ -632,8 +632,8 @@ class CategoricalIndex(Index):
         ).rename(self.name)
 
     def map(  # type: ignore[override]
-        self, mapper: Union[dict, Callable[[Any], Any], pd.Series]
-    ) -> "Index":
+        self, mapper                                              
+    )           :
         """
         Map values using input correspondence (a dict, Series, or function).
 
@@ -706,11 +706,11 @@ class CategoricalIndex(Index):
         return super().map(mapper)
 
     @no_type_check
-    def all(self, *args, **kwargs) -> None:
+    def all(self, *args, **kwargs)        :
         raise TypeError("Cannot perform 'all' with this index type: %s" % type(self).__name__)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

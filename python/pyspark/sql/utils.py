@@ -37,10 +37,10 @@ if TYPE_CHECKING:
 class CapturedException(Exception):
     def __init__(
         self,
-        desc: Optional[str] = None,
-        stackTrace: Optional[str] = None,
-        cause: Optional[Py4JJavaError] = None,
-        origin: Optional[Py4JJavaError] = None,
+        desc                = None,
+        stackTrace                = None,
+        cause                          = None,
+        origin                          = None,
     ):
         # desc & stackTrace vs origin are mutually exclusive.
         # cause is optional.
@@ -60,7 +60,7 @@ class CapturedException(Exception):
             self.cause = convert_exception(origin.getCause())
         self._origin = origin
 
-    def __str__(self) -> str:
+    def __str__(self)       :
         assert SparkContext._jvm is not None
 
         jvm = SparkContext._jvm
@@ -71,7 +71,7 @@ class CapturedException(Exception):
             desc = desc + "\n\nJVM stacktrace:\n%s" % self.stackTrace
         return str(desc)
 
-    def getErrorClass(self) -> Optional[str]:
+    def getErrorClass(self)                 :
         assert SparkContext._gateway is not None
 
         gw = SparkContext._gateway
@@ -82,7 +82,7 @@ class CapturedException(Exception):
         else:
             return None
 
-    def getSqlState(self) -> Optional[str]:
+    def getSqlState(self)                 :
         assert SparkContext._gateway is not None
 
         gw = SparkContext._gateway
@@ -142,7 +142,7 @@ class SparkUpgradeException(CapturedException):
     """
 
 
-def convert_exception(e: Py4JJavaError) -> CapturedException:
+def convert_exception(e               )                     :
     assert e is not None
     assert SparkContext._jvm is not None
     assert SparkContext._gateway is not None
@@ -164,8 +164,8 @@ def convert_exception(e: Py4JJavaError) -> CapturedException:
     elif is_instance_of(gw, e, "org.apache.spark.SparkUpgradeException"):
         return SparkUpgradeException(origin=e)
 
-    c: Py4JJavaError = e.getCause()
-    stacktrace: str = jvm.org.apache.spark.util.Utils.exceptionString(e)
+    c                = e.getCause()
+    stacktrace      = jvm.org.apache.spark.util.Utils.exceptionString(e)
     if c is not None and (
         is_instance_of(gw, c, "org.apache.spark.api.python.PythonException")
         # To make sure this only catches Python UDFs.
@@ -184,8 +184,8 @@ def convert_exception(e: Py4JJavaError) -> CapturedException:
     return UnknownException(desc=e.toString(), stackTrace=stacktrace, cause=c)
 
 
-def capture_sql_exception(f: Callable[..., Any]) -> Callable[..., Any]:
-    def deco(*a: Any, **kw: Any) -> Any:
+def capture_sql_exception(f                    )                      :
+    def deco(*a     , **kw     )       :
         try:
             return f(*a, **kw)
         except Py4JJavaError as e:
@@ -200,7 +200,7 @@ def capture_sql_exception(f: Callable[..., Any]) -> Callable[..., Any]:
     return deco
 
 
-def install_exception_handler() -> None:
+def install_exception_handler()        :
     """
     Hook an exception handler into Py4j, which could capture some SQL exceptions in Java.
 
@@ -218,7 +218,7 @@ def install_exception_handler() -> None:
     py4j.java_gateway.get_return_value = patched
 
 
-def toJArray(gateway: JavaGateway, jtype: JavaClass, arr: Sequence[Any]) -> JavaArray:
+def toJArray(gateway             , jtype           , arr               )             :
     """
     Convert python list to java type array
 
@@ -231,13 +231,13 @@ def toJArray(gateway: JavaGateway, jtype: JavaClass, arr: Sequence[Any]) -> Java
     arr :
         python type list
     """
-    jarray: JavaArray = gateway.new_array(jtype, len(arr))
+    jarray            = gateway.new_array(jtype, len(arr))
     for i in range(0, len(arr)):
         jarray[i] = arr[i]
     return jarray
 
 
-def require_test_compiled() -> None:
+def require_test_compiled()        :
     """Raise Exception if test classes are not compiled"""
     import os
     import glob
@@ -258,11 +258,11 @@ class ForeachBatchFunction:
     the query is active.
     """
 
-    def __init__(self, session: "SparkSession", func: Callable[["DataFrame", int], None]):
+    def __init__(self, session                , func                                    ):
         self.func = func
         self.session = session
 
-    def call(self, jdf: JavaObject, batch_id: int) -> None:
+    def call(self, jdf            , batch_id     )        :
         from pyspark.sql.dataframe import DataFrame
 
         try:
@@ -275,7 +275,7 @@ class ForeachBatchFunction:
         implements = ["org.apache.spark.sql.execution.streaming.sources.PythonForeachBatchFunction"]
 
 
-def to_str(value: Any) -> Optional[str]:
+def to_str(value     )                 :
     """
     A wrapper over str(), but converts bool values to lower case strings.
     If None is given, just returns None, instead of converting it to string "None".
@@ -288,7 +288,7 @@ def to_str(value: Any) -> Optional[str]:
         return str(value)
 
 
-def is_timestamp_ntz_preferred() -> bool:
+def is_timestamp_ntz_preferred()        :
     """
     Return a bool if TimestampNTZType is preferred according to the SQL configuration set.
     """

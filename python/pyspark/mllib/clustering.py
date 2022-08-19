@@ -75,32 +75,32 @@ class BisectingKMeansModel(JavaModelWrapper):
     0.0
     """
 
-    def __init__(self, java_model: "JavaObject"):
+    def __init__(self, java_model              ):
         super(BisectingKMeansModel, self).__init__(java_model)
         self.centers = [c.toArray() for c in self.call("clusterCenters")]
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def clusterCenters(self) -> List[np.ndarray]:
+    def clusterCenters(self)                    :
         """Get the cluster centers, represented as a list of NumPy
         arrays."""
         return self.centers
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def k(self) -> int:
+    def k(self)       :
         """Get the number of clusters"""
         return self.call("k")
 
     @overload
-    def predict(self, x: "VectorLike") -> int:
+    def predict(self, x              )       :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[int]:
+    def predict(self, x                   )            :
         ...
 
-    def predict(self, x: Union["VectorLike", RDD["VectorLike"]]) -> Union[int, RDD[int]]:
+    def predict(self, x                                        )                        :
         """
         Find the cluster that each of the points belongs to in this
         model.
@@ -127,7 +127,7 @@ class BisectingKMeansModel(JavaModelWrapper):
         x = _convert_to_vector(x)
         return self.call("predict", x)
 
-    def computeCost(self, x: Union["VectorLike", RDD["VectorLike"]]) -> float:
+    def computeCost(self, x                                        )         :
         """
         Return the Bisecting K-means cost (sum of squared distances of
         points to their nearest center) for this model on the given
@@ -177,12 +177,12 @@ class BisectingKMeans:
     @classmethod
     def train(
         self,
-        rdd: RDD["VectorLike"],
-        k: int = 4,
-        maxIterations: int = 20,
-        minDivisibleClusterSize: float = 1.0,
-        seed: int = -1888008604,
-    ) -> BisectingKMeansModel:
+        rdd                   ,
+        k      = 4,
+        maxIterations      = 20,
+        minDivisibleClusterSize        = 1.0,
+        seed      = -1888008604,
+    )                        :
         """
         Runs the bisecting k-means algorithm return the model.
 
@@ -278,30 +278,30 @@ class KMeansModel(Saveable, Loader["KMeansModel"]):
     [array([-1000., -1000.]), array([ 5.,  5.]), array([ 1000.,  1000.])]
     """
 
-    def __init__(self, centers: List["VectorLike"]):
+    def __init__(self, centers                    ):
         self.centers = centers
 
     @property  # type: ignore[misc]
     @since("1.0.0")
-    def clusterCenters(self) -> List["VectorLike"]:
+    def clusterCenters(self)                      :
         """Get the cluster centers, represented as a list of NumPy arrays."""
         return self.centers
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def k(self) -> int:
+    def k(self)       :
         """Total number of clusters."""
         return len(self.centers)
 
     @overload
-    def predict(self, x: "VectorLike") -> int:
+    def predict(self, x              )       :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[int]:
+    def predict(self, x                   )            :
         ...
 
-    def predict(self, x: Union["VectorLike", RDD["VectorLike"]]) -> Union[int, RDD[int]]:
+    def predict(self, x                                        )                        :
         """
         Find the cluster that each of the points belongs to in this
         model.
@@ -334,7 +334,7 @@ class KMeansModel(Saveable, Loader["KMeansModel"]):
                 best_distance = distance
         return best
 
-    def computeCost(self, rdd: RDD["VectorLike"]) -> float:
+    def computeCost(self, rdd                   )         :
         """
         Return the K-means cost (sum of squared distances of points to
         their nearest center) for this model on the given
@@ -355,7 +355,7 @@ class KMeansModel(Saveable, Loader["KMeansModel"]):
         return cost
 
     @since("1.4.0")
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """
         Save this model to the given path.
         """
@@ -367,7 +367,7 @@ class KMeansModel(Saveable, Loader["KMeansModel"]):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "KMeansModel":
+    def load(cls, sc              , path     )                 :
         """
         Load a model from the given path.
         """
@@ -387,16 +387,16 @@ class KMeans:
     @classmethod
     def train(
         cls,
-        rdd: RDD["VectorLike"],
-        k: int,
-        maxIterations: int = 100,
-        initializationMode: str = "k-means||",
-        seed: Optional[int] = None,
-        initializationSteps: int = 2,
-        epsilon: float = 1e-4,
-        initialModel: Optional[KMeansModel] = None,
-        distanceMeasure: str = "euclidean",
-    ) -> "KMeansModel":
+        rdd                   ,
+        k     ,
+        maxIterations      = 100,
+        initializationMode      = "k-means||",
+        seed                = None,
+        initializationSteps      = 2,
+        epsilon        = 1e-4,
+        initialModel                        = None,
+        distanceMeasure      = "euclidean",
+    )                 :
         """
         Train a k-means clustering model.
 
@@ -534,7 +534,7 @@ class GaussianMixtureModel(JavaModelWrapper, JavaSaveable, JavaLoader["GaussianM
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def weights(self) -> np.ndarray:
+    def weights(self)              :
         """
         Weights for each Gaussian distribution in the mixture, where weights[i] is
         the weight for Gaussian i, and weights.sum == 1.
@@ -543,7 +543,7 @@ class GaussianMixtureModel(JavaModelWrapper, JavaSaveable, JavaLoader["GaussianM
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def gaussians(self) -> List[MultivariateGaussian]:
+    def gaussians(self)                              :
         """
         Array of MultivariateGaussian where gaussians[i] represents
         the Multivariate Gaussian (Normal) Distribution for Gaussian i.
@@ -554,19 +554,19 @@ class GaussianMixtureModel(JavaModelWrapper, JavaSaveable, JavaLoader["GaussianM
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def k(self) -> int:
+    def k(self)       :
         """Number of gaussians in mixture."""
         return len(self.weights)
 
     @overload
-    def predict(self, x: "VectorLike") -> np.int64:
+    def predict(self, x              )            :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[int]:
+    def predict(self, x                   )            :
         ...
 
-    def predict(self, x: Union["VectorLike", RDD["VectorLike"]]) -> Union[np.int64, RDD[int]]:
+    def predict(self, x                                        )                             :
         """
         Find the cluster to which the point 'x' or each point in RDD 'x'
         has maximum membership in this model.
@@ -592,16 +592,16 @@ class GaussianMixtureModel(JavaModelWrapper, JavaSaveable, JavaLoader["GaussianM
             return z.argmax()
 
     @overload
-    def predictSoft(self, x: "VectorLike") -> np.ndarray:
+    def predictSoft(self, x              )              :
         ...
 
     @overload
-    def predictSoft(self, x: RDD["VectorLike"]) -> RDD[pyarray.array]:
+    def predictSoft(self, x                   )                      :
         ...
 
     def predictSoft(
-        self, x: Union["VectorLike", RDD["VectorLike"]]
-    ) -> Union[np.ndarray, RDD[pyarray.array]]:
+        self, x                                        
+    )                                         :
         """
         Find the membership of point 'x' or each point in RDD 'x' to all mixture components.
 
@@ -632,7 +632,7 @@ class GaussianMixtureModel(JavaModelWrapper, JavaSaveable, JavaLoader["GaussianM
             return self.call("predictSoft", _convert_to_vector(x)).toArray()
 
     @classmethod
-    def load(cls, sc: SparkContext, path: str) -> "GaussianMixtureModel":
+    def load(cls, sc              , path     )                          :
         """Load the GaussianMixtureModel from disk.
 
         .. versionadded:: 1.5.0
@@ -660,13 +660,13 @@ class GaussianMixture:
     @classmethod
     def train(
         cls,
-        rdd: RDD["VectorLike"],
-        k: int,
-        convergenceTol: float = 1e-3,
-        maxIterations: int = 100,
-        seed: Optional[int] = None,
-        initialModel: Optional[GaussianMixtureModel] = None,
-    ) -> GaussianMixtureModel:
+        rdd                   ,
+        k     ,
+        convergenceTol        = 1e-3,
+        maxIterations      = 100,
+        seed                = None,
+        initialModel                                 = None,
+    )                        :
         """
         Train a Gaussian Mixture clustering model.
 
@@ -778,14 +778,14 @@ class PowerIterationClusteringModel(
 
     @property  # type: ignore[misc]
     @since("1.5.0")
-    def k(self) -> int:
+    def k(self)       :
         """
         Returns the number of clusters.
         """
         return self.call("k")
 
     @since("1.5.0")
-    def assignments(self) -> RDD["PowerIterationClustering.Assignment"]:
+    def assignments(self)                                              :
         """
         Returns the cluster assignments of this model.
         """
@@ -793,7 +793,7 @@ class PowerIterationClusteringModel(
 
     @classmethod
     @since("1.5.0")
-    def load(cls, sc: SparkContext, path: str) -> "PowerIterationClusteringModel":
+    def load(cls, sc              , path     )                                   :
         """
         Load a model from the given path.
         """
@@ -826,11 +826,11 @@ class PowerIterationClustering:
     @classmethod
     def train(
         cls,
-        rdd: RDD[Tuple[int, int, float]],
-        k: int,
-        maxIterations: int = 100,
-        initMode: str = "random",
-    ) -> PowerIterationClusteringModel:
+        rdd                             ,
+        k     ,
+        maxIterations      = 100,
+        initMode      = "random",
+    )                                 :
         r"""
         Train PowerIterationClusteringModel
 
@@ -940,20 +940,20 @@ class StreamingKMeansModel(KMeansModel):
     1
     """
 
-    def __init__(self, clusterCenters: List["VectorLike"], clusterWeights: "VectorLike"):
+    def __init__(self, clusterCenters                    , clusterWeights              ):
         super(StreamingKMeansModel, self).__init__(centers=clusterCenters)
         self._clusterWeights = list(clusterWeights)  # type: ignore[arg-type]
 
     @property  # type: ignore[misc]
     @since("1.5.0")
-    def clusterWeights(self) -> List[np.float64]:
+    def clusterWeights(self)                    :
         """Return the cluster weights."""
         return self._clusterWeights
 
     @since("1.5.0")
     def update(
-        self, data: RDD["VectorLike"], decayFactor: float, timeUnit: str
-    ) -> "StreamingKMeansModel":
+        self, data                   , decayFactor       , timeUnit     
+    )                          :
         """Update the centroids, according to data
 
         .. versionadded:: 1.5.0
@@ -1013,20 +1013,20 @@ class StreamingKMeans:
         (default: "batches")
     """
 
-    def __init__(self, k: int = 2, decayFactor: float = 1.0, timeUnit: str = "batches"):
+    def __init__(self, k      = 2, decayFactor        = 1.0, timeUnit      = "batches"):
         self._k = k
         self._decayFactor = decayFactor
         if timeUnit not in ["batches", "points"]:
             raise ValueError("timeUnit should be 'batches' or 'points', got %s." % timeUnit)
         self._timeUnit = timeUnit
-        self._model: Optional[StreamingKMeansModel] = None
+        self._model                                 = None
 
     @since("1.5.0")
-    def latestModel(self) -> Optional[StreamingKMeansModel]:
+    def latestModel(self)                                  :
         """Return the latest model"""
         return self._model
 
-    def _validate(self, dstream: Any) -> None:
+    def _validate(self, dstream     )        :
         if self._model is None:
             raise ValueError(
                 "Initial centers should be set either by setInitialCenters " "or setRandomCenters."
@@ -1037,19 +1037,19 @@ class StreamingKMeans:
             )
 
     @since("1.5.0")
-    def setK(self, k: int) -> "StreamingKMeans":
+    def setK(self, k     )                     :
         """Set number of clusters."""
         self._k = k
         return self
 
     @since("1.5.0")
-    def setDecayFactor(self, decayFactor: float) -> "StreamingKMeans":
+    def setDecayFactor(self, decayFactor       )                     :
         """Set decay factor."""
         self._decayFactor = decayFactor
         return self
 
     @since("1.5.0")
-    def setHalfLife(self, halfLife: float, timeUnit: str) -> "StreamingKMeans":
+    def setHalfLife(self, halfLife       , timeUnit     )                     :
         """
         Set number of batches after which the centroids of that
         particular batch has half the weightage.
@@ -1060,8 +1060,8 @@ class StreamingKMeans:
 
     @since("1.5.0")
     def setInitialCenters(
-        self, centers: List["VectorLike"], weights: List[float]
-    ) -> "StreamingKMeans":
+        self, centers                    , weights             
+    )                     :
         """
         Set initial centers. Should be set before calling trainOn.
         """
@@ -1069,7 +1069,7 @@ class StreamingKMeans:
         return self
 
     @since("1.5.0")
-    def setRandomCenters(self, dim: int, weight: float, seed: int) -> "StreamingKMeans":
+    def setRandomCenters(self, dim     , weight       , seed     )                     :
         """
         Set the initial centers to be random samples from
         a gaussian population with constant weights.
@@ -1081,17 +1081,17 @@ class StreamingKMeans:
         return self
 
     @since("1.5.0")
-    def trainOn(self, dstream: "DStream[VectorLike]") -> None:
+    def trainOn(self, dstream                       )        :
         """Train the model on the incoming dstream."""
         self._validate(dstream)
 
-        def update(rdd: RDD["VectorLike"]) -> None:
+        def update(rdd                   )        :
             self._model.update(rdd, self._decayFactor, self._timeUnit)  # type: ignore[union-attr]
 
         dstream.foreachRDD(update)
 
     @since("1.5.0")
-    def predictOn(self, dstream: "DStream[VectorLike]") -> "DStream[int]":
+    def predictOn(self, dstream                       )                  :
         """
         Make predictions on a dstream.
         Returns a transformed dstream object
@@ -1100,7 +1100,7 @@ class StreamingKMeans:
         return dstream.map(lambda x: self._model.predict(x))  # type: ignore[union-attr]
 
     @since("1.5.0")
-    def predictOnValues(self, dstream: "DStream[Tuple[T, VectorLike]]") -> "DStream[Tuple[T, int]]":
+    def predictOnValues(self, dstream                                 )                            :
         """
         Make predictions on a keyed dstream.
         Returns a transformed dstream object.
@@ -1166,18 +1166,18 @@ class LDAModel(JavaModelWrapper, JavaSaveable, Loader["LDAModel"]):
     """
 
     @since("1.5.0")
-    def topicsMatrix(self) -> np.ndarray:
+    def topicsMatrix(self)              :
         """Inferred topics, where each topic is represented by a distribution over terms."""
         return self.call("topicsMatrix").toArray()
 
     @since("1.5.0")
-    def vocabSize(self) -> int:
+    def vocabSize(self)       :
         """Vocabulary size (number of terms or terms in the vocabulary)"""
         return self.call("vocabSize")
 
     def describeTopics(
-        self, maxTermsPerTopic: Optional[int] = None
-    ) -> List[Tuple[List[int], List[float]]]:
+        self, maxTermsPerTopic                = None
+    )                                       :
         """Return the topics described by weighted terms.
 
         .. versionadded:: 1.6.0
@@ -1203,7 +1203,7 @@ class LDAModel(JavaModelWrapper, JavaSaveable, Loader["LDAModel"]):
         return topics
 
     @classmethod
-    def load(cls, sc: SparkContext, path: str) -> "LDAModel":
+    def load(cls, sc              , path     )              :
         """Load the LDAModel from disk.
 
         .. versionadded:: 1.5.0
@@ -1232,15 +1232,15 @@ class LDA:
     @classmethod
     def train(
         cls,
-        rdd: RDD[Tuple[int, "VectorLike"]],
-        k: int = 10,
-        maxIterations: int = 20,
-        docConcentration: float = -1.0,
-        topicConcentration: float = -1.0,
-        seed: Optional[int] = None,
-        checkpointInterval: int = 10,
-        optimizer: str = "em",
-    ) -> LDAModel:
+        rdd                               ,
+        k      = 10,
+        maxIterations      = 20,
+        docConcentration        = -1.0,
+        topicConcentration        = -1.0,
+        seed                = None,
+        checkpointInterval      = 10,
+        optimizer      = "em",
+    )            :
         """Train a LDA model.
 
         .. versionadded:: 1.5.0
@@ -1294,7 +1294,7 @@ class LDA:
         return LDAModel(model)
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import numpy
     import pyspark.mllib.clustering

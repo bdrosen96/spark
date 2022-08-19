@@ -28,9 +28,9 @@ class SparkJobInfo(NamedTuple):
     Exposes information about Spark Jobs.
     """
 
-    jobId: int
-    stageIds: JavaArray
-    status: str
+    #jobId: int
+    #stageIds: JavaArray
+    #status: str
 
 
 class SparkStageInfo(NamedTuple):
@@ -38,13 +38,13 @@ class SparkStageInfo(NamedTuple):
     Exposes information about Spark Stages.
     """
 
-    stageId: int
-    currentAttemptId: int
-    name: str
-    numTasks: int
-    numActiveTasks: int
-    numCompletedTasks: int
-    numFailedTasks: int
+    #stageId: int
+    #currentAttemptId: int
+    #name: str
+    #numTasks: int
+    #numActiveTasks: int
+    #numCompletedTasks: int
+    #numFailedTasks: int
 
 
 class StatusTracker:
@@ -62,10 +62,10 @@ class StatusTracker:
     `spark.ui.retainedStages` stages and `spark.ui.retainedJobs` jobs.
     """
 
-    def __init__(self, jtracker: JavaObject):
+    def __init__(self, jtracker            ):
         self._jtracker = jtracker
 
-    def getJobIdsForGroup(self, jobGroup: Optional[str] = None) -> List[int]:
+    def getJobIdsForGroup(self, jobGroup                = None)             :
         """
         Return a list of all known jobs in a particular job group.  If
         `jobGroup` is None, then returns all known jobs that are not
@@ -77,19 +77,19 @@ class StatusTracker:
         """
         return list(self._jtracker.getJobIdsForGroup(jobGroup))
 
-    def getActiveStageIds(self) -> List[int]:
+    def getActiveStageIds(self)             :
         """
         Returns an array containing the ids of all active stages.
         """
         return sorted(list(self._jtracker.getActiveStageIds()))
 
-    def getActiveJobsIds(self) -> List[int]:
+    def getActiveJobsIds(self)             :
         """
         Returns an array containing the ids of all active jobs.
         """
         return sorted((list(self._jtracker.getActiveJobIds())))
 
-    def getJobInfo(self, jobId: int) -> Optional[SparkJobInfo]:
+    def getJobInfo(self, jobId     )                          :
         """
         Returns a :class:`SparkJobInfo` object, or None if the job info
         could not be found or was garbage collected.
@@ -99,7 +99,7 @@ class StatusTracker:
             return SparkJobInfo(jobId, job.stageIds(), str(job.status()))
         return None
 
-    def getStageInfo(self, stageId: int) -> Optional[SparkStageInfo]:
+    def getStageInfo(self, stageId     )                            :
         """
         Returns a :class:`SparkStageInfo` object, or None if the stage
         info could not be found or was garbage collected.

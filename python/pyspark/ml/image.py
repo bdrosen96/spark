@@ -44,15 +44,15 @@ class _ImageSchema:
     APIs of this class.
     """
 
-    def __init__(self) -> None:
-        self._imageSchema: Optional[StructType] = None
-        self._ocvTypes: Optional[Dict[str, int]] = None
-        self._columnSchema: Optional[StructType] = None
-        self._imageFields: Optional[List[str]] = None
-        self._undefinedImageType: Optional[str] = None
+    def __init__(self)        :
+        self._imageSchema                       = None
+        self._ocvTypes                           = None
+        self._columnSchema                       = None
+        self._imageFields                      = None
+        self._undefinedImageType                = None
 
     @property
-    def imageSchema(self) -> StructType:
+    def imageSchema(self)              :
         """
         Returns the image schema.
 
@@ -73,7 +73,7 @@ class _ImageSchema:
         return self._imageSchema
 
     @property
-    def ocvTypes(self) -> Dict[str, int]:
+    def ocvTypes(self)                  :
         """
         Returns the OpenCV type mapping supported.
 
@@ -92,7 +92,7 @@ class _ImageSchema:
         return self._ocvTypes
 
     @property
-    def columnSchema(self) -> StructType:
+    def columnSchema(self)              :
         """
         Returns the schema for the image column.
 
@@ -113,7 +113,7 @@ class _ImageSchema:
         return self._columnSchema
 
     @property
-    def imageFields(self) -> List[str]:
+    def imageFields(self)             :
         """
         Returns field names of image columns.
 
@@ -132,7 +132,7 @@ class _ImageSchema:
         return self._imageFields
 
     @property
-    def undefinedImageType(self) -> str:
+    def undefinedImageType(self)       :
         """
         Returns the name of undefined image type for the invalid image.
 
@@ -147,7 +147,7 @@ class _ImageSchema:
             )
         return self._undefinedImageType
 
-    def toNDArray(self, image: Row) -> np.ndarray:
+    def toNDArray(self, image     )              :
         """
         Converts an image to an array with metadata.
 
@@ -187,7 +187,7 @@ class _ImageSchema:
             strides=(width * nChannels, nChannels, 1),
         )
 
-    def toImage(self, array: np.ndarray, origin: str = "") -> Row:
+    def toImage(self, array            , origin      = "")       :
         """
         Converts an array with metadata to a two-dimensional image.
 
@@ -244,14 +244,14 @@ ImageSchema = _ImageSchema()
 
 
 # Monkey patch to disallow instantiation of this class.
-def _disallow_instance(_: Any) -> NoReturn:
+def _disallow_instance(_     )            :
     raise RuntimeError("Creating instance of _ImageSchema class is disallowed.")
 
 
 _ImageSchema.__init__ = _disallow_instance  # type: ignore[assignment]
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import pyspark.ml.image
 

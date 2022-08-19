@@ -31,7 +31,7 @@ class TestResult(JavaModelWrapper, Generic[DF]):
     """
 
     @property
-    def pValue(self) -> float:
+    def pValue(self)         :
         """
         The probability of obtaining a test statistic result at least as
         extreme as the one that was actually observed, assuming that the
@@ -40,7 +40,7 @@ class TestResult(JavaModelWrapper, Generic[DF]):
         return self._java_model.pValue()
 
     @property
-    def degreesOfFreedom(self) -> DF:
+    def degreesOfFreedom(self)      :
         """
         Returns the degree(s) of freedom of the hypothesis test.
         Return type should be Number(e.g. Int, Double) or tuples of Numbers.
@@ -48,20 +48,20 @@ class TestResult(JavaModelWrapper, Generic[DF]):
         return self._java_model.degreesOfFreedom()
 
     @property
-    def statistic(self) -> float:
+    def statistic(self)         :
         """
         Test statistic.
         """
         return self._java_model.statistic()
 
     @property
-    def nullHypothesis(self) -> str:
+    def nullHypothesis(self)       :
         """
         Null hypothesis of the test.
         """
         return self._java_model.nullHypothesis()
 
-    def __str__(self) -> str:
+    def __str__(self)       :
         return self._java_model.toString()
 
 
@@ -72,7 +72,7 @@ class ChiSqTestResult(TestResult[int]):
     """
 
     @property
-    def method(self) -> str:
+    def method(self)       :
         """
         Name of the test method
         """

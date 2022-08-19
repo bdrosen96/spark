@@ -42,23 +42,23 @@ class ResourceProfile:
     """
 
     @overload
-    def __init__(self, _java_resource_profile: JavaObject):
+    def __init__(self, _java_resource_profile            ):
         ...
 
     @overload
     def __init__(
         self,
-        _java_resource_profile: None = ...,
-        _exec_req: Optional[Dict[str, ExecutorResourceRequest]] = ...,
-        _task_req: Optional[Dict[str, TaskResourceRequest]] = ...,
+        _java_resource_profile       = ...,
+        _exec_req                                               = ...,
+        _task_req                                           = ...,
     ):
         ...
 
     def __init__(
         self,
-        _java_resource_profile: Optional[JavaObject] = None,
-        _exec_req: Optional[Dict[str, ExecutorResourceRequest]] = None,
-        _task_req: Optional[Dict[str, TaskResourceRequest]] = None,
+        _java_resource_profile                       = None,
+        _exec_req                                               = None,
+        _task_req                                           = None,
     ):
         if _java_resource_profile is not None:
             self._java_resource_profile = _java_resource_profile
@@ -68,7 +68,7 @@ class ResourceProfile:
             self._task_resource_requests = _task_req or {}
 
     @property
-    def id(self) -> int:
+    def id(self)       :
         if self._java_resource_profile is not None:
             return self._java_resource_profile.id()
         else:
@@ -78,7 +78,7 @@ class ResourceProfile:
             )
 
     @property
-    def taskResources(self) -> Dict[str, TaskResourceRequest]:
+    def taskResources(self)                                  :
         if self._java_resource_profile is not None:
             taskRes = self._java_resource_profile.taskResourcesJMap()
             result = {}
@@ -89,7 +89,7 @@ class ResourceProfile:
             return self._task_resource_requests
 
     @property
-    def executorResources(self) -> Dict[str, ExecutorResourceRequest]:
+    def executorResources(self)                                      :
         if self._java_resource_profile is not None:
             execRes = self._java_resource_profile.executorResourcesJMap()
             result = {}
@@ -117,7 +117,7 @@ class ResourceProfileBuilder:
     This API is evolving.
     """
 
-    def __init__(self) -> None:
+    def __init__(self)        :
         from pyspark.context import SparkContext
 
         # TODO: ignore[attr-defined] will be removed, once SparkContext is inlined
@@ -130,12 +130,12 @@ class ResourceProfileBuilder:
         else:
             self._jvm = None
             self._java_resource_profile_builder = None
-            self._executor_resource_requests: Optional[Dict[str, ExecutorResourceRequest]] = {}
-            self._task_resource_requests: Optional[Dict[str, TaskResourceRequest]] = {}
+            self._executor_resource_requests                                               = {}
+            self._task_resource_requests                                           = {}
 
     def require(
-        self, resourceRequest: Union[ExecutorResourceRequest, TaskResourceRequests]
-    ) -> "ResourceProfileBuilder":
+        self, resourceRequest                                                      
+    )                            :
         if isinstance(resourceRequest, TaskResourceRequests):
             if self._java_resource_profile_builder is not None:
                 if resourceRequest._java_task_resource_requests is not None:
@@ -169,20 +169,20 @@ class ResourceProfileBuilder:
                 )
         return self
 
-    def clearExecutorResourceRequests(self) -> None:
+    def clearExecutorResourceRequests(self)        :
         if self._java_resource_profile_builder is not None:
             self._java_resource_profile_builder.clearExecutorResourceRequests()
         else:
             self._executor_resource_requests = {}
 
-    def clearTaskResourceRequests(self) -> None:
+    def clearTaskResourceRequests(self)        :
         if self._java_resource_profile_builder is not None:
             self._java_resource_profile_builder.clearTaskResourceRequests()
         else:
             self._task_resource_requests = {}
 
     @property
-    def taskResources(self) -> Optional[Dict[str, TaskResourceRequest]]:
+    def taskResources(self)                                            :
         if self._java_resource_profile_builder is not None:
             taskRes = self._java_resource_profile_builder.taskResourcesJMap()
             result = {}
@@ -193,7 +193,7 @@ class ResourceProfileBuilder:
             return self._task_resource_requests
 
     @property
-    def executorResources(self) -> Optional[Dict[str, ExecutorResourceRequest]]:
+    def executorResources(self)                                                :
         if self._java_resource_profile_builder is not None:
             result = {}
             execRes = self._java_resource_profile_builder.executorResourcesJMap()
@@ -206,7 +206,7 @@ class ResourceProfileBuilder:
             return self._executor_resource_requests
 
     @property
-    def build(self) -> ResourceProfile:
+    def build(self)                   :
         if self._java_resource_profile_builder is not None:
             jresourceProfile = self._java_resource_profile_builder.build()
             return ResourceProfile(_java_resource_profile=jresourceProfile)

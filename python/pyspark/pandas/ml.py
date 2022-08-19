@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 CORRELATION_OUTPUT_COLUMN = "__correlation_output__"
 
 
-def corr(psdf: "ps.DataFrame", method: str = "pearson") -> pd.DataFrame:
+def corr(psdf                , method      = "pearson")                :
     """
     The correlation matrix of all the numerical columns of this dataframe.
 
@@ -63,7 +63,7 @@ def corr(psdf: "ps.DataFrame", method: str = "pearson") -> pd.DataFrame:
     return pd.DataFrame(arr, columns=idx, index=idx)
 
 
-def to_numeric_df(psdf: "ps.DataFrame") -> Tuple[pyspark.sql.DataFrame, List[Label]]:
+def to_numeric_df(psdf                )                                             :
     """
     Takes a dataframe and turns it into a dataframe containing a single numerical
     vector of doubles. This dataframe has a single field called '_1'.
@@ -92,7 +92,7 @@ def to_numeric_df(psdf: "ps.DataFrame") -> Tuple[pyspark.sql.DataFrame, List[Lab
     return v, numeric_column_labels
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

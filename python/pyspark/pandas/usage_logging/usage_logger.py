@@ -24,7 +24,7 @@ import logging
 from typing import Any, Optional
 
 
-def get_logger() -> Any:
+def get_logger()       :
     """An entry point of the plug-in and return the usage logger."""
     return PandasOnSparkUsageLogger()
 
@@ -52,8 +52,8 @@ class PandasOnSparkUsageLogger:
         self.logger = logging.getLogger("pyspark.pandas.usage_logger")
 
     def log_success(
-        self, class_name: str, name: str, duration: float, signature: Optional[Signature] = None
-    ) -> None:
+        self, class_name     , name     , duration       , signature                      = None
+    )        :
         """
         Log the function or property call is successfully finished.
 
@@ -77,12 +77,12 @@ class PandasOnSparkUsageLogger:
 
     def log_failure(
         self,
-        class_name: str,
-        name: str,
-        ex: Exception,
-        duration: float,
-        signature: Optional[Signature] = None,
-    ) -> None:
+        class_name     ,
+        name     ,
+        ex           ,
+        duration       ,
+        signature                      = None,
+    )        :
         """
         Log the function or property call failed.
 
@@ -108,11 +108,11 @@ class PandasOnSparkUsageLogger:
 
     def log_missing(
         self,
-        class_name: str,
-        name: str,
-        is_deprecated: bool = False,
-        signature: Optional[Signature] = None,
-    ) -> None:
+        class_name     ,
+        name     ,
+        is_deprecated       = False,
+        signature                      = None,
+    )        :
         """
         Log the missing or deprecated function or property is called.
 

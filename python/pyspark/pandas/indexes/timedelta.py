@@ -99,7 +99,7 @@ class TimedeltaIndex(Index):
         dtype=None,
         copy=False,
         name=None,
-    ) -> "TimedeltaIndex":
+    )                    :
         if not is_hashable(name):
             raise TypeError("Index.name must be a hashable type")
 
@@ -121,7 +121,7 @@ class TimedeltaIndex(Index):
 
         return cast(TimedeltaIndex, ps.from_pandas(pd.TimedeltaIndex(**kwargs)))
 
-    def __getattr__(self, item: str) -> Any:
+    def __getattr__(self, item     )       :
         if hasattr(MissingPandasLikeTimedeltaIndex, item):
             property_or_func = getattr(MissingPandasLikeTimedeltaIndex, item)
             if isinstance(property_or_func, property):
@@ -132,18 +132,18 @@ class TimedeltaIndex(Index):
         raise AttributeError("'TimedeltaIndex' object has no attribute '{}'".format(item))
 
     @property
-    def days(self) -> Index:
+    def days(self)         :
         """
         Number of days for each element.
         """
 
-        def pandas_days(x) -> int:  # type: ignore[no-untyped-def]
+        def pandas_days(x)       :  # type: ignore[no-untyped-def]
             return x.days
 
         return Index(self.to_series().transform(pandas_days))
 
     @property
-    def seconds(self) -> Index:
+    def seconds(self)         :
         """
         Number of seconds (>= 0 and less than 1 day) for each element.
         """
@@ -171,7 +171,7 @@ class TimedeltaIndex(Index):
         return Index(self.to_series().spark.transform(get_seconds))
 
     @property
-    def microseconds(self) -> Index:
+    def microseconds(self)         :
         """
         Number of microseconds (>= 0 and less than 1 second) for each element.
         """
@@ -194,5 +194,5 @@ class TimedeltaIndex(Index):
         return Index(self.to_series().spark.transform(get_microseconds))
 
     @no_type_check
-    def all(self, *args, **kwargs) -> None:
+    def all(self, *args, **kwargs)        :
         raise TypeError("Cannot perform 'all' with this index type: %s" % type(self).__name__)

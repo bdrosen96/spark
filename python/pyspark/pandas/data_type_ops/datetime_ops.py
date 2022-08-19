@@ -53,10 +53,10 @@ class DatetimeOps(DataTypeOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "datetimes"
 
-    def sub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def sub(self, left              , right     )                 :
         _sanitize_list_like(right)
         # Note that timestamp subtraction casts arguments to integer. This is to mimic pandas's
         # behaviors. pandas returns 'timedelta64[ns]' from 'datetime64[ns]'s subtraction.
@@ -85,7 +85,7 @@ class DatetimeOps(DataTypeOps):
         else:
             raise TypeError("Datetime subtraction can only be applied to datetime series.")
 
-    def rsub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rsub(self, left              , right     )                 :
         _sanitize_list_like(right)
         # Note that timestamp subtraction casts arguments to integer. This is to mimic pandas's
         # behaviors. pandas returns 'timedelta64[ns]' from 'datetime64[ns]'s subtraction.
@@ -109,35 +109,35 @@ class DatetimeOps(DataTypeOps):
         else:
             raise TypeError("Datetime subtraction can only be applied to datetime series.")
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__lt__)(left, right)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__le__)(left, right)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__ge__)(left, right)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__gt__)(left, right)
 
-    def prepare(self, col: pd.Series) -> pd.Series:
+    def prepare(self, col           )             :
         """Prepare column when from_pandas."""
         return col
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, spark_type = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype):
@@ -149,7 +149,7 @@ class DatetimeOps(DataTypeOps):
         else:
             return _as_other_type(index_ops, dtype, spark_type)
 
-    def _cast_spark_column_timestamp_to_long(self, scol: Column) -> Column:
+    def _cast_spark_column_timestamp_to_long(self, scol        )          :
         return scol.cast(LongType())
 
 
@@ -159,11 +159,11 @@ class DatetimeNTZOps(DatetimeOps):
     TimestampNTZType.
     """
 
-    def _cast_spark_column_timestamp_to_long(self, scol: Column) -> Column:
+    def _cast_spark_column_timestamp_to_long(self, scol        )          :
         jvm = SparkContext._active_spark_context._jvm
         return Column(jvm.PythonSQLUtils.castTimestampNTZToLong(scol._jc))
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, spark_type = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype):

@@ -68,7 +68,7 @@ class TypeHintTests(unittest.TestCase):
         )
 
         def try_infer_return_type():
-            def f() -> None:
+            def f()        :
                 pass
 
             infer_return_type(f)
@@ -78,21 +78,21 @@ class TypeHintTests(unittest.TestCase):
         )
 
     def test_infer_schema_from_pandas_instances(self):
-        def func() -> pd.Series[int]:
+        def func()                  :
             pass
 
         inferred = infer_return_type(func)
         self.assertEqual(inferred.dtype, np.int64)
         self.assertEqual(inferred.spark_type, LongType())
 
-        def func() -> pd.Series[float]:
+        def func()                    :
             pass
 
         inferred = infer_return_type(func)
         self.assertEqual(inferred.dtype, np.float64)
         self.assertEqual(inferred.spark_type, DoubleType())
 
-        def func() -> "pd.DataFrame[np.float_, str]":
+        def func()                                  :
             pass
 
         expected = StructType([StructField("c0", DoubleType()), StructField("c1", StringType())])
@@ -100,7 +100,7 @@ class TypeHintTests(unittest.TestCase):
         self.assertEqual(inferred.dtypes, [np.float64, np.unicode_])
         self.assertEqual(inferred.spark_type, expected)
 
-        def func() -> "pandas.DataFrame[float]":
+        def func()                             :
             pass
 
         expected = StructType([StructField("c0", DoubleType())])
@@ -108,14 +108,14 @@ class TypeHintTests(unittest.TestCase):
         self.assertEqual(inferred.dtypes, [np.float64])
         self.assertEqual(inferred.spark_type, expected)
 
-        def func() -> "pd.Series[int]":
+        def func()                    :
             pass
 
         inferred = infer_return_type(func)
         self.assertEqual(inferred.dtype, np.int64)
         self.assertEqual(inferred.spark_type, LongType())
 
-        def func() -> pd.DataFrame[np.float64, str]:
+        def func()                                 :
             pass
 
         expected = StructType([StructField("c0", DoubleType()), StructField("c1", StringType())])
@@ -123,7 +123,7 @@ class TypeHintTests(unittest.TestCase):
         self.assertEqual(inferred.dtypes, [np.float64, np.unicode_])
         self.assertEqual(inferred.spark_type, expected)
 
-        def func() -> pd.DataFrame[np.float_]:
+        def func()                           :
             pass
 
         expected = StructType([StructField("c0", DoubleType())])
@@ -133,7 +133,7 @@ class TypeHintTests(unittest.TestCase):
 
         pdf = pd.DataFrame({"a": [1, 2, 3], "b": [3, 4, 5]})
 
-        def func() -> pd.DataFrame[pdf.dtypes]:  # type: ignore[name-defined]
+        def func()                            :  # type: ignore[name-defined]
             pass
 
         expected = StructType([StructField("c0", LongType()), StructField("c1", LongType())])
@@ -143,14 +143,14 @@ class TypeHintTests(unittest.TestCase):
 
         pdf = pd.DataFrame({"a": [1, 2, 3], "b": pd.Categorical(["a", "b", "c"])})
 
-        def func() -> pd.Series[pdf.b.dtype]:  # type: ignore[name-defined]
+        def func()                          :  # type: ignore[name-defined]
             pass
 
         inferred = infer_return_type(func)
         self.assertEqual(inferred.dtype, CategoricalDtype(categories=["a", "b", "c"]))
         self.assertEqual(inferred.spark_type, LongType())
 
-        def func() -> pd.DataFrame[pdf.dtypes]:  # type: ignore[name-defined]
+        def func()                            :  # type: ignore[name-defined]
             pass
 
         expected = StructType([StructField("c0", LongType()), StructField("c1", LongType())])
@@ -166,7 +166,7 @@ class TypeHintTests(unittest.TestCase):
         assert not ps._series_has_class_getitem
 
     def test_infer_schema_with_names_pandas_instances(self):
-        def func() -> 'pd.DataFrame["a" : np.float_, "b":str]':  # noqa: F405
+        def func()                                            :  # noqa: F405
             pass
 
         expected = StructType([StructField("a", DoubleType()), StructField("b", StringType())])
@@ -174,7 +174,7 @@ class TypeHintTests(unittest.TestCase):
         self.assertEqual(inferred.dtypes, [np.float64, np.unicode_])
         self.assertEqual(inferred.spark_type, expected)
 
-        def func() -> "pd.DataFrame['a': float, 'b': int]":  # noqa: F405
+        def func()                                        :  # noqa: F405
             pass
 
         expected = StructType([StructField("a", DoubleType()), StructField("b", LongType())])
@@ -184,7 +184,7 @@ class TypeHintTests(unittest.TestCase):
 
         pdf = pd.DataFrame({"a": [1, 2, 3], "b": [3, 4, 5]})
 
-        def func() -> pd.DataFrame[zip(pdf.columns, pdf.dtypes)]:
+        def func()                                              :
             pass
 
         expected = StructType([StructField("a", LongType()), StructField("b", LongType())])
@@ -194,7 +194,7 @@ class TypeHintTests(unittest.TestCase):
 
         pdf = pd.DataFrame({("x", "a"): [1, 2, 3], ("y", "b"): [3, 4, 5]})
 
-        def func() -> pd.DataFrame[zip(pdf.columns, pdf.dtypes)]:
+        def func()                                              :
             pass
 
         expected = StructType(
@@ -206,7 +206,7 @@ class TypeHintTests(unittest.TestCase):
 
         pdf = pd.DataFrame({"a": [1, 2, 3], "b": pd.Categorical(["a", "b", "c"])})
 
-        def func() -> pd.DataFrame[zip(pdf.columns, pdf.dtypes)]:
+        def func()                                              :
             pass
 
         expected = StructType([StructField("a", LongType()), StructField("b", LongType())])
@@ -216,7 +216,7 @@ class TypeHintTests(unittest.TestCase):
 
     def test_infer_schema_with_names_pandas_instances_negative(self):
         def try_infer_return_type():
-            def f() -> 'pd.DataFrame["a" : np.float_ : 1, "b":str:2]':  # noqa: F405
+            def f()                                                  :  # noqa: F405
                 pass
 
             infer_return_type(f)
@@ -227,7 +227,7 @@ class TypeHintTests(unittest.TestCase):
             pass
 
         def try_infer_return_type():
-            def f() -> pd.DataFrame[A]:
+            def f()                   :
                 pass
 
             infer_return_type(f)
@@ -235,7 +235,7 @@ class TypeHintTests(unittest.TestCase):
         self.assertRaisesRegex(TypeError, "not understood", try_infer_return_type)
 
         def try_infer_return_type():
-            def f() -> 'pd.DataFrame["a" : float : 1, "b":str:2]':  # noqa: F405
+            def f()                                              :  # noqa: F405
                 pass
 
             infer_return_type(f)
@@ -246,7 +246,7 @@ class TypeHintTests(unittest.TestCase):
         pdf = pd.DataFrame({"a": ["a", 2, None]})
 
         def try_infer_return_type():
-            def f() -> pd.DataFrame[pdf.dtypes]:  # type: ignore[name-defined]
+            def f()                            :  # type: ignore[name-defined]
                 pass
 
             infer_return_type(f)
@@ -254,7 +254,7 @@ class TypeHintTests(unittest.TestCase):
         self.assertRaisesRegex(TypeError, "object.*not understood", try_infer_return_type)
 
         def try_infer_return_type():
-            def f() -> pd.Series[pdf.a.dtype]:  # type: ignore[name-defined]
+            def f()                          :  # type: ignore[name-defined]
                 pass
 
             infer_return_type(f)
@@ -263,7 +263,7 @@ class TypeHintTests(unittest.TestCase):
 
     def test_infer_schema_with_names_negative(self):
         def try_infer_return_type():
-            def f() -> 'ps.DataFrame["a" : float : 1, "b":str:2]':  # noqa: F405
+            def f()                                              :  # noqa: F405
                 pass
 
             infer_return_type(f)
@@ -274,7 +274,7 @@ class TypeHintTests(unittest.TestCase):
             pass
 
         def try_infer_return_type():
-            def f() -> ps.DataFrame[A]:
+            def f()                   :
                 pass
 
             infer_return_type(f)
@@ -282,7 +282,7 @@ class TypeHintTests(unittest.TestCase):
         self.assertRaisesRegex(TypeError, "not understood", try_infer_return_type)
 
         def try_infer_return_type():
-            def f() -> 'ps.DataFrame["a" : np.float_ : 1, "b":str:2]':  # noqa: F405
+            def f()                                                  :  # noqa: F405
                 pass
 
             infer_return_type(f)
@@ -293,7 +293,7 @@ class TypeHintTests(unittest.TestCase):
         pdf = pd.DataFrame({"a": ["a", 2, None]})
 
         def try_infer_return_type():
-            def f() -> ps.DataFrame[pdf.dtypes]:  # type: ignore[name-defined]
+            def f()                            :  # type: ignore[name-defined]
                 pass
 
             infer_return_type(f)
@@ -301,7 +301,7 @@ class TypeHintTests(unittest.TestCase):
         self.assertRaisesRegex(TypeError, "object.*not understood", try_infer_return_type)
 
         def try_infer_return_type():
-            def f() -> ps.Series[pdf.a.dtype]:  # type: ignore[name-defined]
+            def f()                          :  # type: ignore[name-defined]
                 pass
 
             infer_return_type(f)

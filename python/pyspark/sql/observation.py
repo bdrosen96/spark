@@ -66,7 +66,7 @@ class Observation:
     {'count': 2, 'max(age)': 5}
     """
 
-    def __init__(self, name: Optional[str] = None) -> None:
+    def __init__(self, name                = None)        :
         """Constructs a named or unnamed Observation instance.
 
         Parameters
@@ -80,10 +80,10 @@ class Observation:
             if name == "":
                 raise ValueError("name should not be empty")
         self._name = name
-        self._jvm: Optional[JVMView] = None
-        self._jo: Optional[JavaObject] = None
+        self._jvm                    = None
+        self._jo                       = None
 
-    def _on(self, df: DataFrame, *exprs: Column) -> DataFrame:
+    def _on(self, df           , *exprs        )             :
         """Attaches this observation to the given :class:`DataFrame` to observe aggregations.
 
         Parameters
@@ -112,7 +112,7 @@ class Observation:
         return DataFrame(observed_df, df.sparkSession)
 
     @property
-    def get(self) -> Dict[str, Any]:
+    def get(self)                  :
         """Get the observed metrics.
 
         Waits until the observed dataset finishes its first action. Only the result of the
@@ -129,7 +129,7 @@ class Observation:
         return {k: v for k, v in jmap.items()}
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     import sys
     from pyspark.context import SparkContext

@@ -143,13 +143,13 @@ class Index(IndexOpsMixin):
 
     def __new__(
         cls,
-        data: Optional[Any] = None,
-        dtype: Optional[Union[str, Dtype]] = None,
-        copy: bool = False,
-        name: Optional[Name] = None,
-        tupleize_cols: bool = True,
-        **kwargs: Any,
-    ) -> "Index":
+        data                = None,
+        dtype                              = None,
+        copy       = False,
+        name                 = None,
+        tupleize_cols       = True,
+        **kwargs     ,
+    )           :
         if not is_hashable(name):
             raise TypeError("Index.name must be a hashable type")
 
@@ -193,14 +193,14 @@ class Index(IndexOpsMixin):
         )
 
     @staticmethod
-    def _new_instance(anchor: DataFrame) -> "Index":
+    def _new_instance(anchor           )           :
         from pyspark.pandas.indexes.category import CategoricalIndex
         from pyspark.pandas.indexes.datetimes import DatetimeIndex
         from pyspark.pandas.indexes.multi import MultiIndex
         from pyspark.pandas.indexes.numeric import Float64Index, Int64Index
         from pyspark.pandas.indexes.timedelta import TimedeltaIndex
 
-        instance: Index
+        #instance: Index
         if anchor._internal.index_level > 1:
             instance = object.__new__(MultiIndex)
         elif isinstance(anchor._internal.index_fields[0].dtype, CategoricalDtype):
@@ -230,11 +230,11 @@ class Index(IndexOpsMixin):
         return instance
 
     @property
-    def _psdf(self) -> DataFrame:
+    def _psdf(self)             :
         return self._anchor
 
     @property
-    def _internal(self) -> InternalFrame:
+    def _internal(self)                 :
         internal = self._psdf._internal
         return internal.copy(
             column_labels=internal.index_names,
@@ -244,10 +244,10 @@ class Index(IndexOpsMixin):
         )
 
     @property
-    def _column_label(self) -> Optional[Label]:
+    def _column_label(self)                   :
         return self._psdf._internal.index_names[0]
 
-    def _with_new_scol(self, scol: Column, *, field: Optional[InternalField] = None) -> "Index":
+    def _with_new_scol(self, scol        , *, field                          = None)           :
         """
         Copy pandas-on-Spark Index with the new Spark Column.
 
@@ -267,12 +267,12 @@ class Index(IndexOpsMixin):
         )
         return DataFrame(internal).index
 
-    spark: "SparkIndexOpsMethods" = CachedAccessor(  # type: ignore[assignment]
+    spark                         = CachedAccessor(  # type: ignore[assignment]
         "spark", SparkIndexMethods
     )
 
     # This method is used via `DataFrame.info` API internally.
-    def _summary(self, name: Optional[str] = None) -> str:
+    def _summary(self, name                = None)       :
         """
         Return a summarized representation.
 
@@ -303,7 +303,7 @@ class Index(IndexOpsMixin):
         return "%s: %s entries%s" % (name, total_count, index_summary)
 
     @property
-    def size(self) -> int:
+    def size(self)       :
         """
         Return an int representing the number of elements in this object.
 
@@ -321,7 +321,7 @@ class Index(IndexOpsMixin):
         return len(self)
 
     @property
-    def shape(self) -> tuple:
+    def shape(self)         :
         """
         Return a tuple of the shape of the underlying data.
 
@@ -344,7 +344,7 @@ class Index(IndexOpsMixin):
         """
         return (len(self._psdf),)
 
-    def identical(self, other: "Index") -> bool:
+    def identical(self, other         )        :
         """
         Similar to equals, but check that other comparable attributes are
         also equal.
@@ -398,7 +398,7 @@ class Index(IndexOpsMixin):
             and self.equals(other)
         )
 
-    def equals(self, other: "Index") -> bool:
+    def equals(self, other         )        :
         """
         Determine if two Index objects contain the same elements.
 
@@ -461,7 +461,7 @@ class Index(IndexOpsMixin):
         else:
             return False
 
-    def transpose(self) -> "Index":
+    def transpose(self)           :
         """
         Return the transpose, For index, It will be index itself.
 
@@ -493,7 +493,7 @@ class Index(IndexOpsMixin):
 
     T = property(transpose)
 
-    def _to_internal_pandas(self) -> pd.Index:
+    def _to_internal_pandas(self)            :
         """
         Return a pandas Index directly from _internal to avoid overhead of copy.
 
@@ -501,7 +501,7 @@ class Index(IndexOpsMixin):
         """
         return self._psdf._internal.to_pandas_frame.index
 
-    def to_pandas(self) -> pd.Index:
+    def to_pandas(self)            :
         """
         Return a pandas Index.
 
@@ -522,13 +522,13 @@ class Index(IndexOpsMixin):
         )
         return self._to_pandas()
 
-    def _to_pandas(self) -> pd.Index:
+    def _to_pandas(self)            :
         """
         Same as `to_pandas()`, without issueing the advice log for internal usage.
         """
         return self._to_internal_pandas().copy()
 
-    def to_numpy(self, dtype: Optional[Union[str, Dtype]] = None, copy: bool = False) -> np.ndarray:
+    def to_numpy(self, dtype                              = None, copy       = False)              :
         """
         A NumPy ndarray representing the values in this Index or MultiIndex.
 
@@ -568,8 +568,8 @@ class Index(IndexOpsMixin):
         return result
 
     def map(
-        self, mapper: Union[dict, Callable[[Any], Any], pd.Series], na_action: Optional[str] = None
-    ) -> "Index":
+        self, mapper                                              , na_action                = None
+    )           :
         """
         Map values using input correspondence (a dict, Series, or function).
 
@@ -612,7 +612,7 @@ class Index(IndexOpsMixin):
         ).rename(self.name)
 
     @property
-    def values(self) -> np.ndarray:
+    def values(self)              :
         """
         Return an array representing the data in the Index.
 
@@ -636,7 +636,7 @@ class Index(IndexOpsMixin):
         return self.to_numpy()
 
     @property
-    def asi8(self) -> np.ndarray:
+    def asi8(self)              :
         """
         Integer representation of the values.
 
@@ -669,7 +669,7 @@ class Index(IndexOpsMixin):
             return None
 
     @property
-    def has_duplicates(self) -> bool:
+    def has_duplicates(self)        :
         """
         If index has duplicates, return True, otherwise False.
 
@@ -699,7 +699,7 @@ class Index(IndexOpsMixin):
         return sdf.select(F.count(scol) != F.countDistinct(scol)).first()[0]
 
     @property
-    def is_unique(self) -> bool:
+    def is_unique(self)        :
         """
         Return if the index has unique values.
 
@@ -726,16 +726,16 @@ class Index(IndexOpsMixin):
         return not self.has_duplicates
 
     @property
-    def name(self) -> Name:
+    def name(self)        :
         """Return name of the Index."""
         return self.names[0]
 
     @name.setter
-    def name(self, name: Name) -> None:
+    def name(self, name      )        :
         self.names = [name]
 
     @property
-    def names(self) -> List[Name]:
+    def names(self)              :
         """Return names of the Index."""
         return [
             name if name is None or len(name) > 1 else name[0]
@@ -743,7 +743,7 @@ class Index(IndexOpsMixin):
         ]
 
     @names.setter
-    def names(self, names: List[Name]) -> None:
+    def names(self, names            )        :
         if not is_list_like(names):
             raise ValueError("Names must be a list-like")
         if self._internal.index_level != len(names):
@@ -758,7 +758,7 @@ class Index(IndexOpsMixin):
             self.rename(names, inplace=True)
 
     @property
-    def nlevels(self) -> int:
+    def nlevels(self)       :
         """
         Number of levels in Index & MultiIndex.
 
@@ -774,7 +774,7 @@ class Index(IndexOpsMixin):
         """
         return self._internal.index_level
 
-    def rename(self, name: Union[Name, List[Name]], inplace: bool = False) -> Optional["Index"]:
+    def rename(self, name                         , inplace       = False)                     :
         """
         Alter Index or MultiIndex name.
         Able to set new names without level. Defaults to returning new index.
@@ -837,7 +837,7 @@ class Index(IndexOpsMixin):
         else:
             return DataFrame(internal).index
 
-    def _verify_for_rename(self, name: Name) -> List[Label]:
+    def _verify_for_rename(self, name      )               :
         if is_hashable(name):
             if is_name_like_tuple(name):
                 return [name]
@@ -846,7 +846,7 @@ class Index(IndexOpsMixin):
         raise TypeError("Index.name must be a hashable type")
 
     # TODO: add downcast parameter for fillna function
-    def fillna(self, value: Scalar) -> "Index":
+    def fillna(self, value        )           :
         """
         Fill NA/NaN values with the specified value.
 
@@ -883,7 +883,7 @@ class Index(IndexOpsMixin):
         return DataFrame(internal).index
 
     # TODO: ADD keep parameter
-    def drop_duplicates(self) -> "Index":
+    def drop_duplicates(self)           :
         """
         Return Index with duplicate values removed.
 
@@ -918,7 +918,7 @@ class Index(IndexOpsMixin):
         )
         return DataFrame(internal).index
 
-    def to_series(self, name: Optional[Name] = None) -> Series:
+    def to_series(self, name                 = None)          :
         """
         Create a Series with both index and values equal to the index keys
         useful with map for returning an indexer based on an index.
@@ -954,7 +954,7 @@ class Index(IndexOpsMixin):
             field = field.copy(name=name_like_string(name))
         elif self._internal.index_level == 1:
             name = self.name
-        column_labels: List[Optional[Label]] = [name if is_name_like_tuple(name) else (name,)]
+        column_labels                        = [name if is_name_like_tuple(name) else (name,)]
         internal = self._internal.copy(
             column_labels=column_labels,
             data_spark_columns=[scol],
@@ -963,7 +963,7 @@ class Index(IndexOpsMixin):
         )
         return first_series(DataFrame(internal))
 
-    def to_frame(self, index: bool = True, name: Optional[Name] = None) -> DataFrame:
+    def to_frame(self, index       = True, name                 = None)             :
         """
         Create a DataFrame with a column containing the Index.
 
@@ -1025,7 +1025,7 @@ class Index(IndexOpsMixin):
 
         return self._to_frame(index=index, names=[name])
 
-    def _to_frame(self, index: bool, names: List[Label]) -> DataFrame:
+    def _to_frame(self, index      , names             )             :
         if index:
             index_spark_columns = self._internal.index_spark_columns
             index_names = self._internal.index_names
@@ -1046,7 +1046,7 @@ class Index(IndexOpsMixin):
         )
         return DataFrame(internal)
 
-    def is_boolean(self) -> bool:
+    def is_boolean(self)        :
         """
         Return if the current index type is a boolean type.
 
@@ -1057,7 +1057,7 @@ class Index(IndexOpsMixin):
         """
         return is_bool_dtype(self.dtype)
 
-    def is_categorical(self) -> bool:
+    def is_categorical(self)        :
         """
         Return if the current index type is a categorical type.
 
@@ -1068,7 +1068,7 @@ class Index(IndexOpsMixin):
         """
         return is_categorical_dtype(self.dtype)
 
-    def is_floating(self) -> bool:
+    def is_floating(self)        :
         """
         Return if the current index type is a floating type.
 
@@ -1079,7 +1079,7 @@ class Index(IndexOpsMixin):
         """
         return is_float_dtype(self.dtype)
 
-    def is_integer(self) -> bool:
+    def is_integer(self)        :
         """
         Return if the current index type is a integer type.
 
@@ -1090,7 +1090,7 @@ class Index(IndexOpsMixin):
         """
         return is_integer_dtype(self.dtype)
 
-    def is_interval(self) -> bool:
+    def is_interval(self)        :
         """
         Return if the current index type is an interval type.
 
@@ -1101,7 +1101,7 @@ class Index(IndexOpsMixin):
         """
         return is_interval_dtype(self.dtype)
 
-    def is_numeric(self) -> bool:
+    def is_numeric(self)        :
         """
         Return if the current index type is a numeric type.
 
@@ -1112,7 +1112,7 @@ class Index(IndexOpsMixin):
         """
         return is_numeric_dtype(self.dtype)
 
-    def is_object(self) -> bool:
+    def is_object(self)        :
         """
         Return if the current index type is a object type.
 
@@ -1123,7 +1123,7 @@ class Index(IndexOpsMixin):
         """
         return is_object_dtype(self.dtype)
 
-    def is_type_compatible(self, kind: str) -> bool:
+    def is_type_compatible(self, kind     )        :
         """
         Whether the index type is compatible with the provided type.
 
@@ -1141,7 +1141,7 @@ class Index(IndexOpsMixin):
         """
         return kind == self.inferred_type
 
-    def dropna(self) -> "Index":
+    def dropna(self)           :
         """
         Return Index or MultiIndex without NA/NaN values
 
@@ -1201,7 +1201,7 @@ class Index(IndexOpsMixin):
         )
         return DataFrame(internal).index
 
-    def unique(self, level: Optional[Union[int, Name]] = None) -> "Index":
+    def unique(self, level                             = None)           :
         """
         Return unique values in the index.
 
@@ -1252,7 +1252,7 @@ class Index(IndexOpsMixin):
         ).index
 
     # TODO: add error parameter
-    def drop(self, labels: List[Any]) -> "Index":
+    def drop(self, labels           )           :
         """
         Make new Index with passed list of labels deleted.
 
@@ -1289,7 +1289,7 @@ class Index(IndexOpsMixin):
         )
         return DataFrame(internal).index
 
-    def _validate_index_level(self, level: Union[int, Name]) -> None:
+    def _validate_index_level(self, level                  )        :
         """
         Validate index level.
         For single-level Index getting level number is a no-op, but some
@@ -1308,7 +1308,7 @@ class Index(IndexOpsMixin):
                 "Requested level ({}) does not match index name ({})".format(level, self.name)
             )
 
-    def get_level_values(self, level: Union[int, Name]) -> "Index":
+    def get_level_values(self, level                  )           :
         """
         Return Index if a valid level is given.
 
@@ -1324,7 +1324,7 @@ class Index(IndexOpsMixin):
         self._validate_index_level(level)
         return self
 
-    def copy(self, name: Optional[Name] = None, deep: Optional[bool] = None) -> "Index":
+    def copy(self, name                 = None, deep                 = None)           :
         """
         Make a copy of this object. name sets those attributes on the new object.
 
@@ -1363,7 +1363,7 @@ class Index(IndexOpsMixin):
             result.name = name
         return result
 
-    def droplevel(self, level: Union[int, Name, List[Union[int, Name]]]) -> "Index":
+    def droplevel(self, level                                          )           :
         """
         Return index with requested level(s) removed.
         If resulting index has only 1 level left, the result will be
@@ -1458,10 +1458,10 @@ class Index(IndexOpsMixin):
 
     def symmetric_difference(
         self,
-        other: "Index",
-        result_name: Optional[Name] = None,
-        sort: Optional[bool] = None,
-    ) -> "Index":
+        other         ,
+        result_name                 = None,
+        sort                 = None,
+    )           :
         """
         Compute the symmetric difference of two Index objects.
 
@@ -1537,7 +1537,7 @@ class Index(IndexOpsMixin):
         return result
 
     # TODO: return_indexer
-    def sort_values(self, ascending: bool = True) -> "Index":
+    def sort_values(self, ascending       = True)           :
         """
         Return a sorted copy of the index.
 
@@ -1613,13 +1613,13 @@ class Index(IndexOpsMixin):
         return DataFrame(internal).index
 
     @no_type_check
-    def sort(self, *args, **kwargs) -> None:
+    def sort(self, *args, **kwargs)        :
         """
         Use sort_values instead.
         """
         raise TypeError("cannot sort an Index object in-place, use sort_values instead")
 
-    def min(self) -> Union[Scalar, Tuple[Scalar, ...]]:
+    def min(self)                                     :
         """
         Return the minimum value of the Index.
 
@@ -1660,7 +1660,7 @@ class Index(IndexOpsMixin):
 
         return result if len(result) > 1 else result[0]
 
-    def max(self) -> Union[Scalar, Tuple[Scalar, ...]]:
+    def max(self)                                     :
         """
         Return the maximum value of the Index.
 
@@ -1701,7 +1701,7 @@ class Index(IndexOpsMixin):
 
         return result if len(result) > 1 else result[0]
 
-    def delete(self, loc: Union[int, List[int]]) -> "Index":
+    def delete(self, loc                       )           :
         """
         Make new Index with passed location(-s) deleted.
 
@@ -1739,7 +1739,7 @@ class Index(IndexOpsMixin):
         """
         length = len(self)
 
-        def is_len_exceeded(index: int) -> bool:
+        def is_len_exceeded(index     )        :
             """Check if the given index is exceeded the length or not"""
             return index >= length if index >= 0 else abs(index) > length
 
@@ -1816,7 +1816,7 @@ class Index(IndexOpsMixin):
 
         return DataFrame(internal).index
 
-    def append(self, other: "Index") -> "Index":
+    def append(self, other         )           :
         """
         Append a collection of Index options together.
 
@@ -1886,7 +1886,7 @@ class Index(IndexOpsMixin):
 
         return DataFrame(internal).index
 
-    def argmax(self) -> int:
+    def argmax(self)       :
         """
         Return a maximum argument indexer.
 
@@ -1934,7 +1934,7 @@ class Index(IndexOpsMixin):
             .first()[0]
         )
 
-    def argmin(self) -> int:
+    def argmin(self)       :
         """
         Return a minimum argument indexer.
 
@@ -1970,10 +1970,10 @@ class Index(IndexOpsMixin):
 
     def set_names(
         self,
-        names: Union[Name, List[Name]],
-        level: Optional[Union[int, Name, List[Union[int, Name]]]] = None,
-        inplace: bool = False,
-    ) -> Optional["Index"]:
+        names                         ,
+        level                                                     = None,
+        inplace       = False,
+    )                     :
         """
         Set Index or MultiIndex name.
         Able to set new names partially and by level.
@@ -2035,7 +2035,7 @@ class Index(IndexOpsMixin):
                 names = self_names
         return self.rename(name=names, inplace=inplace)
 
-    def difference(self, other: "Index", sort: Optional[bool] = None) -> "Index":
+    def difference(self, other         , sort                 = None)           :
         """
         Return a new Index with elements from the index that are not in
         `other`.
@@ -2132,7 +2132,7 @@ class Index(IndexOpsMixin):
         return result if sort is None else result.sort_values()
 
     @property
-    def is_all_dates(self) -> bool:
+    def is_all_dates(self)        :
         """
         Return if all data types of the index are datetime.
         remember that since pandas-on-Spark does not support multiple data types in an index,
@@ -2165,7 +2165,7 @@ class Index(IndexOpsMixin):
         """
         return isinstance(self.spark.data_type, (TimestampType, TimestampNTZType))
 
-    def repeat(self, repeats: int) -> "Index":
+    def repeat(self, repeats     )           :
         """
         Repeat elements of a Index/MultiIndex.
 
@@ -2222,13 +2222,13 @@ class Index(IndexOpsMixin):
         elif repeats < 0:
             raise ValueError("negative dimensions are not allowed")
 
-        psdf: DataFrame = DataFrame(self._internal.resolved_copy)
+        psdf            = DataFrame(self._internal.resolved_copy)
         if repeats == 0:
             return DataFrame(psdf._internal.with_filter(SF.lit(False))).index
         else:
             return ps.concat([psdf] * repeats).index
 
-    def asof(self, label: Any) -> Scalar:
+    def asof(self, label     )          :
         """
         Return the label from the index, or, if not present, the previous one.
 
@@ -2286,8 +2286,8 @@ class Index(IndexOpsMixin):
         return result if result is not None else np.nan
 
     def _index_fields_for_union_like(
-        self: "Index", other: "Index", func_name: str
-    ) -> Optional[List[InternalField]]:
+        self         , other         , func_name     
+    )                                 :
         if self._internal.index_fields == other._internal.index_fields:
             return self._internal.index_fields
         elif all(
@@ -2314,8 +2314,8 @@ class Index(IndexOpsMixin):
             return None
 
     def union(
-        self, other: Union[DataFrame, Series, "Index", List], sort: Optional[bool] = None
-    ) -> "Index":
+        self, other                                         , sort                 = None
+    )           :
         """
         Form the union of two Index objects.
 
@@ -2356,7 +2356,7 @@ class Index(IndexOpsMixin):
 
         sort = True if sort is None else sort
         sort = validate_bool_kwarg(sort, "sort")
-        other_idx: Index
+        #other_idx: Index
         if isinstance(self, MultiIndex):
             if isinstance(other, MultiIndex):
                 other_idx = other
@@ -2392,7 +2392,7 @@ class Index(IndexOpsMixin):
 
         return DataFrame(internal).index
 
-    def holds_integer(self) -> bool:
+    def holds_integer(self)        :
         """
         Whether the type is an integer type.
         Always return False for MultiIndex.
@@ -2425,7 +2425,7 @@ class Index(IndexOpsMixin):
         """
         return isinstance(self.spark.data_type, IntegralType)
 
-    def intersection(self, other: Union[DataFrame, Series, "Index", List]) -> "Index":
+    def intersection(self, other                                         )           :
         """
         Form the intersection of two Index objects.
 
@@ -2448,7 +2448,7 @@ class Index(IndexOpsMixin):
         """
         from pyspark.pandas.indexes.multi import MultiIndex
 
-        other_idx: Index
+        #other_idx: Index
         if isinstance(other, DataFrame):
             raise ValueError("Index data must be 1-dimensional")
         elif isinstance(other, MultiIndex):
@@ -2489,7 +2489,7 @@ class Index(IndexOpsMixin):
 
         return DataFrame(internal).index
 
-    def item(self) -> Union[Scalar, Tuple[Scalar, ...]]:
+    def item(self)                                     :
         """
         Return the first element of the underlying data as a python scalar.
 
@@ -2511,7 +2511,7 @@ class Index(IndexOpsMixin):
         """
         return self.to_series().item()
 
-    def insert(self, loc: int, item: Any) -> "Index":
+    def insert(self, loc     , item     )           :
         """
         Make new Index inserting new item at location.
 
@@ -2559,13 +2559,13 @@ class Index(IndexOpsMixin):
         )
         return DataFrame(internal).index
 
-    def view(self) -> "Index":
+    def view(self)           :
         """
         this is defined as a copy with the same identity
         """
         return self.copy()
 
-    def to_list(self) -> List:
+    def to_list(self)        :
         """
         Return a list of the values.
 
@@ -2600,7 +2600,7 @@ class Index(IndexOpsMixin):
     tolist = to_list
 
     @property
-    def inferred_type(self) -> str:
+    def inferred_type(self)       :
         """
         Return a string of the type inferred from the values.
 
@@ -2621,7 +2621,7 @@ class Index(IndexOpsMixin):
         """
         return lib.infer_dtype([self.to_series().head(1).item()])
 
-    def __getattr__(self, item: str) -> Any:
+    def __getattr__(self, item     )       :
         if hasattr(MissingPandasLikeIndex, item):
             property_or_func = getattr(MissingPandasLikeIndex, item)
             if isinstance(property_or_func, property):
@@ -2630,7 +2630,7 @@ class Index(IndexOpsMixin):
                 return partial(property_or_func, self)
         raise AttributeError("'{}' object has no attribute '{}'".format(type(self).__name__, item))
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         max_display_count = get_option("display.max_rows")
         if max_display_count is None:
             return repr(self._to_internal_pandas())
@@ -2645,10 +2645,10 @@ class Index(IndexOpsMixin):
             return repr_string + footer
         return repr_string
 
-    def __iter__(self) -> Iterator:
+    def __iter__(self)            :
         return MissingPandasLikeIndex.__iter__(self)
 
-    def __and__(self, other: "Index") -> "Index":
+    def __and__(self, other         )           :
         warnings.warn(
             "Index.__and__ operating as a set operation is deprecated, "
             "in the future this will be a logical operation matching Series.__and__.  "
@@ -2657,7 +2657,7 @@ class Index(IndexOpsMixin):
         )
         return self.intersection(other)
 
-    def __or__(self, other: "Index") -> "Index":
+    def __or__(self, other         )           :
         warnings.warn(
             "Index.__or__ operating as a set operation is deprecated, "
             "in the future this will be a logical operation matching Series.__or__.  "
@@ -2666,7 +2666,7 @@ class Index(IndexOpsMixin):
         )
         return self.union(other)
 
-    def __xor__(self, other: "Index") -> "Index":
+    def __xor__(self, other         )           :
         warnings.warn(
             "Index.__xor__ operating as a set operation is deprecated, "
             "in the future this will be a logical operation matching Series.__xor__.  "
@@ -2675,17 +2675,17 @@ class Index(IndexOpsMixin):
         )
         return self.symmetric_difference(other)
 
-    def __rxor__(self, other: Any) -> "Index":
+    def __rxor__(self, other     )           :
         return NotImplemented
 
-    def __bool__(self) -> bool:
+    def __bool__(self)        :
         raise ValueError(
             "The truth value of a {0} is ambiguous. "
             "Use a.empty, a.bool(), a.item(), a.any() or a.all().".format(self.__class__.__name__)
         )
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

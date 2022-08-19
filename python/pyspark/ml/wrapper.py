@@ -45,25 +45,25 @@ class JavaWrapper:
     Wrapper class for a Java companion object
     """
 
-    def __init__(self, java_obj: Optional["JavaObject"] = None):
+    def __init__(self, java_obj                         = None):
         super(JavaWrapper, self).__init__()
         self._java_obj = java_obj
 
-    def __del__(self) -> None:
+    def __del__(self)        :
         if SparkContext._active_spark_context and self._java_obj is not None:
             SparkContext._active_spark_context._gateway.detach(  # type: ignore[union-attr]
                 self._java_obj
             )
 
     @classmethod
-    def _create_from_java_class(cls: Type[JW], java_class: str, *args: Any) -> JW:
+    def _create_from_java_class(cls          , java_class     , *args     )      :
         """
         Construct this object from given Java classname and arguments
         """
         java_obj = JavaWrapper._new_java_obj(java_class, *args)
         return cls(java_obj)
 
-    def _call_java(self, name: str, *args: Any) -> Any:
+    def _call_java(self, name     , *args     )       :
         m = getattr(self._java_obj, name)
         sc = SparkContext._active_spark_context
         assert sc is not None
@@ -72,7 +72,7 @@ class JavaWrapper:
         return _java2py(sc, m(*java_args))
 
     @staticmethod
-    def _new_java_obj(java_class: str, *args: Any) -> "JavaObject":
+    def _new_java_obj(java_class     , *args     )                :
         """
         Returns a new Java object.
         """
@@ -86,7 +86,7 @@ class JavaWrapper:
         return java_obj(*java_args)
 
     @staticmethod
-    def _new_java_array(pylist: List[Any], java_class: "JavaClass") -> "JavaObject":
+    def _new_java_array(pylist           , java_class             )                :
         """
         Create a Java array of given java_class type. Useful for
         calling a method with a Scala Array from Python with Py4J.
@@ -147,7 +147,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
     #: The param values in the Java object should be
     #: synced with the Python wrapper in fit/transform/evaluate/copy.
 
-    def _make_java_param_pair(self, param: Param[T], value: T) -> "JavaObject":
+    def _make_java_param_pair(self, param          , value   )                :
         """
         Makes a Java param pair.
         """
@@ -159,7 +159,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
         java_value = _py2java(sc, value)
         return java_param.w(java_value)
 
-    def _transfer_params_to_java(self) -> None:
+    def _transfer_params_to_java(self)        :
         """
         Transforms the embedded params to the companion Java object.
         """
@@ -180,7 +180,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
             pair_defaults_seq = sc._jvm.PythonUtils.toSeq(pair_defaults)
             self._java_obj.setDefault(pair_defaults_seq)
 
-    def _transfer_param_map_to_java(self, pyParamMap: "ParamMap") -> "JavaObject":
+    def _transfer_param_map_to_java(self, pyParamMap            )                :
         """
         Transforms a Python ParamMap into a Java ParamMap.
         """
@@ -191,7 +191,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
                 paramMap.put([pair])
         return paramMap
 
-    def _create_params_from_java(self) -> None:
+    def _create_params_from_java(self)        :
         """
         SPARK-10931: Temporary fix to create params that are defined in the Java obj but not here
         """
@@ -203,12 +203,12 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
         for java_param in java_params:
             java_param_name = java_param.name()
             if not hasattr(self, java_param_name):
-                param: Param[Any] = Param(self, java_param_name, java_param.doc())
+                param             = Param(self, java_param_name, java_param.doc())
                 setattr(param, "created_from_java_param", True)
                 setattr(self, java_param_name, param)
                 self._params = None  # need to reset so self.params will discover new params
 
-    def _transfer_params_from_java(self) -> None:
+    def _transfer_params_from_java(self)        :
         """
         Transforms the embedded params from the companion Java object.
         """
@@ -227,7 +227,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
                     value = _java2py(sc, self._java_obj.getDefault(java_param)).get()
                     self._setDefault(**{param.name: value})
 
-    def _transfer_param_map_from_java(self, javaParamMap: "JavaObject") -> "ParamMap":
+    def _transfer_param_map_from_java(self, javaParamMap              )              :
         """
         Transforms a Java ParamMap into a Python ParamMap.
         """
@@ -242,13 +242,13 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
         return paramMap
 
     @staticmethod
-    def _empty_java_param_map() -> "JavaObject":
+    def _empty_java_param_map()                :
         """
         Returns an empty Java ParamMap reference.
         """
         return _jvm().org.apache.spark.ml.param.ParamMap()
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance's Params to the wrapped Java object, and return the Java object.
         Used for ML persistence.
@@ -264,7 +264,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
         return self._java_obj
 
     @staticmethod
-    def _from_java(java_stage: "JavaObject") -> "JP":
+    def _from_java(java_stage              )        :
         """
         Given a Java object, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -272,7 +272,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
         Meta-algorithms such as Pipeline should override this method as a classmethod.
         """
 
-        def __get_class(clazz: str) -> Type[JP]:
+        def __get_class(clazz     )            :
             """
             Loads Python class from its name.
             """
@@ -305,7 +305,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
             )
         return py_stage
 
-    def copy(self: "JP", extra: Optional["ParamMap"] = None) -> "JP":
+    def copy(self      , extra                       = None)        :
         """
         Creates a copy of this instance with the same uid and some
         extra params. This implementation first calls Params.copy and
@@ -331,7 +331,7 @@ class JavaParams(JavaWrapper, Params, metaclass=ABCMeta):
             that._transfer_params_to_java()
         return that
 
-    def clear(self, param: Param) -> None:
+    def clear(self, param       )        :
         """
         Clears a param from the param map if it has been explicitly set.
         """
@@ -350,13 +350,13 @@ class JavaEstimator(JavaParams, Estimator[JM], metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def _create_model(self, java_model: "JavaObject") -> JM:
+    def _create_model(self, java_model              )      :
         """
         Creates a model from the input Java model reference.
         """
         raise NotImplementedError()
 
-    def _fit_java(self, dataset: DataFrame) -> "JavaObject":
+    def _fit_java(self, dataset           )                :
         """
         Fits a Java model to the input dataset.
 
@@ -375,7 +375,7 @@ class JavaEstimator(JavaParams, Estimator[JM], metaclass=ABCMeta):
         self._transfer_params_to_java()
         return self._java_obj.fit(dataset._jdf)
 
-    def _fit(self, dataset: DataFrame) -> JM:
+    def _fit(self, dataset           )      :
         java_model = self._fit_java(dataset)
         model = self._create_model(java_model)
         return self._copyValues(model)
@@ -389,7 +389,7 @@ class JavaTransformer(JavaParams, Transformer, metaclass=ABCMeta):
     available as _java_obj.
     """
 
-    def _transform(self, dataset: DataFrame) -> DataFrame:
+    def _transform(self, dataset           )             :
         assert self._java_obj is not None
 
         self._transfer_params_to_java()
@@ -404,7 +404,7 @@ class JavaModel(JavaTransformer, Model, metaclass=ABCMeta):
     param mix-ins, because this sets the UID from the Java model.
     """
 
-    def __init__(self, java_model: Optional["JavaObject"] = None):
+    def __init__(self, java_model                         = None):
         """
         Initialize this instance with a Java model object.
         Subclasses should call this constructor, initialize params,
@@ -428,7 +428,7 @@ class JavaModel(JavaTransformer, Model, metaclass=ABCMeta):
 
             self._resetUid(java_model.uid())
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return self._call_java("toString")
 
 
@@ -449,14 +449,14 @@ class JavaPredictionModel(PredictionModel[T], JavaModel, _PredictorParams):
 
     @property  # type: ignore[misc]
     @since("2.1.0")
-    def numFeatures(self) -> int:
+    def numFeatures(self)       :
         """
         Returns the number of features the model was trained on. If unknown, returns -1
         """
         return self._call_java("numFeatures")
 
     @since("3.0.0")
-    def predict(self, value: T) -> float:
+    def predict(self, value   )         :
         """
         Predict label for the given features.
         """

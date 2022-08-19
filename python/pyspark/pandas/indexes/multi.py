@@ -103,8 +103,8 @@ class MultiIndex(Index):
         dtype=None,
         copy=False,
         name=None,
-        verify_integrity: bool = True,
-    ) -> "MultiIndex":
+        verify_integrity       = True,
+    )                :
         pidx = pd.MultiIndex(
             levels=levels,
             codes=codes,
@@ -118,7 +118,7 @@ class MultiIndex(Index):
         return ps.from_pandas(pidx)
 
     @property
-    def _internal(self) -> InternalFrame:
+    def _internal(self)                 :
         internal = self._psdf._internal
         scol = F.struct(*internal.index_spark_columns)
         return internal.copy(
@@ -129,31 +129,31 @@ class MultiIndex(Index):
         )
 
     @property
-    def _column_label(self) -> Optional[Label]:
+    def _column_label(self)                   :
         return None
 
-    def __abs__(self) -> "MultiIndex":
+    def __abs__(self)                :
         raise TypeError("TypeError: cannot perform __abs__ with this index type: MultiIndex")
 
     def _with_new_scol(
-        self, scol: Column, *, field: Optional[InternalField] = None
-    ) -> "MultiIndex":
+        self, scol        , *, field                          = None
+    )                :
         raise NotImplementedError("Not supported for type MultiIndex")
 
     @no_type_check
-    def any(self, *args, **kwargs) -> None:
+    def any(self, *args, **kwargs)        :
         raise TypeError("cannot perform any with this index type: MultiIndex")
 
     @no_type_check
-    def all(self, *args, **kwargs) -> None:
+    def all(self, *args, **kwargs)        :
         raise TypeError("cannot perform all with this index type: MultiIndex")
 
     @staticmethod
     def from_tuples(
-        tuples: List[Tuple],
-        sortorder: Optional[int] = None,
-        names: Optional[List[Name]] = None,
-    ) -> "MultiIndex":
+        tuples             ,
+        sortorder                = None,
+        names                       = None,
+    )                :
         """
         Convert list of tuples to MultiIndex.
 
@@ -191,10 +191,10 @@ class MultiIndex(Index):
 
     @staticmethod
     def from_arrays(
-        arrays: List[List],
-        sortorder: Optional[int] = None,
-        names: Optional[List[Name]] = None,
-    ) -> "MultiIndex":
+        arrays            ,
+        sortorder                = None,
+        names                       = None,
+    )                :
         """
         Convert arrays to MultiIndex.
 
@@ -232,10 +232,10 @@ class MultiIndex(Index):
 
     @staticmethod
     def from_product(
-        iterables: List[List],
-        sortorder: Optional[int] = None,
-        names: Optional[List[Name]] = None,
-    ) -> "MultiIndex":
+        iterables            ,
+        sortorder                = None,
+        names                       = None,
+    )                :
         """
         Make a MultiIndex from the cartesian product of multiple iterables.
 
@@ -280,7 +280,7 @@ class MultiIndex(Index):
         )
 
     @staticmethod
-    def from_frame(df: DataFrame, names: Optional[List[Name]] = None) -> "MultiIndex":
+    def from_frame(df           , names                       = None)                :
         """
         Make a MultiIndex from a DataFrame.
 
@@ -352,15 +352,15 @@ class MultiIndex(Index):
         return cast(MultiIndex, DataFrame(internal).index)
 
     @property
-    def name(self) -> Name:
+    def name(self)        :
         raise PandasNotImplementedError(class_name="pd.MultiIndex", property_name="name")
 
     @name.setter
-    def name(self, name: Name) -> None:
+    def name(self, name      )        :
         raise PandasNotImplementedError(class_name="pd.MultiIndex", property_name="name")
 
     @property
-    def dtypes(self) -> pd.Series:
+    def dtypes(self)             :
         """Return the dtypes as a Series for the underlying MultiIndex.
 
         .. versionadded:: 3.3.0
@@ -388,7 +388,7 @@ class MultiIndex(Index):
             ),
         )
 
-    def _verify_for_rename(self, name: List[Name]) -> List[Label]:  # type: ignore[override]
+    def _verify_for_rename(self, name            )               :  # type: ignore[override]
         if is_list_like(name):
             if self._internal.index_level != len(name):
                 raise ValueError(
@@ -402,7 +402,7 @@ class MultiIndex(Index):
         else:
             raise TypeError("Must pass list-like as `names`.")
 
-    def swaplevel(self, i: int = -2, j: int = -1) -> "MultiIndex":
+    def swaplevel(self, i      = -2, j      = -1)                :
         """
         Swap level i with level j.
         Calling this method does not change the ordering of the values.
@@ -473,7 +473,7 @@ class MultiIndex(Index):
         return cast(MultiIndex, DataFrame(internal).index)
 
     @property
-    def levshape(self) -> Tuple[int, ...]:
+    def levshape(self)                   :
         """
         A tuple with the length of each level.
 
@@ -496,17 +496,17 @@ class MultiIndex(Index):
 
     @staticmethod
     def _comparator_for_monotonic_increasing(
-        data_type: DataType,
-    ) -> Callable[[Column, Column, Callable[[Column, Column], Column]], Column]:
+        data_type          ,
+    )                                                                          :
         return compare_disallow_null
 
-    def _is_monotonic(self, order: str) -> bool:
+    def _is_monotonic(self, order     )        :
         if order == "increasing":
             return self._is_monotonic_increasing().all()
         else:
             return self._is_monotonic_decreasing().all()
 
-    def _is_monotonic_increasing(self) -> Series:
+    def _is_monotonic_increasing(self)          :
         window = Window.orderBy(NATURAL_ORDER_COLUMN_NAME).rowsBetween(-1, -1)
 
         cond = SF.lit(True)
@@ -544,11 +544,11 @@ class MultiIndex(Index):
 
     @staticmethod
     def _comparator_for_monotonic_decreasing(
-        data_type: DataType,
-    ) -> Callable[[Column, Column, Callable[[Column, Column], Column]], Column]:
+        data_type          ,
+    )                                                                          :
         return compare_disallow_null
 
-    def _is_monotonic_decreasing(self) -> Series:
+    def _is_monotonic_decreasing(self)          :
         window = Window.orderBy(NATURAL_ORDER_COLUMN_NAME).rowsBetween(-1, -1)
 
         cond = SF.lit(True)
@@ -585,8 +585,8 @@ class MultiIndex(Index):
         return first_series(DataFrame(internal))
 
     def to_frame(  # type: ignore[override]
-        self, index: bool = True, name: Optional[List[Name]] = None
-    ) -> DataFrame:
+        self, index       = True, name                       = None
+    )             :
         """
         Create a DataFrame with the levels of the MultiIndex as columns.
         Column ordering is determined by the DataFrame constructor with data as
@@ -659,7 +659,7 @@ class MultiIndex(Index):
 
         return self._to_frame(index=index, names=name)
 
-    def to_pandas(self) -> pd.MultiIndex:
+    def to_pandas(self)                 :
         """
         Return a pandas MultiIndex.
 
@@ -683,17 +683,17 @@ class MultiIndex(Index):
         # series-like operations. In that case, it creates new Index object instead of MultiIndex.
         return cast(pd.MultiIndex, super().to_pandas())
 
-    def _to_pandas(self) -> pd.MultiIndex:
+    def _to_pandas(self)                 :
         """
         Same as `to_pandas()`, without issuing the advice log for internal usage.
         """
         return cast(pd.MultiIndex, super()._to_pandas())
 
-    def nunique(self, dropna: bool = True, approx: bool = False, rsd: float = 0.05) -> int:
+    def nunique(self, dropna       = True, approx       = False, rsd        = 0.05)       :
         raise NotImplementedError("nunique is not defined for MultiIndex")
 
     # TODO: add 'name' parameter after pd.MultiIndex.name is implemented
-    def copy(self, deep: Optional[bool] = None) -> "MultiIndex":  # type: ignore[override]
+    def copy(self, deep                 = None)                :  # type: ignore[override]
         """
         Make a copy of this object.
 
@@ -727,10 +727,10 @@ class MultiIndex(Index):
 
     def symmetric_difference(  # type: ignore[override]
         self,
-        other: Index,
-        result_name: Optional[List[Name]] = None,
-        sort: Optional[bool] = None,
-    ) -> "MultiIndex":
+        other       ,
+        result_name                       = None,
+        sort                 = None,
+    )                :
         """
         Compute the symmetric difference of two MultiIndex objects.
 
@@ -824,7 +824,7 @@ class MultiIndex(Index):
         return result
 
     # TODO: ADD error parameter
-    def drop(self, codes: List[Any], level: Optional[Union[int, Name]] = None) -> "MultiIndex":
+    def drop(self, codes           , level                             = None)                :
         """
         Make new MultiIndex with passed list of labels deleted
 
@@ -893,19 +893,19 @@ class MultiIndex(Index):
         )
         return cast(MultiIndex, DataFrame(internal).index)
 
-    def argmax(self) -> None:
+    def argmax(self)        :
         raise TypeError("reduction operation 'argmax' not allowed for this dtype")
 
-    def argmin(self) -> None:
+    def argmin(self)        :
         raise TypeError("reduction operation 'argmin' not allowed for this dtype")
 
-    def asof(self, label: Any) -> None:
+    def asof(self, label     )        :
         raise NotImplementedError(
             "only the default get_loc method is currently supported for MultiIndex"
         )
 
     @property
-    def is_all_dates(self) -> bool:
+    def is_all_dates(self)        :
         """
         is_all_dates always returns False for MultiIndex
 
@@ -926,7 +926,7 @@ class MultiIndex(Index):
         """
         return False
 
-    def __getattr__(self, item: str) -> Any:
+    def __getattr__(self, item     )       :
         if hasattr(MissingPandasLikeMultiIndex, item):
             property_or_func = getattr(MissingPandasLikeMultiIndex, item)
             if isinstance(property_or_func, property):
@@ -935,7 +935,7 @@ class MultiIndex(Index):
                 return partial(property_or_func, self)
         raise AttributeError("'MultiIndex' object has no attribute '{}'".format(item))
 
-    def _get_level_number(self, level: Union[int, Name]) -> int:
+    def _get_level_number(self, level                  )       :
         """
         Return the level number if a valid level is given.
         """
@@ -963,7 +963,7 @@ class MultiIndex(Index):
 
         return level
 
-    def get_level_values(self, level: Union[int, Name]) -> Index:
+    def get_level_values(self, level                  )         :
         """
         Return vector of label values for requested level,
         equal to the length of the index.
@@ -1010,7 +1010,7 @@ class MultiIndex(Index):
         )
         return DataFrame(internal).index
 
-    def insert(self, loc: int, item: Any) -> Index:
+    def insert(self, loc     , item     )         :
         """
         Make new MultiIndex inserting new item at location.
 
@@ -1059,7 +1059,7 @@ class MultiIndex(Index):
                     "index {} is out of bounds for axis 0 with size {}".format(loc, length)
                 )
 
-        index_name: List[Label] = [(name,) for name in self._internal.index_spark_column_names]
+        index_name              = [(name,) for name in self._internal.index_spark_column_names]
         sdf_before = self.to_frame(name=index_name)[:loc]._to_spark()
         sdf_middle = Index([item]).to_frame(name=index_name)._to_spark()
         sdf_after = self.to_frame(name=index_name)[loc:]._to_spark()
@@ -1075,7 +1075,7 @@ class MultiIndex(Index):
         )
         return DataFrame(internal).index
 
-    def item(self) -> Tuple[Scalar, ...]:
+    def item(self)                      :
         """
         Return the first element of the underlying data as a python tuple.
 
@@ -1097,7 +1097,7 @@ class MultiIndex(Index):
         """
         return self._psdf.head(2)._to_internal_pandas().index.item()
 
-    def intersection(self, other: Union[DataFrame, Series, Index, List]) -> "MultiIndex":
+    def intersection(self, other                                       )                :
         """
         Form the intersection of two Index objects.
 
@@ -1138,7 +1138,7 @@ class MultiIndex(Index):
 
         index_fields = self._index_fields_for_union_like(other, func_name="intersection")
 
-        default_name: List[Name] = [SPARK_INDEX_NAME_FORMAT(i) for i in range(self.nlevels)]
+        default_name             = [SPARK_INDEX_NAME_FORMAT(i) for i in range(self.nlevels)]
         spark_frame_self = self.to_frame(name=default_name)._to_spark()
         spark_frame_intersected = spark_frame_self.intersect(spark_frame_other)
         if keep_name:
@@ -1156,7 +1156,7 @@ class MultiIndex(Index):
         )
         return cast(MultiIndex, DataFrame(internal).index)
 
-    def equal_levels(self, other: "MultiIndex") -> bool:
+    def equal_levels(self, other              )        :
         """
         Return True if the levels of both MultiIndex objects are the same
 
@@ -1192,11 +1192,11 @@ class MultiIndex(Index):
         return len(unioned_subtracts.head(1)) == 0
 
     @property
-    def hasnans(self) -> bool:
+    def hasnans(self)        :
         raise NotImplementedError("hasnans is not defined for MultiIndex")
 
     @property
-    def inferred_type(self) -> str:
+    def inferred_type(self)       :
         """
         Return a string of the type inferred from the values.
         """
@@ -1204,7 +1204,7 @@ class MultiIndex(Index):
         return "mixed"
 
     @property
-    def asi8(self) -> None:
+    def asi8(self)        :
         """
         Integer representation of the values.
         """
@@ -1212,22 +1212,22 @@ class MultiIndex(Index):
         return None
 
     def factorize(
-        self, sort: bool = True, na_sentinel: Optional[int] = -1
-    ) -> Tuple["MultiIndex", pd.Index]:
+        self, sort       = True, na_sentinel                = -1
+    )                                 :
         return MissingPandasLikeMultiIndex.factorize(self, sort=sort, na_sentinel=na_sentinel)
 
-    def __iter__(self) -> Iterator:
+    def __iter__(self)            :
         return MissingPandasLikeMultiIndex.__iter__(self)
 
     def map(
         self,
-        mapper: Union[dict, Callable[[Any], Any], pd.Series] = None,
-        na_action: Optional[str] = None,
-    ) -> "Index":
+        mapper                                               = None,
+        na_action                = None,
+    )           :
         return MissingPandasLikeMultiIndex.map(self, mapper, na_action)
 
 
-def _test() -> None:
+def _test()        :
     import os
     import doctest
     import sys

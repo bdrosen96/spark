@@ -84,17 +84,17 @@ class LabeledPoint:
     'label' and 'features' are accessible as class attributes.
     """
 
-    def __init__(self, label: float, features: Iterable[float]):
+    def __init__(self, label       , features                 ):
         self.label = float(label)
         self.features = _convert_to_vector(features)
 
-    def __reduce__(self) -> Tuple[Type["LabeledPoint"], Tuple[float, Vector]]:
+    def __reduce__(self)                                                     :
         return (LabeledPoint, (self.label, self.features))
 
-    def __str__(self) -> str:
+    def __str__(self)       :
         return "(" + ",".join((str(self.label), str(self.features))) + ")"
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "LabeledPoint(%s, %s)" % (self.label, self.features)
 
 
@@ -113,23 +113,23 @@ class LinearModel:
       Intercept computed for this model.
     """
 
-    def __init__(self, weights: Vector, intercept: float):
+    def __init__(self, weights        , intercept       ):
         self._coeff = _convert_to_vector(weights)
         self._intercept = float(intercept)
 
     @property  # type: ignore[misc]
     @since("1.0.0")
-    def weights(self) -> Vector:
+    def weights(self)          :
         """Weights computed for every feature."""
         return self._coeff
 
     @property  # type: ignore[misc]
     @since("1.0.0")
-    def intercept(self) -> float:
+    def intercept(self)         :
         """Intercept computed for this model."""
         return self._intercept
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return "(weights=%s, intercept=%r)" % (self._coeff, self._intercept)
 
 
@@ -151,14 +151,14 @@ class LinearRegressionModelBase(LinearModel):
     """
 
     @overload
-    def predict(self, x: "VectorLike") -> float:
+    def predict(self, x              )         :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[float]:
+    def predict(self, x                   )              :
         ...
 
-    def predict(self, x: Union["VectorLike", RDD["VectorLike"]]) -> Union[float, RDD[float]]:
+    def predict(self, x                                        )                            :
         """
         Predict the value of the dependent variable given a vector or
         an RDD of vectors containing values for the independent variables.
@@ -235,7 +235,7 @@ class LinearRegressionModel(LinearRegressionModelBase):
     """
 
     @since("1.4.0")
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """Save a LinearRegressionModel."""
         assert sc._jvm is not None
 
@@ -246,7 +246,7 @@ class LinearRegressionModel(LinearRegressionModelBase):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "LinearRegressionModel":
+    def load(cls, sc              , path     )                           :
         """Load a LinearRegressionModel."""
         assert sc._jvm is not None
 
@@ -263,11 +263,11 @@ class LinearRegressionModel(LinearRegressionModelBase):
 # return the result of a call to the appropriate JVM stub.
 # _regression_train_wrapper is responsible for setup and error checking.
 def _regression_train_wrapper(
-    train_func: Callable[[RDD[LabeledPoint], Vector], Iterable[Any]],
-    modelClass: Type[LM],
-    data: RDD[LabeledPoint],
-    initial_weights: Optional["VectorLike"],
-) -> LM:
+    train_func                                                      ,
+    modelClass          ,
+    data                   ,
+    initial_weights                        ,
+)      :
     from pyspark.mllib.classification import LogisticRegressionModel
 
     first = data.first()
@@ -299,17 +299,17 @@ class LinearRegressionWithSGD:
     @classmethod
     def train(
         cls,
-        data: RDD[LabeledPoint],
-        iterations: int = 100,
-        step: float = 1.0,
-        miniBatchFraction: float = 1.0,
-        initialWeights: Optional["VectorLike"] = None,
-        regParam: float = 0.0,
-        regType: Optional[str] = None,
-        intercept: bool = False,
-        validateData: bool = True,
-        convergenceTol: float = 0.001,
-    ) -> LinearRegressionModel:
+        data                   ,
+        iterations      = 100,
+        step        = 1.0,
+        miniBatchFraction        = 1.0,
+        initialWeights                         = None,
+        regParam        = 0.0,
+        regType                = None,
+        intercept       = False,
+        validateData       = True,
+        convergenceTol        = 0.001,
+    )                         :
         """
         Train a linear regression model using Stochastic Gradient
         Descent (SGD). This solves the least squares regression
@@ -366,7 +366,7 @@ class LinearRegressionWithSGD:
         """
         warnings.warn("Deprecated in 2.0.0. Use ml.regression.LinearRegression.", FutureWarning)
 
-        def train(rdd: RDD[LabeledPoint], i: Vector) -> Iterable[Any]:
+        def train(rdd                   , i        )                 :
             return callMLlibFunc(
                 "trainLinearRegressionModelWithSGD",
                 rdd,
@@ -449,7 +449,7 @@ class LassoModel(LinearRegressionModelBase):
     """
 
     @since("1.4.0")
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """Save a LassoModel."""
         assert sc._jvm is not None
 
@@ -460,7 +460,7 @@ class LassoModel(LinearRegressionModelBase):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "LassoModel":
+    def load(cls, sc              , path     )                :
         """Load a LassoModel."""
         assert sc._jvm is not None
 
@@ -484,16 +484,16 @@ class LassoWithSGD:
     @classmethod
     def train(
         cls,
-        data: RDD[LabeledPoint],
-        iterations: int = 100,
-        step: float = 1.0,
-        regParam: float = 0.01,
-        miniBatchFraction: float = 1.0,
-        initialWeights: Optional["VectorLike"] = None,
-        intercept: bool = False,
-        validateData: bool = True,
-        convergenceTol: float = 0.001,
-    ) -> LassoModel:
+        data                   ,
+        iterations      = 100,
+        step        = 1.0,
+        regParam        = 0.01,
+        miniBatchFraction        = 1.0,
+        initialWeights                         = None,
+        intercept       = False,
+        validateData       = True,
+        convergenceTol        = 0.001,
+    )              :
         """
         Train a regression model with L1-regularization using Stochastic
         Gradient Descent. This solves the l1-regularized least squares
@@ -545,7 +545,7 @@ class LassoWithSGD:
             FutureWarning,
         )
 
-        def train(rdd: RDD[LabeledPoint], i: Vector) -> Iterable[Any]:
+        def train(rdd                   , i        )                 :
             return callMLlibFunc(
                 "trainLassoModelWithSGD",
                 rdd,
@@ -627,7 +627,7 @@ class RidgeRegressionModel(LinearRegressionModelBase):
     """
 
     @since("1.4.0")
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """Save a RidgeRegressionMode."""
         assert sc._jvm is not None
 
@@ -638,7 +638,7 @@ class RidgeRegressionModel(LinearRegressionModelBase):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "RidgeRegressionModel":
+    def load(cls, sc              , path     )                          :
         """Load a RidgeRegressionMode."""
         assert sc._jvm is not None
 
@@ -665,16 +665,16 @@ class RidgeRegressionWithSGD:
     @classmethod
     def train(
         cls,
-        data: RDD[LabeledPoint],
-        iterations: int = 100,
-        step: float = 1.0,
-        regParam: float = 0.01,
-        miniBatchFraction: float = 1.0,
-        initialWeights: Optional["VectorLike"] = None,
-        intercept: bool = False,
-        validateData: bool = True,
-        convergenceTol: float = 0.001,
-    ) -> RidgeRegressionModel:
+        data                   ,
+        iterations      = 100,
+        step        = 1.0,
+        regParam        = 0.01,
+        miniBatchFraction        = 1.0,
+        initialWeights                         = None,
+        intercept       = False,
+        validateData       = True,
+        convergenceTol        = 0.001,
+    )                        :
         """
         Train a regression model with L2-regularization using Stochastic
         Gradient Descent. This solves the l2-regularized least squares
@@ -727,7 +727,7 @@ class RidgeRegressionWithSGD:
             FutureWarning,
         )
 
-        def train(rdd: RDD[LabeledPoint], i: Vector) -> Iterable[Any]:
+        def train(rdd                   , i        )                 :
             return callMLlibFunc(
                 "trainRidgeModelWithSGD",
                 rdd,
@@ -787,30 +787,30 @@ class IsotonicRegressionModel(Saveable, Loader["IsotonicRegressionModel"]):
     ...     pass
     """
 
-    def __init__(self, boundaries: np.ndarray, predictions: np.ndarray, isotonic: bool):
+    def __init__(self, boundaries            , predictions            , isotonic      ):
         self.boundaries = boundaries
         self.predictions = predictions
         self.isotonic = isotonic
 
     @overload
-    def predict(self, x: float) -> np.float64:
+    def predict(self, x       )              :
         ...
 
     @overload
-    def predict(self, x: "VectorLike") -> np.ndarray:
+    def predict(self, x              )              :
         ...
 
     @overload
-    def predict(self, x: RDD[float]) -> RDD[np.float64]:
+    def predict(self, x            )                   :
         ...
 
     @overload
-    def predict(self, x: RDD["VectorLike"]) -> RDD[np.ndarray]:
+    def predict(self, x                   )                   :
         ...
 
     def predict(
-        self, x: Union[float, "VectorLike", RDD[float], RDD["VectorLike"]]
-    ) -> Union[np.float64, np.ndarray, RDD[np.float64], RDD[np.ndarray]]:
+        self, x                                                           
+    )                                                                   :
         """
         Predict labels for provided features.
         Using a piecewise linear function.
@@ -843,7 +843,7 @@ class IsotonicRegressionModel(Saveable, Loader["IsotonicRegressionModel"]):
         )
 
     @since("1.4.0")
-    def save(self, sc: SparkContext, path: str) -> None:
+    def save(self, sc              , path     )        :
         """Save an IsotonicRegressionModel."""
         java_boundaries = _py2java(sc, self.boundaries.tolist())
         java_predictions = _py2java(sc, self.predictions.tolist())
@@ -856,7 +856,7 @@ class IsotonicRegressionModel(Saveable, Loader["IsotonicRegressionModel"]):
 
     @classmethod
     @since("1.4.0")
-    def load(cls, sc: SparkContext, path: str) -> "IsotonicRegressionModel":
+    def load(cls, sc              , path     )                             :
         """Load an IsotonicRegressionModel."""
         assert sc._jvm is not None
 
@@ -897,7 +897,7 @@ class IsotonicRegression:
     """
 
     @classmethod
-    def train(cls, data: RDD["VectorLike"], isotonic: bool = True) -> IsotonicRegressionModel:
+    def train(cls, data                   , isotonic       = True)                           :
         """
         Train an isotonic regression model on the given data.
 
@@ -926,23 +926,23 @@ class StreamingLinearAlgorithm:
     .. versionadded:: 1.5.0
     """
 
-    def __init__(self, model: Optional[LinearModel]):
+    def __init__(self, model                       ):
         self._model = model
 
     @since("1.5.0")
-    def latestModel(self) -> Optional[LinearModel]:
+    def latestModel(self)                         :
         """
         Returns the latest model.
         """
         return self._model
 
-    def _validate(self, dstream: Any) -> None:
+    def _validate(self, dstream     )        :
         if not isinstance(dstream, DStream):
             raise TypeError("dstream should be a DStream object, got %s" % type(dstream))
         if not self._model:
             raise ValueError("Model must be initialized using setInitialWeights")
 
-    def predictOn(self, dstream: "DStream[VectorLike]") -> "DStream[float]":
+    def predictOn(self, dstream                       )                    :
         """
         Use the model to make predictions on batches of data from a
         DStream.
@@ -958,8 +958,8 @@ class StreamingLinearAlgorithm:
         return dstream.map(lambda x: self._model.predict(x))  # type: ignore[union-attr]
 
     def predictOnValues(
-        self, dstream: "DStream[Tuple[K, VectorLike]]"
-    ) -> "DStream[Tuple[K, float]]":
+        self, dstream                                 
+    )                              :
         """
         Use the model to make predictions on the values of a DStream and
         carry over its keys.
@@ -1008,20 +1008,20 @@ class StreamingLinearRegressionWithSGD(StreamingLinearAlgorithm):
 
     def __init__(
         self,
-        stepSize: float = 0.1,
-        numIterations: int = 50,
-        miniBatchFraction: float = 1.0,
-        convergenceTol: float = 0.001,
+        stepSize        = 0.1,
+        numIterations      = 50,
+        miniBatchFraction        = 1.0,
+        convergenceTol        = 0.001,
     ):
         self.stepSize = stepSize
         self.numIterations = numIterations
         self.miniBatchFraction = miniBatchFraction
         self.convergenceTol = convergenceTol
-        self._model: Optional[LinearModel] = None
+        self._model                        = None
         super(StreamingLinearRegressionWithSGD, self).__init__(model=self._model)
 
     @since("1.5.0")
-    def setInitialWeights(self, initialWeights: "VectorLike") -> "StreamingLinearRegressionWithSGD":
+    def setInitialWeights(self, initialWeights              )                                      :
         """
         Set the initial value of weights.
 
@@ -1032,11 +1032,11 @@ class StreamingLinearRegressionWithSGD(StreamingLinearAlgorithm):
         return self
 
     @since("1.5.0")
-    def trainOn(self, dstream: "DStream[LabeledPoint]") -> None:
+    def trainOn(self, dstream                         )        :
         """Train the model on the incoming dstream."""
         self._validate(dstream)
 
-        def update(rdd: RDD[LabeledPoint]) -> None:
+        def update(rdd                   )        :
             # LinearRegressionWithSGD.train raises an error for an empty RDD.
             if not rdd.isEmpty():
                 assert self._model is not None
@@ -1053,7 +1053,7 @@ class StreamingLinearRegressionWithSGD(StreamingLinearAlgorithm):
         dstream.foreachRDD(update)
 
 
-def _test() -> None:
+def _test()        :
     import doctest
     from pyspark.sql import SparkSession
     import pyspark.mllib.regression

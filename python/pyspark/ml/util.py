@@ -42,7 +42,7 @@ RL = TypeVar("RL", bound="MLReadable")
 JR = TypeVar("JR", bound="JavaMLReader")
 
 
-def _jvm() -> "JavaGateway":
+def _jvm()                 :
     """
     Returns the JVM view associated with SparkContext. Must be called
     after SparkContext is initialized.
@@ -59,15 +59,15 @@ class Identifiable:
     Object with a unique ID.
     """
 
-    def __init__(self) -> None:
+    def __init__(self)        :
         #: A unique id for the object.
         self.uid = self._randomUID()
 
-    def __repr__(self) -> str:
+    def __repr__(self)       :
         return self.uid
 
     @classmethod
-    def _randomUID(cls) -> str:
+    def _randomUID(cls)       :
         """
         Generate a unique string id for the object. The default implementation
         concatenates the class name, "_", and 12 random hex chars.
@@ -84,10 +84,10 @@ class BaseReadWrite:
     .. versionadded:: 2.3.0
     """
 
-    def __init__(self) -> None:
-        self._sparkSession: Optional[SparkSession] = None
+    def __init__(self)        :
+        self._sparkSession                         = None
 
-    def session(self: RW, sparkSession: SparkSession) -> RW:
+    def session(self    , sparkSession              )      :
         """
         Sets the Spark Session to use for saving/loading.
         """
@@ -95,7 +95,7 @@ class BaseReadWrite:
         return self
 
     @property
-    def sparkSession(self) -> SparkSession:
+    def sparkSession(self)                :
         """
         Returns the user-specified Spark Session or the default.
         """
@@ -105,7 +105,7 @@ class BaseReadWrite:
         return self._sparkSession
 
     @property
-    def sc(self) -> SparkContext:
+    def sc(self)                :
         """
         Returns the underlying `SparkContext`.
         """
@@ -121,37 +121,37 @@ class MLWriter(BaseReadWrite):
     .. versionadded:: 2.0.0
     """
 
-    def __init__(self) -> None:
+    def __init__(self)        :
         super(MLWriter, self).__init__()
-        self.shouldOverwrite: bool = False
-        self.optionMap: Dict[str, Any] = {}
+        self.shouldOverwrite       = False
+        self.optionMap                 = {}
 
-    def _handleOverwrite(self, path: str) -> None:
+    def _handleOverwrite(self, path     )        :
         from pyspark.ml.wrapper import JavaWrapper
 
         _java_obj = JavaWrapper._new_java_obj("org.apache.spark.ml.util.FileSystemOverwrite")
         wrapper = JavaWrapper(_java_obj)
         wrapper._call_java("handleOverwrite", path, True, self.sparkSession._jsparkSession)
 
-    def save(self, path: str) -> None:
+    def save(self, path     )        :
         """Save the ML instance to the input path."""
         if self.shouldOverwrite:
             self._handleOverwrite(path)
         self.saveImpl(path)
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         """
         save() handles overwriting and then calls this method.  Subclasses should override this
         method to implement the actual saving of the instance.
         """
         raise NotImplementedError("MLWriter is not yet implemented for type: %s" % type(self))
 
-    def overwrite(self) -> "MLWriter":
+    def overwrite(self)              :
         """Overwrites if the output path already exists."""
         self.shouldOverwrite = True
         return self
 
-    def option(self, key: str, value: Any) -> "MLWriter":
+    def option(self, key     , value     )              :
         """
         Adds an option to the underlying MLWriter. See the documentation for the specific model's
         writer for possible options. The option name (key) is case-insensitive.
@@ -168,7 +168,7 @@ class GeneralMLWriter(MLWriter):
     .. versionadded:: 2.4.0
     """
 
-    def format(self, source: str) -> "GeneralMLWriter":
+    def format(self, source     )                     :
         """
         Specifies the format of ML export ("pmml", "internal", or the fully qualified class
         name for export).
@@ -183,29 +183,29 @@ class JavaMLWriter(MLWriter):
     (Private) Specialization of :py:class:`MLWriter` for :py:class:`JavaParams` types
     """
 
-    _jwrite: "JavaObject"
+    #_jwrite: "JavaObject"
 
-    def __init__(self, instance: "JavaMLWritable"):
+    def __init__(self, instance                  ):
         super(JavaMLWriter, self).__init__()
         _java_obj = instance._to_java()  # type: ignore[attr-defined]
         self._jwrite = _java_obj.write()
 
-    def save(self, path: str) -> None:
+    def save(self, path     )        :
         """Save the ML instance to the input path."""
         if not isinstance(path, str):
             raise TypeError("path should be a string, got type %s" % type(path))
         self._jwrite.save(path)
 
-    def overwrite(self) -> "JavaMLWriter":
+    def overwrite(self)                  :
         """Overwrites if the output path already exists."""
         self._jwrite.overwrite()
         return self
 
-    def option(self, key: str, value: str) -> "JavaMLWriter":
+    def option(self, key     , value     )                  :
         self._jwrite.option(key, value)
         return self
 
-    def session(self, sparkSession: SparkSession) -> "JavaMLWriter":
+    def session(self, sparkSession              )                  :
         """Sets the Spark Session to use for saving."""
         self._jwrite.session(sparkSession._jsparkSession)
         return self
@@ -217,10 +217,10 @@ class GeneralJavaMLWriter(JavaMLWriter):
     (Private) Specialization of :py:class:`GeneralMLWriter` for :py:class:`JavaParams` types
     """
 
-    def __init__(self, instance: "JavaMLWritable"):
+    def __init__(self, instance                  ):
         super(GeneralJavaMLWriter, self).__init__(instance)
 
-    def format(self, source: str) -> "GeneralJavaMLWriter":
+    def format(self, source     )                         :
         """
         Specifies the format of ML export ("pmml", "internal", or the fully qualified class
         name for export).
@@ -237,11 +237,11 @@ class MLWritable:
     .. versionadded:: 2.0.0
     """
 
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns an MLWriter instance for this ML instance."""
         raise NotImplementedError("MLWritable is not yet implemented for type: %r" % type(self))
 
-    def save(self, path: str) -> None:
+    def save(self, path     )        :
         """Save this ML instance to the given path, a shortcut of 'write().save(path)'."""
         self.write().save(path)
 
@@ -252,7 +252,7 @@ class JavaMLWritable(MLWritable):
     (Private) Mixin for ML instances that provide :py:class:`JavaMLWriter`.
     """
 
-    def write(self) -> JavaMLWriter:
+    def write(self)                :
         """Returns an MLWriter instance for this ML instance."""
         return JavaMLWriter(self)
 
@@ -263,7 +263,7 @@ class GeneralJavaMLWritable(JavaMLWritable):
     (Private) Mixin for ML instances that provide :py:class:`GeneralJavaMLWriter`.
     """
 
-    def write(self) -> GeneralJavaMLWriter:
+    def write(self)                       :
         """Returns an GeneralMLWriter instance for this ML instance."""
         return GeneralJavaMLWriter(self)
 
@@ -276,10 +276,10 @@ class MLReader(BaseReadWrite, Generic[RL]):
     .. versionadded:: 2.0.0
     """
 
-    def __init__(self) -> None:
+    def __init__(self)        :
         super(MLReader, self).__init__()
 
-    def load(self, path: str) -> RL:
+    def load(self, path     )      :
         """Load the ML instance from the input path."""
         raise NotImplementedError("MLReader is not yet implemented for type: %s" % type(self))
 
@@ -290,12 +290,12 @@ class JavaMLReader(MLReader[RL]):
     (Private) Specialization of :py:class:`MLReader` for :py:class:`JavaParams` types
     """
 
-    def __init__(self, clazz: Type["JavaMLReadable[RL]"]) -> None:
+    def __init__(self, clazz                            )        :
         super(JavaMLReader, self).__init__()
         self._clazz = clazz
         self._jread = self._load_java_obj(clazz).read()
 
-    def load(self, path: str) -> RL:
+    def load(self, path     )      :
         """Load the ML instance from the input path."""
         if not isinstance(path, str):
             raise TypeError("path should be a string, got type %s" % type(path))
@@ -306,13 +306,13 @@ class JavaMLReader(MLReader[RL]):
             )
         return self._clazz._from_java(java_obj)  # type: ignore[attr-defined]
 
-    def session(self: JR, sparkSession: SparkSession) -> JR:
+    def session(self    , sparkSession              )      :
         """Sets the Spark Session to use for loading."""
         self._jread.session(sparkSession._jsparkSession)
         return self
 
     @classmethod
-    def _java_loader_class(cls, clazz: Type["JavaMLReadable[RL]"]) -> str:
+    def _java_loader_class(cls, clazz                            )       :
         """
         Returns the full class name of the Java ML instance. The default
         implementation replaces "pyspark" by "org.apache.spark" in
@@ -325,7 +325,7 @@ class JavaMLReader(MLReader[RL]):
         return java_package + "." + clazz.__name__
 
     @classmethod
-    def _load_java_obj(cls, clazz: Type["JavaMLReadable[RL]"]) -> "JavaObject":
+    def _load_java_obj(cls, clazz                            )                :
         """Load the peer Java object of the ML instance."""
         java_class = cls._java_loader_class(clazz)
         java_obj = _jvm()
@@ -343,12 +343,12 @@ class MLReadable(Generic[RL]):
     """
 
     @classmethod
-    def read(cls) -> MLReader[RL]:
+    def read(cls)                :
         """Returns an MLReader instance for this class."""
         raise NotImplementedError("MLReadable.read() not implemented for type: %r" % cls)
 
     @classmethod
-    def load(cls, path: str) -> RL:
+    def load(cls, path     )      :
         """Reads an ML instance from the input path, a shortcut of `read().load(path)`."""
         return cls.read().load(path)
 
@@ -360,7 +360,7 @@ class JavaMLReadable(MLReadable[RL]):
     """
 
     @classmethod
-    def read(cls) -> JavaMLReader[RL]:
+    def read(cls)                    :
         """Returns an MLReader instance for this class."""
         return JavaMLReader(cls)
 
@@ -378,7 +378,7 @@ class DefaultParamsWritable(MLWritable):
     .. versionadded:: 2.3.0
     """
 
-    def write(self) -> MLWriter:
+    def write(self)            :
         """Returns a DefaultParamsWriter instance for this class."""
         from pyspark.ml.param import Params
 
@@ -402,15 +402,15 @@ class DefaultParamsWriter(MLWriter):
     .. versionadded:: 2.3.0
     """
 
-    def __init__(self, instance: "Params"):
+    def __init__(self, instance          ):
         super(DefaultParamsWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         DefaultParamsWriter.saveMetadata(self.instance, path, self.sc)
 
     @staticmethod
-    def extractJsonParams(instance: "Params", skipParams: Sequence[str]) -> Dict[str, Any]:
+    def extractJsonParams(instance          , skipParams               )                  :
         paramMap = instance.extractParamMap()
         jsonParams = {
             param.name: value for param, value in paramMap.items() if param.name not in skipParams
@@ -419,12 +419,12 @@ class DefaultParamsWriter(MLWriter):
 
     @staticmethod
     def saveMetadata(
-        instance: "Params",
-        path: str,
-        sc: SparkContext,
-        extraMetadata: Optional[Dict[str, Any]] = None,
-        paramMap: Optional[Dict[str, Any]] = None,
-    ) -> None:
+        instance          ,
+        path     ,
+        sc              ,
+        extraMetadata                           = None,
+        paramMap                           = None,
+    )        :
         """
         Saves metadata + Params to: path + "/metadata"
 
@@ -451,11 +451,11 @@ class DefaultParamsWriter(MLWriter):
 
     @staticmethod
     def _get_metadata_to_save(
-        instance: "Params",
-        sc: SparkContext,
-        extraMetadata: Optional[Dict[str, Any]] = None,
-        paramMap: Optional[Dict[str, Any]] = None,
-    ) -> str:
+        instance          ,
+        sc              ,
+        extraMetadata                           = None,
+        paramMap                           = None,
+    )       :
         """
         Helper for :py:meth:`DefaultParamsWriter.saveMetadata` which extracts the JSON to save.
         This is useful for ensemble models which need to save metadata for many sub-models.
@@ -508,7 +508,7 @@ class DefaultParamsReadable(MLReadable[RL]):
     """
 
     @classmethod
-    def read(cls) -> "DefaultParamsReader[RL]":
+    def read(cls)                             :
         """Returns a DefaultParamsReader instance for this class."""
         return DefaultParamsReader(cls)
 
@@ -525,12 +525,12 @@ class DefaultParamsReader(MLReader[RL]):
     .. versionadded:: 2.3.0
     """
 
-    def __init__(self, cls: Type[DefaultParamsReadable[RL]]):
+    def __init__(self, cls                                 ):
         super(DefaultParamsReader, self).__init__()
         self.cls = cls
 
     @staticmethod
-    def __get_class(clazz: str) -> Type[RL]:
+    def __get_class(clazz     )            :
         """
         Loads Python class from its name.
         """
@@ -541,16 +541,16 @@ class DefaultParamsReader(MLReader[RL]):
             m = getattr(m, comp)
         return m
 
-    def load(self, path: str) -> RL:
+    def load(self, path     )      :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
-        py_type: Type[RL] = DefaultParamsReader.__get_class(metadata["class"])
+        py_type           = DefaultParamsReader.__get_class(metadata["class"])
         instance = py_type()
         cast("Params", instance)._resetUid(metadata["uid"])
         DefaultParamsReader.getAndSetParams(instance, metadata)
         return instance
 
     @staticmethod
-    def loadMetadata(path: str, sc: SparkContext, expectedClassName: str = "") -> Dict[str, Any]:
+    def loadMetadata(path     , sc              , expectedClassName      = "")                  :
         """
         Load metadata saved using :py:meth:`DefaultParamsWriter.saveMetadata`
 
@@ -567,7 +567,7 @@ class DefaultParamsReader(MLReader[RL]):
         return loadedVals
 
     @staticmethod
-    def _parseMetaData(metadataStr: str, expectedClassName: str = "") -> Dict[str, Any]:
+    def _parseMetaData(metadataStr     , expectedClassName      = "")                  :
         """
         Parse metadata JSON string produced by :py:meth`DefaultParamsWriter._get_metadata_to_save`.
         This is a helper function for :py:meth:`DefaultParamsReader.loadMetadata`.
@@ -590,8 +590,8 @@ class DefaultParamsReader(MLReader[RL]):
 
     @staticmethod
     def getAndSetParams(
-        instance: RL, metadata: Dict[str, Any], skipParams: Optional[List[str]] = None
-    ) -> None:
+        instance    , metadata                , skipParams                      = None
+    )        :
         """
         Extract Params from metadata, and set them in the instance.
         """
@@ -618,11 +618,11 @@ class DefaultParamsReader(MLReader[RL]):
                 cast("Params", instance)._setDefault(**{paramName: paramValue})
 
     @staticmethod
-    def isPythonParamsInstance(metadata: Dict[str, Any]) -> bool:
+    def isPythonParamsInstance(metadata                )        :
         return metadata["class"].startswith("pyspark.ml.")
 
     @staticmethod
-    def loadParamsInstance(path: str, sc: SparkContext) -> RL:
+    def loadParamsInstance(path     , sc              )      :
         """
         Load a :py:class:`Params` instance from the given path, and return it.
         This assumes the instance inherits from :py:class:`MLReadable`.
@@ -632,7 +632,7 @@ class DefaultParamsReader(MLReader[RL]):
             pythonClassName = metadata["class"]
         else:
             pythonClassName = metadata["class"].replace("org.apache.spark", "pyspark")
-        py_type: Type[RL] = DefaultParamsReader.__get_class(pythonClassName)
+        py_type           = DefaultParamsReader.__get_class(pythonClassName)
         instance = py_type.load(path)
         return instance
 
@@ -647,7 +647,7 @@ class HasTrainingSummary(Generic[T]):
 
     @property  # type: ignore[misc]
     @since("2.1.0")
-    def hasSummary(self) -> bool:
+    def hasSummary(self)        :
         """
         Indicates whether a training summary exists for this model
         instance.
@@ -656,7 +656,7 @@ class HasTrainingSummary(Generic[T]):
 
     @property  # type: ignore[misc]
     @since("2.1.0")
-    def summary(self) -> T:
+    def summary(self)     :
         """
         Gets summary of the model trained on the training set. An exception is thrown if
         no summary exists.
@@ -666,7 +666,7 @@ class HasTrainingSummary(Generic[T]):
 
 class MetaAlgorithmReadWrite:
     @staticmethod
-    def isMetaEstimator(pyInstance: Any) -> bool:
+    def isMetaEstimator(pyInstance     )        :
         from pyspark.ml import Estimator, Pipeline
         from pyspark.ml.tuning import _ValidatorParams
         from pyspark.ml.classification import OneVsRest
@@ -678,14 +678,14 @@ class MetaAlgorithmReadWrite:
         )
 
     @staticmethod
-    def getAllNestedStages(pyInstance: Any) -> List["Params"]:
+    def getAllNestedStages(pyInstance     )                  :
         from pyspark.ml import Pipeline, PipelineModel
         from pyspark.ml.tuning import _ValidatorParams
         from pyspark.ml.classification import OneVsRest, OneVsRestModel
 
         # TODO: We need to handle `RFormulaModel.pipelineModel` here after Pyspark RFormulaModel
         #  support pipelineModel property.
-        pySubStages: Sequence["Params"]
+        #pySubStages: Sequence["Params"]
 
         if isinstance(pyInstance, Pipeline):
             pySubStages = pyInstance.getStages()
@@ -709,7 +709,7 @@ class MetaAlgorithmReadWrite:
         return [pyInstance] + nestedStages
 
     @staticmethod
-    def getUidMap(instance: Any) -> Dict[str, "Params"]:
+    def getUidMap(instance     )                       :
         nestedStages = MetaAlgorithmReadWrite.getAllNestedStages(instance)
         uidMap = {stage.uid: stage for stage in nestedStages}
         if len(nestedStages) != len(uidMap):

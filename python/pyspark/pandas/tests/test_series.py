@@ -1203,12 +1203,12 @@ class SeriesTest(PandasOnSparkTestCase, SQLTestUtils):
             pser.map(lambda x: x.upper(), na_action="ignore"),
         )
 
-        def to_upper(string) -> str:
+        def to_upper(string)       :
             return string.upper() if string else ""
 
         self.assert_eq(psser.map(to_upper), pser.map(to_upper))
 
-        def tomorrow(date) -> datetime:
+        def tomorrow(date)            :
             return date + timedelta(days=1)
 
         pser = pd.Series([datetime(2019, 10, 24)])
@@ -2979,7 +2979,7 @@ class SeriesTest(PandasOnSparkTestCase, SQLTestUtils):
     def test_apply(self):
         psser = self.psser
 
-        def udf(col) -> ps.Series[int]:
+        def udf(col)                  :
             return col + 10
 
         with self.assertRaisesRegex(

@@ -45,10 +45,10 @@ class TimedeltaOps(DataTypeOps):
     """
 
     @property
-    def pretty_name(self) -> str:
+    def pretty_name(self)       :
         return "timedelta"
 
-    def astype(self, index_ops: IndexOpsLike, dtype: Union[str, type, Dtype]) -> IndexOpsLike:
+    def astype(self, index_ops              , dtype                         )                :
         dtype, spark_type = pandas_on_spark_type(dtype)
 
         if isinstance(dtype, CategoricalDtype):
@@ -60,11 +60,11 @@ class TimedeltaOps(DataTypeOps):
         else:
             return _as_other_type(index_ops, dtype, spark_type)
 
-    def prepare(self, col: pd.Series) -> pd.Series:
+    def prepare(self, col           )             :
         """Prepare column when from_pandas."""
         return col
 
-    def sub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def sub(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
@@ -78,7 +78,7 @@ class TimedeltaOps(DataTypeOps):
         else:
             raise TypeError("Timedelta subtraction can only be applied to timedelta series.")
 
-    def rsub(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def rsub(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
@@ -88,25 +88,25 @@ class TimedeltaOps(DataTypeOps):
         else:
             raise TypeError("Timedelta subtraction can only be applied to timedelta series.")
 
-    def lt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def lt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__lt__)(left, right)
 
-    def le(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def le(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__le__)(left, right)
 
-    def ge(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def ge(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)
         return column_op(Column.__ge__)(left, right)
 
-    def gt(self, left: IndexOpsLike, right: Any) -> SeriesOrIndex:
+    def gt(self, left              , right     )                 :
         from pyspark.pandas.base import column_op
 
         _sanitize_list_like(right)

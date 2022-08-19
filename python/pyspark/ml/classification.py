@@ -159,7 +159,7 @@ class Classifier(Predictor[CM], _ClassifierParams, Generic[CM], metaclass=ABCMet
     """
 
     @since("3.0.0")
-    def setRawPredictionCol(self: "P", value: str) -> "P":
+    def setRawPredictionCol(self     , value     )       :
         """
         Sets the value of :py:attr:`rawPredictionCol`.
         """
@@ -174,7 +174,7 @@ class ClassificationModel(PredictionModel, _ClassifierParams, metaclass=ABCMeta)
     """
 
     @since("3.0.0")
-    def setRawPredictionCol(self: "P", value: str) -> "P":
+    def setRawPredictionCol(self     , value     )       :
         """
         Sets the value of :py:attr:`rawPredictionCol`.
         """
@@ -183,7 +183,7 @@ class ClassificationModel(PredictionModel, _ClassifierParams, metaclass=ABCMeta)
     @property  # type: ignore[misc]
     @abstractmethod
     @since("2.1.0")
-    def numClasses(self) -> int:
+    def numClasses(self)       :
         """
         Number of classes (values which the label can take).
         """
@@ -191,7 +191,7 @@ class ClassificationModel(PredictionModel, _ClassifierParams, metaclass=ABCMeta)
 
     @abstractmethod
     @since("3.0.0")
-    def predictRaw(self, value: Vector) -> Vector:
+    def predictRaw(self, value        )          :
         """
         Raw prediction for each possible label.
         """
@@ -216,14 +216,14 @@ class ProbabilisticClassifier(Classifier, _ProbabilisticClassifierParams, metacl
     """
 
     @since("3.0.0")
-    def setProbabilityCol(self: "P", value: str) -> "P":
+    def setProbabilityCol(self     , value     )       :
         """
         Sets the value of :py:attr:`probabilityCol`.
         """
         return self._set(probabilityCol=value)
 
     @since("3.0.0")
-    def setThresholds(self: "P", value: List[float]) -> "P":
+    def setThresholds(self     , value             )       :
         """
         Sets the value of :py:attr:`thresholds`.
         """
@@ -239,14 +239,14 @@ class ProbabilisticClassificationModel(
     """
 
     @since("3.0.0")
-    def setProbabilityCol(self: CM, value: str) -> CM:
+    def setProbabilityCol(self    , value     )      :
         """
         Sets the value of :py:attr:`probabilityCol`.
         """
         return self._set(probabilityCol=value)
 
     @since("3.0.0")
-    def setThresholds(self: CM, value: List[float]) -> CM:
+    def setThresholds(self    , value             )      :
         """
         Sets the value of :py:attr:`thresholds`.
         """
@@ -254,7 +254,7 @@ class ProbabilisticClassificationModel(
 
     @abstractmethod
     @since("3.0.0")
-    def predictProbability(self, value: Vector) -> Vector:
+    def predictProbability(self, value        )          :
         """
         Predict the probability of each class given the features.
         """
@@ -269,7 +269,7 @@ class _JavaClassifier(Classifier, JavaPredictor[JPM], Generic[JPM], metaclass=AB
     """
 
     @since("3.0.0")
-    def setRawPredictionCol(self: "P", value: str) -> "P":
+    def setRawPredictionCol(self     , value     )       :
         """
         Sets the value of :py:attr:`rawPredictionCol`.
         """
@@ -286,14 +286,14 @@ class _JavaClassificationModel(ClassificationModel, JavaPredictionModel[T]):
 
     @property  # type: ignore[misc]
     @since("2.1.0")
-    def numClasses(self) -> int:
+    def numClasses(self)       :
         """
         Number of classes (values which the label can take).
         """
         return self._call_java("numClasses")
 
     @since("3.0.0")
-    def predictRaw(self, value: Vector) -> Vector:
+    def predictRaw(self, value        )          :
         """
         Raw prediction for each possible label.
         """
@@ -320,7 +320,7 @@ class _JavaProbabilisticClassificationModel(
     """
 
     @since("3.0.0")
-    def predictProbability(self, value: Vector) -> Vector:
+    def predictProbability(self, value        )          :
         """
         Predict the probability of each class given the features.
         """
@@ -337,7 +337,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def predictions(self) -> DataFrame:
+    def predictions(self)             :
         """
         Dataframe outputted by the model's `transform` method.
         """
@@ -345,7 +345,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def predictionCol(self) -> str:
+    def predictionCol(self)       :
         """
         Field in "predictions" which gives the prediction of each class.
         """
@@ -353,7 +353,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def labelCol(self) -> str:
+    def labelCol(self)       :
         """
         Field in "predictions" which gives the true label of each
         instance.
@@ -362,7 +362,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def weightCol(self) -> str:
+    def weightCol(self)       :
         """
         Field in "predictions" which gives the weight of each instance
         as a vector.
@@ -370,7 +370,7 @@ class _ClassificationSummary(JavaWrapper):
         return self._call_java("weightCol")
 
     @property
-    def labels(self) -> List[str]:
+    def labels(self)             :
         """
         Returns the sequence of labels in ascending order. This order matches the order used
         in metrics which are specified as arrays over labels, e.g., truePositiveRateByLabel.
@@ -388,7 +388,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def truePositiveRateByLabel(self) -> List[float]:
+    def truePositiveRateByLabel(self)               :
         """
         Returns true positive rate for each label (category).
         """
@@ -396,7 +396,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def falsePositiveRateByLabel(self) -> List[float]:
+    def falsePositiveRateByLabel(self)               :
         """
         Returns false positive rate for each label (category).
         """
@@ -404,7 +404,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def precisionByLabel(self) -> List[float]:
+    def precisionByLabel(self)               :
         """
         Returns precision for each label (category).
         """
@@ -412,14 +412,14 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def recallByLabel(self) -> List[float]:
+    def recallByLabel(self)               :
         """
         Returns recall for each label (category).
         """
         return self._call_java("recallByLabel")
 
     @since("3.1.0")
-    def fMeasureByLabel(self, beta: float = 1.0) -> List[float]:
+    def fMeasureByLabel(self, beta        = 1.0)               :
         """
         Returns f-measure for each label (category).
         """
@@ -427,7 +427,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def accuracy(self) -> float:
+    def accuracy(self)         :
         """
         Returns accuracy.
         (equals to the total number of correctly classified instances
@@ -437,7 +437,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def weightedTruePositiveRate(self) -> float:
+    def weightedTruePositiveRate(self)         :
         """
         Returns weighted true positive rate.
         (equals to precision, recall and f-measure)
@@ -446,7 +446,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def weightedFalsePositiveRate(self) -> float:
+    def weightedFalsePositiveRate(self)         :
         """
         Returns weighted false positive rate.
         """
@@ -454,7 +454,7 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def weightedRecall(self) -> float:
+    def weightedRecall(self)         :
         """
         Returns weighted averaged recall.
         (equals to precision, recall and f-measure)
@@ -463,14 +463,14 @@ class _ClassificationSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def weightedPrecision(self) -> float:
+    def weightedPrecision(self)         :
         """
         Returns weighted averaged precision.
         """
         return self._call_java("weightedPrecision")
 
     @since("3.1.0")
-    def weightedFMeasure(self, beta: float = 1.0) -> float:
+    def weightedFMeasure(self, beta        = 1.0)         :
         """
         Returns weighted averaged f-measure.
         """
@@ -487,7 +487,7 @@ class _TrainingSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def objectiveHistory(self) -> List[float]:
+    def objectiveHistory(self)               :
         """
         Objective function (scaled loss + regularization) at each
         iteration. It contains one more element, the initial state,
@@ -497,7 +497,7 @@ class _TrainingSummary(JavaWrapper):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def totalIterations(self) -> int:
+    def totalIterations(self)       :
         """
         Number of training iterations until termination.
         """
@@ -514,7 +514,7 @@ class _BinaryClassificationSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def scoreCol(self) -> str:
+    def scoreCol(self)       :
         """
         Field in "predictions" which gives the probability or raw prediction
         of each class as a vector.
@@ -522,7 +522,7 @@ class _BinaryClassificationSummary(_ClassificationSummary):
         return self._call_java("scoreCol")
 
     @property
-    def roc(self) -> DataFrame:
+    def roc(self)             :
         """
         Returns the receiver operating characteristic (ROC) curve,
         which is a Dataframe having two fields (FPR, TPR) with
@@ -538,7 +538,7 @@ class _BinaryClassificationSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def areaUnderROC(self) -> float:
+    def areaUnderROC(self)         :
         """
         Computes the area under the receiver operating characteristic
         (ROC) curve.
@@ -547,7 +547,7 @@ class _BinaryClassificationSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def pr(self) -> DataFrame:
+    def pr(self)             :
         """
         Returns the precision-recall curve, which is a Dataframe
         containing two fields recall, precision with (0.0, 1.0) prepended
@@ -557,7 +557,7 @@ class _BinaryClassificationSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def fMeasureByThreshold(self) -> DataFrame:
+    def fMeasureByThreshold(self)             :
         """
         Returns a dataframe with two fields (threshold, F-Measure) curve
         with beta = 1.0.
@@ -566,7 +566,7 @@ class _BinaryClassificationSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def precisionByThreshold(self) -> DataFrame:
+    def precisionByThreshold(self)             :
         """
         Returns a dataframe with two fields (threshold, precision) curve.
         Every possible probability obtained in transforming the dataset
@@ -576,7 +576,7 @@ class _BinaryClassificationSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def recallByThreshold(self) -> DataFrame:
+    def recallByThreshold(self)             :
         """
         Returns a dataframe with two fields (threshold, recall) curve.
         Every possible probability obtained in transforming the dataset
@@ -603,7 +603,7 @@ class _LinearSVCParams(
     .. versionadded:: 3.0.0
     """
 
-    threshold: Param[float] = Param(
+    threshold               = Param(
         Params._dummy(),
         "threshold",
         "The threshold in binary classification applied to the linear model"
@@ -612,7 +612,7 @@ class _LinearSVCParams(
         typeConverter=TypeConverters.toFloat,
     )
 
-    def __init__(self, *args: Any) -> None:
+    def __init__(self, *args     )        :
         super(_LinearSVCParams, self).__init__(*args)
         self._setDefault(
             maxIter=100,
@@ -708,25 +708,25 @@ class LinearSVC(
     True
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxIter: int = 100,
-        regParam: float = 0.0,
-        tol: float = 1e-6,
-        rawPredictionCol: str = "rawPrediction",
-        fitIntercept: bool = True,
-        standardization: bool = True,
-        threshold: float = 0.0,
-        weightCol: Optional[str] = None,
-        aggregationDepth: int = 2,
-        maxBlockSizeInMB: float = 0.0,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxIter      = 100,
+        regParam        = 0.0,
+        tol        = 1e-6,
+        rawPredictionCol      = "rawPrediction",
+        fitIntercept       = True,
+        standardization       = True,
+        threshold        = 0.0,
+        weightCol                = None,
+        aggregationDepth      = 2,
+        maxBlockSizeInMB        = 0.0,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -746,20 +746,20 @@ class LinearSVC(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxIter: int = 100,
-        regParam: float = 0.0,
-        tol: float = 1e-6,
-        rawPredictionCol: str = "rawPrediction",
-        fitIntercept: bool = True,
-        standardization: bool = True,
-        threshold: float = 0.0,
-        weightCol: Optional[str] = None,
-        aggregationDepth: int = 2,
-        maxBlockSizeInMB: float = 0.0,
-    ) -> "LinearSVC":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxIter      = 100,
+        regParam        = 0.0,
+        tol        = 1e-6,
+        rawPredictionCol      = "rawPrediction",
+        fitIntercept       = True,
+        standardization       = True,
+        threshold        = 0.0,
+        weightCol                = None,
+        aggregationDepth      = 2,
+        maxBlockSizeInMB        = 0.0,
+    )               :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   maxIter=100, regParam=0.0, tol=1e-6, rawPredictionCol="rawPrediction", \
@@ -770,67 +770,67 @@ class LinearSVC(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _create_model(self, java_model: "JavaObject") -> "LinearSVCModel":
+    def _create_model(self, java_model              )                    :
         return LinearSVCModel(java_model)
 
     @since("2.2.0")
-    def setMaxIter(self, value: int) -> "LinearSVC":
+    def setMaxIter(self, value     )               :
         """
         Sets the value of :py:attr:`maxIter`.
         """
         return self._set(maxIter=value)
 
     @since("2.2.0")
-    def setRegParam(self, value: float) -> "LinearSVC":
+    def setRegParam(self, value       )               :
         """
         Sets the value of :py:attr:`regParam`.
         """
         return self._set(regParam=value)
 
     @since("2.2.0")
-    def setTol(self, value: float) -> "LinearSVC":
+    def setTol(self, value       )               :
         """
         Sets the value of :py:attr:`tol`.
         """
         return self._set(tol=value)
 
     @since("2.2.0")
-    def setFitIntercept(self, value: bool) -> "LinearSVC":
+    def setFitIntercept(self, value      )               :
         """
         Sets the value of :py:attr:`fitIntercept`.
         """
         return self._set(fitIntercept=value)
 
     @since("2.2.0")
-    def setStandardization(self, value: bool) -> "LinearSVC":
+    def setStandardization(self, value      )               :
         """
         Sets the value of :py:attr:`standardization`.
         """
         return self._set(standardization=value)
 
     @since("2.2.0")
-    def setThreshold(self, value: float) -> "LinearSVC":
+    def setThreshold(self, value       )               :
         """
         Sets the value of :py:attr:`threshold`.
         """
         return self._set(threshold=value)
 
     @since("2.2.0")
-    def setWeightCol(self, value: str) -> "LinearSVC":
+    def setWeightCol(self, value     )               :
         """
         Sets the value of :py:attr:`weightCol`.
         """
         return self._set(weightCol=value)
 
     @since("2.2.0")
-    def setAggregationDepth(self, value: int) -> "LinearSVC":
+    def setAggregationDepth(self, value     )               :
         """
         Sets the value of :py:attr:`aggregationDepth`.
         """
         return self._set(aggregationDepth=value)
 
     @since("3.1.0")
-    def setMaxBlockSizeInMB(self, value: float) -> "LinearSVC":
+    def setMaxBlockSizeInMB(self, value       )               :
         """
         Sets the value of :py:attr:`maxBlockSizeInMB`.
         """
@@ -851,7 +851,7 @@ class LinearSVCModel(
     """
 
     @since("3.0.0")
-    def setThreshold(self, value: float) -> "LinearSVCModel":
+    def setThreshold(self, value       )                    :
         """
         Sets the value of :py:attr:`threshold`.
         """
@@ -859,7 +859,7 @@ class LinearSVCModel(
 
     @property  # type: ignore[misc]
     @since("2.2.0")
-    def coefficients(self) -> Vector:
+    def coefficients(self)          :
         """
         Model coefficients of Linear SVM Classifier.
         """
@@ -867,14 +867,14 @@ class LinearSVCModel(
 
     @property  # type: ignore[misc]
     @since("2.2.0")
-    def intercept(self) -> float:
+    def intercept(self)         :
         """
         Model intercept of Linear SVM Classifier.
         """
         return self._call_java("intercept")
 
     @since("3.1.0")
-    def summary(self) -> "LinearSVCTrainingSummary":
+    def summary(self)                              :
         """
         Gets summary (accuracy/precision/recall, objective history, total iterations) of model
         trained on the training set. An exception is thrown if `trainingSummary is None`.
@@ -886,7 +886,7 @@ class LinearSVCModel(
                 "No training summary available for this %s" % self.__class__.__name__
             )
 
-    def evaluate(self, dataset: DataFrame) -> "LinearSVCSummary":
+    def evaluate(self, dataset           )                      :
         """
         Evaluates the model on a test dataset.
 
@@ -943,7 +943,7 @@ class _LogisticRegressionParams(
     .. versionadded:: 3.0.0
     """
 
-    threshold: Param[float] = Param(
+    threshold               = Param(
         Params._dummy(),
         "threshold",
         "Threshold in binary classification prediction, in range [0, 1]."
@@ -952,7 +952,7 @@ class _LogisticRegressionParams(
         typeConverter=TypeConverters.toFloat,
     )
 
-    family: Param[str] = Param(
+    family             = Param(
         Params._dummy(),
         "family",
         "The name of family which is a description of the label distribution to "
@@ -960,7 +960,7 @@ class _LogisticRegressionParams(
         typeConverter=TypeConverters.toString,
     )
 
-    lowerBoundsOnCoefficients: Param[Matrix] = Param(
+    lowerBoundsOnCoefficients                = Param(
         Params._dummy(),
         "lowerBoundsOnCoefficients",
         "The lower bounds on coefficients if fitting under bound "
@@ -972,7 +972,7 @@ class _LogisticRegressionParams(
         typeConverter=TypeConverters.toMatrix,
     )
 
-    upperBoundsOnCoefficients: Param[Matrix] = Param(
+    upperBoundsOnCoefficients                = Param(
         Params._dummy(),
         "upperBoundsOnCoefficients",
         "The upper bounds on coefficients if fitting under bound "
@@ -984,7 +984,7 @@ class _LogisticRegressionParams(
         typeConverter=TypeConverters.toMatrix,
     )
 
-    lowerBoundsOnIntercepts: Param[Vector] = Param(
+    lowerBoundsOnIntercepts                = Param(
         Params._dummy(),
         "lowerBoundsOnIntercepts",
         "The lower bounds on intercepts if fitting under bound "
@@ -994,7 +994,7 @@ class _LogisticRegressionParams(
         typeConverter=TypeConverters.toVector,
     )
 
-    upperBoundsOnIntercepts: Param[Vector] = Param(
+    upperBoundsOnIntercepts                = Param(
         Params._dummy(),
         "upperBoundsOnIntercepts",
         "The upper bounds on intercepts if fitting under bound "
@@ -1004,14 +1004,14 @@ class _LogisticRegressionParams(
         typeConverter=TypeConverters.toVector,
     )
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_LogisticRegressionParams, self).__init__(*args)
         self._setDefault(
             maxIter=100, regParam=0.0, tol=1e-6, threshold=0.5, family="auto", maxBlockSizeInMB=0.0
         )
 
     @since("1.4.0")
-    def setThreshold(self: "P", value: float) -> "P":
+    def setThreshold(self     , value       )       :
         """
         Sets the value of :py:attr:`threshold`.
         Clears value of :py:attr:`thresholds` if it has been set.
@@ -1021,7 +1021,7 @@ class _LogisticRegressionParams(
         return self
 
     @since("1.4.0")
-    def getThreshold(self) -> float:
+    def getThreshold(self)         :
         """
         Get threshold for binary classification.
 
@@ -1044,7 +1044,7 @@ class _LogisticRegressionParams(
             return self.getOrDefault(self.threshold)
 
     @since("1.5.0")
-    def setThresholds(self: "P", value: List[float]) -> "P":
+    def setThresholds(self     , value             )       :
         """
         Sets the value of :py:attr:`thresholds`.
         Clears value of :py:attr:`threshold` if it has been set.
@@ -1054,7 +1054,7 @@ class _LogisticRegressionParams(
         return self
 
     @since("1.5.0")
-    def getThresholds(self) -> List[float]:
+    def getThresholds(self)               :
         """
         If :py:attr:`thresholds` is set, return its value.
         Otherwise, if :py:attr:`threshold` is set, return the equivalent thresholds for binary
@@ -1068,7 +1068,7 @@ class _LogisticRegressionParams(
         else:
             return self.getOrDefault(self.thresholds)
 
-    def _checkThresholdConsistency(self) -> None:
+    def _checkThresholdConsistency(self)        :
         if self.isSet(self.threshold) and self.isSet(self.thresholds):
             ts = self.getOrDefault(self.thresholds)
             if len(ts) != 2:
@@ -1086,35 +1086,35 @@ class _LogisticRegressionParams(
                 )
 
     @since("2.1.0")
-    def getFamily(self) -> str:
+    def getFamily(self)       :
         """
         Gets the value of :py:attr:`family` or its default value.
         """
         return self.getOrDefault(self.family)
 
     @since("2.3.0")
-    def getLowerBoundsOnCoefficients(self) -> Matrix:
+    def getLowerBoundsOnCoefficients(self)          :
         """
         Gets the value of :py:attr:`lowerBoundsOnCoefficients`
         """
         return self.getOrDefault(self.lowerBoundsOnCoefficients)
 
     @since("2.3.0")
-    def getUpperBoundsOnCoefficients(self) -> Matrix:
+    def getUpperBoundsOnCoefficients(self)          :
         """
         Gets the value of :py:attr:`upperBoundsOnCoefficients`
         """
         return self.getOrDefault(self.upperBoundsOnCoefficients)
 
     @since("2.3.0")
-    def getLowerBoundsOnIntercepts(self) -> Vector:
+    def getLowerBoundsOnIntercepts(self)          :
         """
         Gets the value of :py:attr:`lowerBoundsOnIntercepts`
         """
         return self.getOrDefault(self.lowerBoundsOnIntercepts)
 
     @since("2.3.0")
-    def getUpperBoundsOnIntercepts(self) -> Vector:
+    def getUpperBoundsOnIntercepts(self)          :
         """
         Gets the value of :py:attr:`upperBoundsOnIntercepts`
         """
@@ -1221,32 +1221,32 @@ class LogisticRegression(
     True
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @overload
     def __init__(
         self,
         *,
-        featuresCol: str = ...,
-        labelCol: str = ...,
-        predictionCol: str = ...,
-        maxIter: int = ...,
-        regParam: float = ...,
-        elasticNetParam: float = ...,
-        tol: float = ...,
-        fitIntercept: bool = ...,
-        threshold: float = ...,
-        probabilityCol: str = ...,
-        rawPredictionCol: str = ...,
-        standardization: bool = ...,
-        weightCol: Optional[str] = ...,
-        aggregationDepth: int = ...,
-        family: str = ...,
-        lowerBoundsOnCoefficients: Optional[Matrix] = ...,
-        upperBoundsOnCoefficients: Optional[Matrix] = ...,
-        lowerBoundsOnIntercepts: Optional[Vector] = ...,
-        upperBoundsOnIntercepts: Optional[Vector] = ...,
-        maxBlockSizeInMB: float = ...,
+        featuresCol      = ...,
+        labelCol      = ...,
+        predictionCol      = ...,
+        maxIter      = ...,
+        regParam        = ...,
+        elasticNetParam        = ...,
+        tol        = ...,
+        fitIntercept       = ...,
+        threshold        = ...,
+        probabilityCol      = ...,
+        rawPredictionCol      = ...,
+        standardization       = ...,
+        weightCol                = ...,
+        aggregationDepth      = ...,
+        family      = ...,
+        lowerBoundsOnCoefficients                   = ...,
+        upperBoundsOnCoefficients                   = ...,
+        lowerBoundsOnIntercepts                   = ...,
+        upperBoundsOnIntercepts                   = ...,
+        maxBlockSizeInMB        = ...,
     ):
         ...
 
@@ -1254,26 +1254,26 @@ class LogisticRegression(
     def __init__(
         self,
         *,
-        featuresCol: str = ...,
-        labelCol: str = ...,
-        predictionCol: str = ...,
-        maxIter: int = ...,
-        regParam: float = ...,
-        elasticNetParam: float = ...,
-        tol: float = ...,
-        fitIntercept: bool = ...,
-        thresholds: Optional[List[float]] = ...,
-        probabilityCol: str = ...,
-        rawPredictionCol: str = ...,
-        standardization: bool = ...,
-        weightCol: Optional[str] = ...,
-        aggregationDepth: int = ...,
-        family: str = ...,
-        lowerBoundsOnCoefficients: Optional[Matrix] = ...,
-        upperBoundsOnCoefficients: Optional[Matrix] = ...,
-        lowerBoundsOnIntercepts: Optional[Vector] = ...,
-        upperBoundsOnIntercepts: Optional[Vector] = ...,
-        maxBlockSizeInMB: float = ...,
+        featuresCol      = ...,
+        labelCol      = ...,
+        predictionCol      = ...,
+        maxIter      = ...,
+        regParam        = ...,
+        elasticNetParam        = ...,
+        tol        = ...,
+        fitIntercept       = ...,
+        thresholds                        = ...,
+        probabilityCol      = ...,
+        rawPredictionCol      = ...,
+        standardization       = ...,
+        weightCol                = ...,
+        aggregationDepth      = ...,
+        family      = ...,
+        lowerBoundsOnCoefficients                   = ...,
+        upperBoundsOnCoefficients                   = ...,
+        lowerBoundsOnIntercepts                   = ...,
+        upperBoundsOnIntercepts                   = ...,
+        maxBlockSizeInMB        = ...,
     ):
         ...
 
@@ -1281,27 +1281,27 @@ class LogisticRegression(
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxIter: int = 100,
-        regParam: float = 0.0,
-        elasticNetParam: float = 0.0,
-        tol: float = 1e-6,
-        fitIntercept: bool = True,
-        threshold: float = 0.5,
-        thresholds: Optional[List[float]] = None,
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        standardization: bool = True,
-        weightCol: Optional[str] = None,
-        aggregationDepth: int = 2,
-        family: str = "auto",
-        lowerBoundsOnCoefficients: Optional[Matrix] = None,
-        upperBoundsOnCoefficients: Optional[Matrix] = None,
-        lowerBoundsOnIntercepts: Optional[Vector] = None,
-        upperBoundsOnIntercepts: Optional[Vector] = None,
-        maxBlockSizeInMB: float = 0.0,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxIter      = 100,
+        regParam        = 0.0,
+        elasticNetParam        = 0.0,
+        tol        = 1e-6,
+        fitIntercept       = True,
+        threshold        = 0.5,
+        thresholds                        = None,
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        standardization       = True,
+        weightCol                = None,
+        aggregationDepth      = 2,
+        family      = "auto",
+        lowerBoundsOnCoefficients                   = None,
+        upperBoundsOnCoefficients                   = None,
+        lowerBoundsOnIntercepts                   = None,
+        upperBoundsOnIntercepts                   = None,
+        maxBlockSizeInMB        = 0.0,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -1326,54 +1326,54 @@ class LogisticRegression(
     def setParams(
         self,
         *,
-        featuresCol: str = ...,
-        labelCol: str = ...,
-        predictionCol: str = ...,
-        maxIter: int = ...,
-        regParam: float = ...,
-        elasticNetParam: float = ...,
-        tol: float = ...,
-        fitIntercept: bool = ...,
-        threshold: float = ...,
-        probabilityCol: str = ...,
-        rawPredictionCol: str = ...,
-        standardization: bool = ...,
-        weightCol: Optional[str] = ...,
-        aggregationDepth: int = ...,
-        family: str = ...,
-        lowerBoundsOnCoefficients: Optional[Matrix] = ...,
-        upperBoundsOnCoefficients: Optional[Matrix] = ...,
-        lowerBoundsOnIntercepts: Optional[Vector] = ...,
-        upperBoundsOnIntercepts: Optional[Vector] = ...,
-        maxBlockSizeInMB: float = ...,
-    ) -> "LogisticRegression":
+        featuresCol      = ...,
+        labelCol      = ...,
+        predictionCol      = ...,
+        maxIter      = ...,
+        regParam        = ...,
+        elasticNetParam        = ...,
+        tol        = ...,
+        fitIntercept       = ...,
+        threshold        = ...,
+        probabilityCol      = ...,
+        rawPredictionCol      = ...,
+        standardization       = ...,
+        weightCol                = ...,
+        aggregationDepth      = ...,
+        family      = ...,
+        lowerBoundsOnCoefficients                   = ...,
+        upperBoundsOnCoefficients                   = ...,
+        lowerBoundsOnIntercepts                   = ...,
+        upperBoundsOnIntercepts                   = ...,
+        maxBlockSizeInMB        = ...,
+    )                        :
         ...
 
     @overload
     def setParams(
         self,
         *,
-        featuresCol: str = ...,
-        labelCol: str = ...,
-        predictionCol: str = ...,
-        maxIter: int = ...,
-        regParam: float = ...,
-        elasticNetParam: float = ...,
-        tol: float = ...,
-        fitIntercept: bool = ...,
-        thresholds: Optional[List[float]] = ...,
-        probabilityCol: str = ...,
-        rawPredictionCol: str = ...,
-        standardization: bool = ...,
-        weightCol: Optional[str] = ...,
-        aggregationDepth: int = ...,
-        family: str = ...,
-        lowerBoundsOnCoefficients: Optional[Matrix] = ...,
-        upperBoundsOnCoefficients: Optional[Matrix] = ...,
-        lowerBoundsOnIntercepts: Optional[Vector] = ...,
-        upperBoundsOnIntercepts: Optional[Vector] = ...,
-        maxBlockSizeInMB: float = ...,
-    ) -> "LogisticRegression":
+        featuresCol      = ...,
+        labelCol      = ...,
+        predictionCol      = ...,
+        maxIter      = ...,
+        regParam        = ...,
+        elasticNetParam        = ...,
+        tol        = ...,
+        fitIntercept       = ...,
+        thresholds                        = ...,
+        probabilityCol      = ...,
+        rawPredictionCol      = ...,
+        standardization       = ...,
+        weightCol                = ...,
+        aggregationDepth      = ...,
+        family      = ...,
+        lowerBoundsOnCoefficients                   = ...,
+        upperBoundsOnCoefficients                   = ...,
+        lowerBoundsOnIntercepts                   = ...,
+        upperBoundsOnIntercepts                   = ...,
+        maxBlockSizeInMB        = ...,
+    )                        :
         ...
 
     @keyword_only
@@ -1381,28 +1381,28 @@ class LogisticRegression(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxIter: int = 100,
-        regParam: float = 0.0,
-        elasticNetParam: float = 0.0,
-        tol: float = 1e-6,
-        fitIntercept: bool = True,
-        threshold: float = 0.5,
-        thresholds: Optional[List[float]] = None,
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        standardization: bool = True,
-        weightCol: Optional[str] = None,
-        aggregationDepth: int = 2,
-        family: str = "auto",
-        lowerBoundsOnCoefficients: Optional[Matrix] = None,
-        upperBoundsOnCoefficients: Optional[Matrix] = None,
-        lowerBoundsOnIntercepts: Optional[Vector] = None,
-        upperBoundsOnIntercepts: Optional[Vector] = None,
-        maxBlockSizeInMB: float = 0.0,
-    ) -> "LogisticRegression":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxIter      = 100,
+        regParam        = 0.0,
+        elasticNetParam        = 0.0,
+        tol        = 1e-6,
+        fitIntercept       = True,
+        threshold        = 0.5,
+        thresholds                        = None,
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        standardization       = True,
+        weightCol                = None,
+        aggregationDepth      = 2,
+        family      = "auto",
+        lowerBoundsOnCoefficients                   = None,
+        upperBoundsOnCoefficients                   = None,
+        lowerBoundsOnIntercepts                   = None,
+        upperBoundsOnIntercepts                   = None,
+        maxBlockSizeInMB        = 0.0,
+    )                        :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   maxIter=100, regParam=0.0, elasticNetParam=0.0, tol=1e-6, fitIntercept=True, \
@@ -1420,94 +1420,94 @@ class LogisticRegression(
         self._checkThresholdConsistency()
         return self
 
-    def _create_model(self, java_model: "JavaObject") -> "LogisticRegressionModel":
+    def _create_model(self, java_model              )                             :
         return LogisticRegressionModel(java_model)
 
     @since("2.1.0")
-    def setFamily(self, value: str) -> "LogisticRegression":
+    def setFamily(self, value     )                        :
         """
         Sets the value of :py:attr:`family`.
         """
         return self._set(family=value)
 
     @since("2.3.0")
-    def setLowerBoundsOnCoefficients(self, value: Matrix) -> "LogisticRegression":
+    def setLowerBoundsOnCoefficients(self, value        )                        :
         """
         Sets the value of :py:attr:`lowerBoundsOnCoefficients`
         """
         return self._set(lowerBoundsOnCoefficients=value)
 
     @since("2.3.0")
-    def setUpperBoundsOnCoefficients(self, value: Matrix) -> "LogisticRegression":
+    def setUpperBoundsOnCoefficients(self, value        )                        :
         """
         Sets the value of :py:attr:`upperBoundsOnCoefficients`
         """
         return self._set(upperBoundsOnCoefficients=value)
 
     @since("2.3.0")
-    def setLowerBoundsOnIntercepts(self, value: Vector) -> "LogisticRegression":
+    def setLowerBoundsOnIntercepts(self, value        )                        :
         """
         Sets the value of :py:attr:`lowerBoundsOnIntercepts`
         """
         return self._set(lowerBoundsOnIntercepts=value)
 
     @since("2.3.0")
-    def setUpperBoundsOnIntercepts(self, value: Vector) -> "LogisticRegression":
+    def setUpperBoundsOnIntercepts(self, value        )                        :
         """
         Sets the value of :py:attr:`upperBoundsOnIntercepts`
         """
         return self._set(upperBoundsOnIntercepts=value)
 
-    def setMaxIter(self, value: int) -> "LogisticRegression":
+    def setMaxIter(self, value     )                        :
         """
         Sets the value of :py:attr:`maxIter`.
         """
         return self._set(maxIter=value)
 
-    def setRegParam(self, value: float) -> "LogisticRegression":
+    def setRegParam(self, value       )                        :
         """
         Sets the value of :py:attr:`regParam`.
         """
         return self._set(regParam=value)
 
-    def setTol(self, value: float) -> "LogisticRegression":
+    def setTol(self, value       )                        :
         """
         Sets the value of :py:attr:`tol`.
         """
         return self._set(tol=value)
 
-    def setElasticNetParam(self, value: float) -> "LogisticRegression":
+    def setElasticNetParam(self, value       )                        :
         """
         Sets the value of :py:attr:`elasticNetParam`.
         """
         return self._set(elasticNetParam=value)
 
-    def setFitIntercept(self, value: bool) -> "LogisticRegression":
+    def setFitIntercept(self, value      )                        :
         """
         Sets the value of :py:attr:`fitIntercept`.
         """
         return self._set(fitIntercept=value)
 
-    def setStandardization(self, value: bool) -> "LogisticRegression":
+    def setStandardization(self, value      )                        :
         """
         Sets the value of :py:attr:`standardization`.
         """
         return self._set(standardization=value)
 
-    def setWeightCol(self, value: str) -> "LogisticRegression":
+    def setWeightCol(self, value     )                        :
         """
         Sets the value of :py:attr:`weightCol`.
         """
         return self._set(weightCol=value)
 
-    def setAggregationDepth(self, value: int) -> "LogisticRegression":
+    def setAggregationDepth(self, value     )                        :
         """
         Sets the value of :py:attr:`aggregationDepth`.
         """
         return self._set(aggregationDepth=value)
 
     @since("3.1.0")
-    def setMaxBlockSizeInMB(self, value: float) -> "LogisticRegression":
+    def setMaxBlockSizeInMB(self, value       )                        :
         """
         Sets the value of :py:attr:`maxBlockSizeInMB`.
         """
@@ -1529,7 +1529,7 @@ class LogisticRegressionModel(
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def coefficients(self) -> Vector:
+    def coefficients(self)          :
         """
         Model coefficients of binomial logistic regression.
         An exception is thrown in the case of multinomial logistic regression.
@@ -1538,7 +1538,7 @@ class LogisticRegressionModel(
 
     @property  # type: ignore[misc]
     @since("1.4.0")
-    def intercept(self) -> float:
+    def intercept(self)         :
         """
         Model intercept of binomial logistic regression.
         An exception is thrown in the case of multinomial logistic regression.
@@ -1547,7 +1547,7 @@ class LogisticRegressionModel(
 
     @property  # type: ignore[misc]
     @since("2.1.0")
-    def coefficientMatrix(self) -> Matrix:
+    def coefficientMatrix(self)          :
         """
         Model coefficients.
         """
@@ -1555,7 +1555,7 @@ class LogisticRegressionModel(
 
     @property  # type: ignore[misc]
     @since("2.1.0")
-    def interceptVector(self) -> Vector:
+    def interceptVector(self)          :
         """
         Model intercept.
         """
@@ -1563,7 +1563,7 @@ class LogisticRegressionModel(
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def summary(self) -> "LogisticRegressionTrainingSummary":
+    def summary(self)                                       :
         """
         Gets summary (accuracy/precision/recall, objective history, total iterations) of model
         trained on the training set. An exception is thrown if `trainingSummary is None`.
@@ -1582,7 +1582,7 @@ class LogisticRegressionModel(
                 "No training summary available for this %s" % self.__class__.__name__
             )
 
-    def evaluate(self, dataset: DataFrame) -> "LogisticRegressionSummary":
+    def evaluate(self, dataset           )                               :
         """
         Evaluates the model on a test dataset.
 
@@ -1611,7 +1611,7 @@ class LogisticRegressionSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def probabilityCol(self) -> str:
+    def probabilityCol(self)       :
         """
         Field in "predictions" which gives the probability
         of each class as a vector.
@@ -1620,7 +1620,7 @@ class LogisticRegressionSummary(_ClassificationSummary):
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def featuresCol(self) -> str:
+    def featuresCol(self)       :
         """
         Field in "predictions" which gives the features of each instance
         as a vector.
@@ -1669,7 +1669,7 @@ class _DecisionTreeClassifierParams(_DecisionTreeParams, _TreeClassifierParams):
     Params for :py:class:`DecisionTreeClassifier` and :py:class:`DecisionTreeClassificationModel`.
     """
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_DecisionTreeClassifierParams, self).__init__(*args)
         self._setDefault(
             maxDepth=5,
@@ -1772,29 +1772,29 @@ class DecisionTreeClassifier(
     DecisionTreeClassificationModel...depth=1, numNodes=3...
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-        maxMemoryInMB: int = 256,
-        cacheNodeIds: bool = False,
-        checkpointInterval: int = 10,
-        impurity: str = "gini",
-        seed: Optional[int] = None,
-        weightCol: Optional[str] = None,
-        leafCol: str = "",
-        minWeightFractionPerNode: float = 0.0,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+        maxMemoryInMB      = 256,
+        cacheNodeIds       = False,
+        checkpointInterval      = 10,
+        impurity      = "gini",
+        seed                = None,
+        weightCol                = None,
+        leafCol      = "",
+        minWeightFractionPerNode        = 0.0,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -1815,24 +1815,24 @@ class DecisionTreeClassifier(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-        maxMemoryInMB: int = 256,
-        cacheNodeIds: bool = False,
-        checkpointInterval: int = 10,
-        impurity: str = "gini",
-        seed: Optional[int] = None,
-        weightCol: Optional[str] = None,
-        leafCol: str = "",
-        minWeightFractionPerNode: float = 0.0,
-    ) -> "DecisionTreeClassifier":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+        maxMemoryInMB      = 256,
+        cacheNodeIds       = False,
+        checkpointInterval      = 10,
+        impurity      = "gini",
+        seed                = None,
+        weightCol                = None,
+        leafCol      = "",
+        minWeightFractionPerNode        = 0.0,
+    )                            :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   probabilityCol="probability", rawPredictionCol="rawPrediction", \
@@ -1844,74 +1844,74 @@ class DecisionTreeClassifier(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _create_model(self, java_model: "JavaObject") -> "DecisionTreeClassificationModel":
+    def _create_model(self, java_model              )                                     :
         return DecisionTreeClassificationModel(java_model)
 
-    def setMaxDepth(self, value: int) -> "DecisionTreeClassifier":
+    def setMaxDepth(self, value     )                            :
         """
         Sets the value of :py:attr:`maxDepth`.
         """
         return self._set(maxDepth=value)
 
-    def setMaxBins(self, value: int) -> "DecisionTreeClassifier":
+    def setMaxBins(self, value     )                            :
         """
         Sets the value of :py:attr:`maxBins`.
         """
         return self._set(maxBins=value)
 
-    def setMinInstancesPerNode(self, value: int) -> "DecisionTreeClassifier":
+    def setMinInstancesPerNode(self, value     )                            :
         """
         Sets the value of :py:attr:`minInstancesPerNode`.
         """
         return self._set(minInstancesPerNode=value)
 
     @since("3.0.0")
-    def setMinWeightFractionPerNode(self, value: float) -> "DecisionTreeClassifier":
+    def setMinWeightFractionPerNode(self, value       )                            :
         """
         Sets the value of :py:attr:`minWeightFractionPerNode`.
         """
         return self._set(minWeightFractionPerNode=value)
 
-    def setMinInfoGain(self, value: float) -> "DecisionTreeClassifier":
+    def setMinInfoGain(self, value       )                            :
         """
         Sets the value of :py:attr:`minInfoGain`.
         """
         return self._set(minInfoGain=value)
 
-    def setMaxMemoryInMB(self, value: int) -> "DecisionTreeClassifier":
+    def setMaxMemoryInMB(self, value     )                            :
         """
         Sets the value of :py:attr:`maxMemoryInMB`.
         """
         return self._set(maxMemoryInMB=value)
 
-    def setCacheNodeIds(self, value: bool) -> "DecisionTreeClassifier":
+    def setCacheNodeIds(self, value      )                            :
         """
         Sets the value of :py:attr:`cacheNodeIds`.
         """
         return self._set(cacheNodeIds=value)
 
     @since("1.4.0")
-    def setImpurity(self, value: str) -> "DecisionTreeClassifier":
+    def setImpurity(self, value     )                            :
         """
         Sets the value of :py:attr:`impurity`.
         """
         return self._set(impurity=value)
 
     @since("1.4.0")
-    def setCheckpointInterval(self, value: int) -> "DecisionTreeClassifier":
+    def setCheckpointInterval(self, value     )                            :
         """
         Sets the value of :py:attr:`checkpointInterval`.
         """
         return self._set(checkpointInterval=value)
 
-    def setSeed(self, value: int) -> "DecisionTreeClassifier":
+    def setSeed(self, value     )                            :
         """
         Sets the value of :py:attr:`seed`.
         """
         return self._set(seed=value)
 
     @since("3.0.0")
-    def setWeightCol(self, value: str) -> "DecisionTreeClassifier":
+    def setWeightCol(self, value     )                            :
         """
         Sets the value of :py:attr:`weightCol`.
         """
@@ -1933,7 +1933,7 @@ class DecisionTreeClassificationModel(
     """
 
     @property
-    def featureImportances(self) -> Vector:
+    def featureImportances(self)          :
         """
         Estimate of the importance of each feature.
 
@@ -1963,7 +1963,7 @@ class _RandomForestClassifierParams(_RandomForestParams, _TreeClassifierParams):
     Params for :py:class:`RandomForestClassifier` and :py:class:`RandomForestClassificationModel`.
     """
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_RandomForestClassifierParams, self).__init__(*args)
         self._setDefault(
             maxDepth=5,
@@ -2064,33 +2064,33 @@ class RandomForestClassifier(
     True
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-        maxMemoryInMB: int = 256,
-        cacheNodeIds: bool = False,
-        checkpointInterval: int = 10,
-        impurity: str = "gini",
-        numTrees: int = 20,
-        featureSubsetStrategy: str = "auto",
-        seed: Optional[int] = None,
-        subsamplingRate: float = 1.0,
-        leafCol: str = "",
-        minWeightFractionPerNode: float = 0.0,
-        weightCol: Optional[str] = None,
-        bootstrap: Optional[bool] = True,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+        maxMemoryInMB      = 256,
+        cacheNodeIds       = False,
+        checkpointInterval      = 10,
+        impurity      = "gini",
+        numTrees      = 20,
+        featureSubsetStrategy      = "auto",
+        seed                = None,
+        subsamplingRate        = 1.0,
+        leafCol      = "",
+        minWeightFractionPerNode        = 0.0,
+        weightCol                = None,
+        bootstrap                 = True,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -2112,28 +2112,28 @@ class RandomForestClassifier(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-        maxMemoryInMB: int = 256,
-        cacheNodeIds: bool = False,
-        checkpointInterval: int = 10,
-        impurity: str = "gini",
-        numTrees: int = 20,
-        featureSubsetStrategy: str = "auto",
-        seed: Optional[int] = None,
-        subsamplingRate: float = 1.0,
-        leafCol: str = "",
-        minWeightFractionPerNode: float = 0.0,
-        weightCol: Optional[str] = None,
-        bootstrap: Optional[bool] = True,
-    ) -> "RandomForestClassifier":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+        maxMemoryInMB      = 256,
+        cacheNodeIds       = False,
+        checkpointInterval      = 10,
+        impurity      = "gini",
+        numTrees      = 20,
+        featureSubsetStrategy      = "auto",
+        seed                = None,
+        subsamplingRate        = 1.0,
+        leafCol      = "",
+        minWeightFractionPerNode        = 0.0,
+        weightCol                = None,
+        bootstrap                 = True,
+    )                            :
         """
         setParams(self, featuresCol="features", labelCol="label", predictionCol="prediction", \
                  probabilityCol="probability", rawPredictionCol="rawPrediction", \
@@ -2146,101 +2146,101 @@ class RandomForestClassifier(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _create_model(self, java_model: "JavaObject") -> "RandomForestClassificationModel":
+    def _create_model(self, java_model              )                                     :
         return RandomForestClassificationModel(java_model)
 
-    def setMaxDepth(self, value: int) -> "RandomForestClassifier":
+    def setMaxDepth(self, value     )                            :
         """
         Sets the value of :py:attr:`maxDepth`.
         """
         return self._set(maxDepth=value)
 
-    def setMaxBins(self, value: int) -> "RandomForestClassifier":
+    def setMaxBins(self, value     )                            :
         """
         Sets the value of :py:attr:`maxBins`.
         """
         return self._set(maxBins=value)
 
-    def setMinInstancesPerNode(self, value: int) -> "RandomForestClassifier":
+    def setMinInstancesPerNode(self, value     )                            :
         """
         Sets the value of :py:attr:`minInstancesPerNode`.
         """
         return self._set(minInstancesPerNode=value)
 
-    def setMinInfoGain(self, value: float) -> "RandomForestClassifier":
+    def setMinInfoGain(self, value       )                            :
         """
         Sets the value of :py:attr:`minInfoGain`.
         """
         return self._set(minInfoGain=value)
 
-    def setMaxMemoryInMB(self, value: int) -> "RandomForestClassifier":
+    def setMaxMemoryInMB(self, value     )                            :
         """
         Sets the value of :py:attr:`maxMemoryInMB`.
         """
         return self._set(maxMemoryInMB=value)
 
-    def setCacheNodeIds(self, value: bool) -> "RandomForestClassifier":
+    def setCacheNodeIds(self, value      )                            :
         """
         Sets the value of :py:attr:`cacheNodeIds`.
         """
         return self._set(cacheNodeIds=value)
 
     @since("1.4.0")
-    def setImpurity(self, value: str) -> "RandomForestClassifier":
+    def setImpurity(self, value     )                            :
         """
         Sets the value of :py:attr:`impurity`.
         """
         return self._set(impurity=value)
 
     @since("1.4.0")
-    def setNumTrees(self, value: int) -> "RandomForestClassifier":
+    def setNumTrees(self, value     )                            :
         """
         Sets the value of :py:attr:`numTrees`.
         """
         return self._set(numTrees=value)
 
     @since("3.0.0")
-    def setBootstrap(self, value: bool) -> "RandomForestClassifier":
+    def setBootstrap(self, value      )                            :
         """
         Sets the value of :py:attr:`bootstrap`.
         """
         return self._set(bootstrap=value)
 
     @since("1.4.0")
-    def setSubsamplingRate(self, value: float) -> "RandomForestClassifier":
+    def setSubsamplingRate(self, value       )                            :
         """
         Sets the value of :py:attr:`subsamplingRate`.
         """
         return self._set(subsamplingRate=value)
 
     @since("2.4.0")
-    def setFeatureSubsetStrategy(self, value: str) -> "RandomForestClassifier":
+    def setFeatureSubsetStrategy(self, value     )                            :
         """
         Sets the value of :py:attr:`featureSubsetStrategy`.
         """
         return self._set(featureSubsetStrategy=value)
 
-    def setSeed(self, value: int) -> "RandomForestClassifier":
+    def setSeed(self, value     )                            :
         """
         Sets the value of :py:attr:`seed`.
         """
         return self._set(seed=value)
 
-    def setCheckpointInterval(self, value: int) -> "RandomForestClassifier":
+    def setCheckpointInterval(self, value     )                            :
         """
         Sets the value of :py:attr:`checkpointInterval`.
         """
         return self._set(checkpointInterval=value)
 
     @since("3.0.0")
-    def setWeightCol(self, value: str) -> "RandomForestClassifier":
+    def setWeightCol(self, value     )                            :
         """
         Sets the value of :py:attr:`weightCol`.
         """
         return self._set(weightCol=value)
 
     @since("3.0.0")
-    def setMinWeightFractionPerNode(self, value: float) -> "RandomForestClassifier":
+    def setMinWeightFractionPerNode(self, value       )                            :
         """
         Sets the value of :py:attr:`minWeightFractionPerNode`.
         """
@@ -2262,7 +2262,7 @@ class RandomForestClassificationModel(
     """
 
     @property
-    def featureImportances(self) -> Vector:
+    def featureImportances(self)          :
         """
         Estimate of the importance of each feature.
 
@@ -2281,13 +2281,13 @@ class RandomForestClassificationModel(
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def trees(self) -> List[DecisionTreeClassificationModel]:
+    def trees(self)                                         :
         """Trees in this ensemble. Warning: These have null parent Estimators."""
         return [DecisionTreeClassificationModel(m) for m in list(self._call_java("trees"))]
 
     @property  # type: ignore[misc]
     @since("3.1.0")
-    def summary(self) -> "RandomForestClassificationTrainingSummary":
+    def summary(self)                                               :
         """
         Gets summary (accuracy/precision/recall, objective history, total iterations) of model
         trained on the training set. An exception is thrown if `trainingSummary is None`.
@@ -2307,8 +2307,8 @@ class RandomForestClassificationModel(
             )
 
     def evaluate(
-        self, dataset: DataFrame
-    ) -> Union["BinaryRandomForestClassificationSummary", "RandomForestClassificationSummary"]:
+        self, dataset           
+    )                                                                                         :
         """
         Evaluates the model on a test dataset.
 
@@ -2382,9 +2382,9 @@ class _GBTClassifierParams(_GBTParams, _HasVarianceImpurity):
     .. versionadded:: 3.0.0
     """
 
-    supportedLossTypes: List[str] = ["logistic"]
+    supportedLossTypes            = ["logistic"]
 
-    lossType: Param[str] = Param(
+    lossType             = Param(
         Params._dummy(),
         "lossType",
         "Loss function which GBT tries to minimize (case-insensitive). "
@@ -2393,7 +2393,7 @@ class _GBTClassifierParams(_GBTParams, _HasVarianceImpurity):
         typeConverter=TypeConverters.toString,
     )
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_GBTClassifierParams, self).__init__(*args)
         self._setDefault(
             maxDepth=5,
@@ -2415,7 +2415,7 @@ class _GBTClassifierParams(_GBTParams, _HasVarianceImpurity):
         )
 
     @since("1.4.0")
-    def getLossType(self) -> str:
+    def getLossType(self)       :
         """
         Gets the value of lossType or its default value.
         """
@@ -2533,34 +2533,34 @@ class GBTClassifier(
     0.01
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-        maxMemoryInMB: int = 256,
-        cacheNodeIds: bool = False,
-        checkpointInterval: int = 10,
-        lossType: str = "logistic",
-        maxIter: int = 20,
-        stepSize: float = 0.1,
-        seed: Optional[int] = None,
-        subsamplingRate: float = 1.0,
-        impurity: str = "variance",
-        featureSubsetStrategy: str = "all",
-        validationTol: float = 0.01,
-        validationIndicatorCol: Optional[str] = None,
-        leafCol: str = "",
-        minWeightFractionPerNode: float = 0.0,
-        weightCol: Optional[str] = None,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+        maxMemoryInMB      = 256,
+        cacheNodeIds       = False,
+        checkpointInterval      = 10,
+        lossType      = "logistic",
+        maxIter      = 20,
+        stepSize        = 0.1,
+        seed                = None,
+        subsamplingRate        = 1.0,
+        impurity      = "variance",
+        featureSubsetStrategy      = "all",
+        validationTol        = 0.01,
+        validationIndicatorCol                = None,
+        leafCol      = "",
+        minWeightFractionPerNode        = 0.0,
+        weightCol                = None,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -2583,29 +2583,29 @@ class GBTClassifier(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxDepth: int = 5,
-        maxBins: int = 32,
-        minInstancesPerNode: int = 1,
-        minInfoGain: float = 0.0,
-        maxMemoryInMB: int = 256,
-        cacheNodeIds: bool = False,
-        checkpointInterval: int = 10,
-        lossType: str = "logistic",
-        maxIter: int = 20,
-        stepSize: float = 0.1,
-        seed: Optional[int] = None,
-        subsamplingRate: float = 1.0,
-        impurity: str = "variance",
-        featureSubsetStrategy: str = "all",
-        validationTol: float = 0.01,
-        validationIndicatorCol: Optional[str] = None,
-        leafCol: str = "",
-        minWeightFractionPerNode: float = 0.0,
-        weightCol: Optional[str] = None,
-    ) -> "GBTClassifier":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxDepth      = 5,
+        maxBins      = 32,
+        minInstancesPerNode      = 1,
+        minInfoGain        = 0.0,
+        maxMemoryInMB      = 256,
+        cacheNodeIds       = False,
+        checkpointInterval      = 10,
+        lossType      = "logistic",
+        maxIter      = 20,
+        stepSize        = 0.1,
+        seed                = None,
+        subsamplingRate        = 1.0,
+        impurity      = "variance",
+        featureSubsetStrategy      = "all",
+        validationTol        = 0.01,
+        validationIndicatorCol                = None,
+        leafCol      = "",
+        minWeightFractionPerNode        = 0.0,
+        weightCol                = None,
+    )                   :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   maxDepth=5, maxBins=32, minInstancesPerNode=1, minInfoGain=0.0, \
@@ -2619,117 +2619,117 @@ class GBTClassifier(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _create_model(self, java_model: "JavaObject") -> "GBTClassificationModel":
+    def _create_model(self, java_model              )                            :
         return GBTClassificationModel(java_model)
 
-    def setMaxDepth(self, value: int) -> "GBTClassifier":
+    def setMaxDepth(self, value     )                   :
         """
         Sets the value of :py:attr:`maxDepth`.
         """
         return self._set(maxDepth=value)
 
-    def setMaxBins(self, value: int) -> "GBTClassifier":
+    def setMaxBins(self, value     )                   :
         """
         Sets the value of :py:attr:`maxBins`.
         """
         return self._set(maxBins=value)
 
-    def setMinInstancesPerNode(self, value: int) -> "GBTClassifier":
+    def setMinInstancesPerNode(self, value     )                   :
         """
         Sets the value of :py:attr:`minInstancesPerNode`.
         """
         return self._set(minInstancesPerNode=value)
 
-    def setMinInfoGain(self, value: float) -> "GBTClassifier":
+    def setMinInfoGain(self, value       )                   :
         """
         Sets the value of :py:attr:`minInfoGain`.
         """
         return self._set(minInfoGain=value)
 
-    def setMaxMemoryInMB(self, value: int) -> "GBTClassifier":
+    def setMaxMemoryInMB(self, value     )                   :
         """
         Sets the value of :py:attr:`maxMemoryInMB`.
         """
         return self._set(maxMemoryInMB=value)
 
-    def setCacheNodeIds(self, value: bool) -> "GBTClassifier":
+    def setCacheNodeIds(self, value      )                   :
         """
         Sets the value of :py:attr:`cacheNodeIds`.
         """
         return self._set(cacheNodeIds=value)
 
     @since("1.4.0")
-    def setImpurity(self, value: str) -> "GBTClassifier":
+    def setImpurity(self, value     )                   :
         """
         Sets the value of :py:attr:`impurity`.
         """
         return self._set(impurity=value)
 
     @since("1.4.0")
-    def setLossType(self, value: str) -> "GBTClassifier":
+    def setLossType(self, value     )                   :
         """
         Sets the value of :py:attr:`lossType`.
         """
         return self._set(lossType=value)
 
     @since("1.4.0")
-    def setSubsamplingRate(self, value: float) -> "GBTClassifier":
+    def setSubsamplingRate(self, value       )                   :
         """
         Sets the value of :py:attr:`subsamplingRate`.
         """
         return self._set(subsamplingRate=value)
 
     @since("2.4.0")
-    def setFeatureSubsetStrategy(self, value: str) -> "GBTClassifier":
+    def setFeatureSubsetStrategy(self, value     )                   :
         """
         Sets the value of :py:attr:`featureSubsetStrategy`.
         """
         return self._set(featureSubsetStrategy=value)
 
     @since("3.0.0")
-    def setValidationIndicatorCol(self, value: str) -> "GBTClassifier":
+    def setValidationIndicatorCol(self, value     )                   :
         """
         Sets the value of :py:attr:`validationIndicatorCol`.
         """
         return self._set(validationIndicatorCol=value)
 
     @since("1.4.0")
-    def setMaxIter(self, value: int) -> "GBTClassifier":
+    def setMaxIter(self, value     )                   :
         """
         Sets the value of :py:attr:`maxIter`.
         """
         return self._set(maxIter=value)
 
     @since("1.4.0")
-    def setCheckpointInterval(self, value: int) -> "GBTClassifier":
+    def setCheckpointInterval(self, value     )                   :
         """
         Sets the value of :py:attr:`checkpointInterval`.
         """
         return self._set(checkpointInterval=value)
 
     @since("1.4.0")
-    def setSeed(self, value: int) -> "GBTClassifier":
+    def setSeed(self, value     )                   :
         """
         Sets the value of :py:attr:`seed`.
         """
         return self._set(seed=value)
 
     @since("1.4.0")
-    def setStepSize(self, value: int) -> "GBTClassifier":
+    def setStepSize(self, value     )                   :
         """
         Sets the value of :py:attr:`stepSize`.
         """
         return self._set(stepSize=value)
 
     @since("3.0.0")
-    def setWeightCol(self, value: str) -> "GBTClassifier":
+    def setWeightCol(self, value     )                   :
         """
         Sets the value of :py:attr:`weightCol`.
         """
         return self._set(weightCol=value)
 
     @since("3.0.0")
-    def setMinWeightFractionPerNode(self, value: float) -> "GBTClassifier":
+    def setMinWeightFractionPerNode(self, value       )                   :
         """
         Sets the value of :py:attr:`minWeightFractionPerNode`.
         """
@@ -2750,7 +2750,7 @@ class GBTClassificationModel(
     """
 
     @property
-    def featureImportances(self) -> Vector:
+    def featureImportances(self)          :
         """
         Estimate of the importance of each feature.
 
@@ -2769,11 +2769,11 @@ class GBTClassificationModel(
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def trees(self) -> List[DecisionTreeRegressionModel]:
+    def trees(self)                                     :
         """Trees in this ensemble. Warning: These have null parent Estimators."""
         return [DecisionTreeRegressionModel(m) for m in list(self._call_java("trees"))]
 
-    def evaluateEachIteration(self, dataset: DataFrame) -> List[float]:
+    def evaluateEachIteration(self, dataset           )               :
         """
         Method to compute error or loss for every iteration of gradient boosting.
 
@@ -2794,13 +2794,13 @@ class _NaiveBayesParams(_PredictorParams, HasWeightCol):
     .. versionadded:: 3.0.0
     """
 
-    smoothing: Param[float] = Param(
+    smoothing               = Param(
         Params._dummy(),
         "smoothing",
         "The smoothing parameter, should be >= 0, " + "default is 1.0",
         typeConverter=TypeConverters.toFloat,
     )
-    modelType: Param[str] = Param(
+    modelType             = Param(
         Params._dummy(),
         "modelType",
         "The model type which is a string "
@@ -2809,19 +2809,19 @@ class _NaiveBayesParams(_PredictorParams, HasWeightCol):
         typeConverter=TypeConverters.toString,
     )
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_NaiveBayesParams, self).__init__(*args)
         self._setDefault(smoothing=1.0, modelType="multinomial")
 
     @since("1.5.0")
-    def getSmoothing(self) -> float:
+    def getSmoothing(self)         :
         """
         Gets the value of smoothing or its default value.
         """
         return self.getOrDefault(self.smoothing)
 
     @since("1.5.0")
-    def getModelType(self) -> str:
+    def getModelType(self)       :
         """
         Gets the value of modelType or its default value.
         """
@@ -2930,21 +2930,21 @@ class NaiveBayes(
     DenseMatrix(0, 0, [...], ...)
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        smoothing: float = 1.0,
-        modelType: str = "multinomial",
-        thresholds: Optional[List[float]] = None,
-        weightCol: Optional[str] = None,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        smoothing        = 1.0,
+        modelType      = "multinomial",
+        thresholds                        = None,
+        weightCol                = None,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -2963,16 +2963,16 @@ class NaiveBayes(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        smoothing: float = 1.0,
-        modelType: str = "multinomial",
-        thresholds: Optional[List[float]] = None,
-        weightCol: Optional[str] = None,
-    ) -> "NaiveBayes":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        smoothing        = 1.0,
+        modelType      = "multinomial",
+        thresholds                        = None,
+        weightCol                = None,
+    )                :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   probabilityCol="probability", rawPredictionCol="rawPrediction", smoothing=1.0, \
@@ -2982,24 +2982,24 @@ class NaiveBayes(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _create_model(self, java_model: "JavaObject") -> "NaiveBayesModel":
+    def _create_model(self, java_model              )                     :
         return NaiveBayesModel(java_model)
 
     @since("1.5.0")
-    def setSmoothing(self, value: float) -> "NaiveBayes":
+    def setSmoothing(self, value       )                :
         """
         Sets the value of :py:attr:`smoothing`.
         """
         return self._set(smoothing=value)
 
     @since("1.5.0")
-    def setModelType(self, value: str) -> "NaiveBayes":
+    def setModelType(self, value     )                :
         """
         Sets the value of :py:attr:`modelType`.
         """
         return self._set(modelType=value)
 
-    def setWeightCol(self, value: str) -> "NaiveBayes":
+    def setWeightCol(self, value     )                :
         """
         Sets the value of :py:attr:`weightCol`.
         """
@@ -3020,7 +3020,7 @@ class NaiveBayesModel(
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def pi(self) -> Vector:
+    def pi(self)          :
         """
         log of class priors.
         """
@@ -3028,7 +3028,7 @@ class NaiveBayesModel(
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def theta(self) -> Matrix:
+    def theta(self)          :
         """
         log of class conditional probabilities.
         """
@@ -3036,7 +3036,7 @@ class NaiveBayesModel(
 
     @property  # type: ignore[misc]
     @since("3.0.0")
-    def sigma(self) -> Matrix:
+    def sigma(self)          :
         """
         variance of each feature.
         """
@@ -3058,7 +3058,7 @@ class _MultilayerPerceptronParams(
     .. versionadded:: 3.0.0
     """
 
-    layers: Param[List[int]] = Param(
+    layers                   = Param(
         Params._dummy(),
         "layers",
         "Sizes of layers from input layer to output layer "
@@ -3066,32 +3066,32 @@ class _MultilayerPerceptronParams(
         + "neurons and output layer of 10 neurons.",
         typeConverter=TypeConverters.toListInt,
     )
-    solver: Param[str] = Param(
+    solver             = Param(
         Params._dummy(),
         "solver",
         "The solver algorithm for optimization. Supported " + "options: l-bfgs, gd.",
         typeConverter=TypeConverters.toString,
     )
-    initialWeights: Param[Vector] = Param(
+    initialWeights                = Param(
         Params._dummy(),
         "initialWeights",
         "The initial weights of the model.",
         typeConverter=TypeConverters.toVector,
     )
 
-    def __init__(self, *args: Any):
+    def __init__(self, *args     ):
         super(_MultilayerPerceptronParams, self).__init__(*args)
         self._setDefault(maxIter=100, tol=1e-6, blockSize=128, stepSize=0.03, solver="l-bfgs")
 
     @since("1.6.0")
-    def getLayers(self) -> List[int]:
+    def getLayers(self)             :
         """
         Gets the value of layers or its default value.
         """
         return self.getOrDefault(self.layers)
 
     @since("2.0.0")
-    def getInitialWeights(self) -> Vector:
+    def getInitialWeights(self)          :
         """
         Gets the value of initialWeights or its default value.
         """
@@ -3180,25 +3180,25 @@ class MultilayerPerceptronClassifier(
     True
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxIter: int = 100,
-        tol: float = 1e-6,
-        seed: Optional[int] = None,
-        layers: Optional[List[int]] = None,
-        blockSize: int = 128,
-        stepSize: float = 0.03,
-        solver: str = "l-bfgs",
-        initialWeights: Optional[Vector] = None,
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxIter      = 100,
+        tol        = 1e-6,
+        seed                = None,
+        layers                      = None,
+        blockSize      = 128,
+        stepSize        = 0.03,
+        solver      = "l-bfgs",
+        initialWeights                   = None,
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -3218,19 +3218,19 @@ class MultilayerPerceptronClassifier(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        maxIter: int = 100,
-        tol: float = 1e-6,
-        seed: Optional[int] = None,
-        layers: Optional[List[int]] = None,
-        blockSize: int = 128,
-        stepSize: float = 0.03,
-        solver: str = "l-bfgs",
-        initialWeights: Optional[Vector] = None,
-        probabilityCol: str = "probability",
-    ) -> "MultilayerPerceptronClassifier":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        maxIter      = 100,
+        tol        = 1e-6,
+        seed                = None,
+        layers                      = None,
+        blockSize      = 128,
+        stepSize        = 0.03,
+        solver      = "l-bfgs",
+        initialWeights                   = None,
+        probabilityCol      = "probability",
+    )                                    :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   maxIter=100, tol=1e-6, seed=None, layers=None, blockSize=128, stepSize=0.03, \
@@ -3241,56 +3241,56 @@ class MultilayerPerceptronClassifier(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _create_model(self, java_model: "JavaObject") -> "MultilayerPerceptronClassificationModel":
+    def _create_model(self, java_model              )                                             :
         return MultilayerPerceptronClassificationModel(java_model)
 
     @since("1.6.0")
-    def setLayers(self, value: List[int]) -> "MultilayerPerceptronClassifier":
+    def setLayers(self, value           )                                    :
         """
         Sets the value of :py:attr:`layers`.
         """
         return self._set(layers=value)
 
     @since("1.6.0")
-    def setBlockSize(self, value: int) -> "MultilayerPerceptronClassifier":
+    def setBlockSize(self, value     )                                    :
         """
         Sets the value of :py:attr:`blockSize`.
         """
         return self._set(blockSize=value)
 
     @since("2.0.0")
-    def setInitialWeights(self, value: Vector) -> "MultilayerPerceptronClassifier":
+    def setInitialWeights(self, value        )                                    :
         """
         Sets the value of :py:attr:`initialWeights`.
         """
         return self._set(initialWeights=value)
 
-    def setMaxIter(self, value: int) -> "MultilayerPerceptronClassifier":
+    def setMaxIter(self, value     )                                    :
         """
         Sets the value of :py:attr:`maxIter`.
         """
         return self._set(maxIter=value)
 
-    def setSeed(self, value: int) -> "MultilayerPerceptronClassifier":
+    def setSeed(self, value     )                                    :
         """
         Sets the value of :py:attr:`seed`.
         """
         return self._set(seed=value)
 
-    def setTol(self, value: float) -> "MultilayerPerceptronClassifier":
+    def setTol(self, value       )                                    :
         """
         Sets the value of :py:attr:`tol`.
         """
         return self._set(tol=value)
 
     @since("2.0.0")
-    def setStepSize(self, value: float) -> "MultilayerPerceptronClassifier":
+    def setStepSize(self, value       )                                    :
         """
         Sets the value of :py:attr:`stepSize`.
         """
         return self._set(stepSize=value)
 
-    def setSolver(self, value: str) -> "MultilayerPerceptronClassifier":
+    def setSolver(self, value     )                                    :
         """
         Sets the value of :py:attr:`solver`.
         """
@@ -3312,14 +3312,14 @@ class MultilayerPerceptronClassificationModel(
 
     @property  # type: ignore[misc]
     @since("2.0.0")
-    def weights(self) -> Vector:
+    def weights(self)          :
         """
         the weights of layers.
         """
         return self._call_java("weights")
 
     @since("3.1.0")
-    def summary(self) -> "MultilayerPerceptronClassificationTrainingSummary":
+    def summary(self)                                                       :
         """
         Gets summary (accuracy/precision/recall, objective history, total iterations) of model
         trained on the training set. An exception is thrown if `trainingSummary is None`.
@@ -3333,7 +3333,7 @@ class MultilayerPerceptronClassificationModel(
                 "No training summary available for this %s" % self.__class__.__name__
             )
 
-    def evaluate(self, dataset: DataFrame) -> "MultilayerPerceptronClassificationSummary":
+    def evaluate(self, dataset           )                                               :
         """
         Evaluates the model on a test dataset.
 
@@ -3378,10 +3378,10 @@ class _OneVsRestParams(_ClassifierParams, HasWeightCol):
     Params for :py:class:`OneVsRest` and :py:class:`OneVsRestModelModel`.
     """
 
-    classifier: Param[Classifier] = Param(Params._dummy(), "classifier", "base binary classifier")
+    classifier                    = Param(Params._dummy(), "classifier", "base binary classifier")
 
     @since("2.0.0")
-    def getClassifier(self) -> Classifier:
+    def getClassifier(self)              :
         """
         Gets the value of classifier or its default value.
         """
@@ -3447,19 +3447,19 @@ class OneVsRest(
     ['features', 'rawPrediction', 'newPrediction']
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        rawPredictionCol: str = "rawPrediction",
-        classifier: Optional[Classifier[CM]] = None,
-        weightCol: Optional[str] = None,
-        parallelism: int = 1,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        rawPredictionCol      = "rawPrediction",
+        classifier                           = None,
+        weightCol                = None,
+        parallelism      = 1,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -3475,14 +3475,14 @@ class OneVsRest(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        rawPredictionCol: str = "rawPrediction",
-        classifier: Optional[Classifier[CM]] = None,
-        weightCol: Optional[str] = None,
-        parallelism: int = 1,
-    ) -> "OneVsRest":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        rawPredictionCol      = "rawPrediction",
+        classifier                           = None,
+        weightCol                = None,
+        parallelism      = 1,
+    )               :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   rawPredictionCol="rawPrediction", classifier=None, weightCol=None, parallelism=1):
@@ -3492,49 +3492,49 @@ class OneVsRest(
         return self._set(**kwargs)
 
     @since("2.0.0")
-    def setClassifier(self, value: Classifier[CM]) -> "OneVsRest":
+    def setClassifier(self, value                )               :
         """
         Sets the value of :py:attr:`classifier`.
         """
         return self._set(classifier=value)
 
-    def setLabelCol(self, value: str) -> "OneVsRest":
+    def setLabelCol(self, value     )               :
         """
         Sets the value of :py:attr:`labelCol`.
         """
         return self._set(labelCol=value)
 
-    def setFeaturesCol(self, value: str) -> "OneVsRest":
+    def setFeaturesCol(self, value     )               :
         """
         Sets the value of :py:attr:`featuresCol`.
         """
         return self._set(featuresCol=value)
 
-    def setPredictionCol(self, value: str) -> "OneVsRest":
+    def setPredictionCol(self, value     )               :
         """
         Sets the value of :py:attr:`predictionCol`.
         """
         return self._set(predictionCol=value)
 
-    def setRawPredictionCol(self, value: str) -> "OneVsRest":
+    def setRawPredictionCol(self, value     )               :
         """
         Sets the value of :py:attr:`rawPredictionCol`.
         """
         return self._set(rawPredictionCol=value)
 
-    def setWeightCol(self, value: str) -> "OneVsRest":
+    def setWeightCol(self, value     )               :
         """
         Sets the value of :py:attr:`weightCol`.
         """
         return self._set(weightCol=value)
 
-    def setParallelism(self, value: int) -> "OneVsRest":
+    def setParallelism(self, value     )               :
         """
         Sets the value of :py:attr:`parallelism`.
         """
         return self._set(parallelism=value)
 
-    def _fit(self, dataset: DataFrame) -> "OneVsRestModel":
+    def _fit(self, dataset           )                    :
         labelCol = self.getLabelCol()
         featuresCol = self.getFeaturesCol()
         predictionCol = self.getPredictionCol()
@@ -3563,7 +3563,7 @@ class OneVsRest(
         if handlePersistence:
             multiclassLabeled.persist(StorageLevel.MEMORY_AND_DISK)
 
-        def trainSingleClass(index: int) -> CM:
+        def trainSingleClass(index     )      :
             binaryLabelCol = "mc2b$" + str(index)
             trainingDataset = multiclassLabeled.withColumn(
                 binaryLabelCol,
@@ -3589,7 +3589,7 @@ class OneVsRest(
 
         return self._copyValues(OneVsRestModel(models=models))
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "OneVsRest":
+    def copy(self, extra                       = None)               :
         """
         Creates a copy of this instance with a randomly generated uid
         and some extra params. This creates a deep copy of the embedded paramMap,
@@ -3615,7 +3615,7 @@ class OneVsRest(
         return newOvr
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "OneVsRest":
+    def _from_java(cls, java_stage              )               :
         """
         Given a Java OneVsRest, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -3624,7 +3624,7 @@ class OneVsRest(
         labelCol = java_stage.getLabelCol()
         predictionCol = java_stage.getPredictionCol()
         rawPredictionCol = java_stage.getRawPredictionCol()
-        classifier: Classifier = JavaParams._from_java(java_stage.getClassifier())
+        classifier             = JavaParams._from_java(java_stage.getClassifier())
         parallelism = java_stage.getParallelism()
         py_stage = cls(
             featuresCol=featuresCol,
@@ -3639,7 +3639,7 @@ class OneVsRest(
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java OneVsRest. Used for ML persistence.
 
@@ -3662,10 +3662,10 @@ class OneVsRest(
         return _java_obj
 
     @classmethod
-    def read(cls) -> "OneVsRestReader":
+    def read(cls)                     :
         return OneVsRestReader(cls)
 
-    def write(self) -> MLWriter:
+    def write(self)            :
         if isinstance(self.getClassifier(), JavaMLWritable):
             return JavaMLWriter(self)  # type: ignore[arg-type]
         else:
@@ -3675,11 +3675,11 @@ class OneVsRest(
 class _OneVsRestSharedReadWrite:
     @staticmethod
     def saveImpl(
-        instance: Union[OneVsRest, "OneVsRestModel"],
-        sc: SparkContext,
-        path: str,
-        extraMetadata: Optional[Dict[str, Any]] = None,
-    ) -> None:
+        instance                                    ,
+        sc              ,
+        path     ,
+        extraMetadata                           = None,
+    )        :
         skipParams = ["classifier"]
         jsonParams = DefaultParamsWriter.extractJsonParams(instance, skipParams)
         DefaultParamsWriter.saveMetadata(
@@ -3689,13 +3689,13 @@ class _OneVsRestSharedReadWrite:
         cast(MLWritable, instance.getClassifier()).save(classifierPath)
 
     @staticmethod
-    def loadClassifier(path: str, sc: SparkContext) -> Union[OneVsRest, "OneVsRestModel"]:
+    def loadClassifier(path     , sc              )                                      :
         classifierPath = os.path.join(path, "classifier")
         return DefaultParamsReader.loadParamsInstance(classifierPath, sc)
 
     @staticmethod
-    def validateParams(instance: Union[OneVsRest, "OneVsRestModel"]) -> None:
-        elems_to_check: List[Params] = [instance.getClassifier()]
+    def validateParams(instance                                    )        :
+        elems_to_check               = [instance.getClassifier()]
         if isinstance(instance, OneVsRestModel):
             elems_to_check.extend(instance.models)
 
@@ -3709,28 +3709,28 @@ class _OneVsRestSharedReadWrite:
 
 @inherit_doc
 class OneVsRestReader(MLReader[OneVsRest]):
-    def __init__(self, cls: Type[OneVsRest]) -> None:
+    def __init__(self, cls                 )        :
         super(OneVsRestReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> OneVsRest:
+    def load(self, path     )             :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if not DefaultParamsReader.isPythonParamsInstance(metadata):
             return JavaMLReader(self.cls).load(path)  # type: ignore[arg-type]
         else:
             classifier = cast(Classifier, _OneVsRestSharedReadWrite.loadClassifier(path, self.sc))
-            ova: OneVsRest = OneVsRest(classifier=classifier)._resetUid(metadata["uid"])
+            ova            = OneVsRest(classifier=classifier)._resetUid(metadata["uid"])
             DefaultParamsReader.getAndSetParams(ova, metadata, skipParams=["classifier"])
             return ova
 
 
 @inherit_doc
 class OneVsRestWriter(MLWriter):
-    def __init__(self, instance: OneVsRest):
+    def __init__(self, instance           ):
         super(OneVsRestWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         _OneVsRestSharedReadWrite.validateParams(self.instance)
         _OneVsRestSharedReadWrite.saveImpl(self.instance, self.sc, path)
 
@@ -3750,25 +3750,25 @@ class OneVsRestModel(
     .. versionadded:: 2.0.0
     """
 
-    def setFeaturesCol(self, value: str) -> "OneVsRestModel":
+    def setFeaturesCol(self, value     )                    :
         """
         Sets the value of :py:attr:`featuresCol`.
         """
         return self._set(featuresCol=value)
 
-    def setPredictionCol(self, value: str) -> "OneVsRestModel":
+    def setPredictionCol(self, value     )                    :
         """
         Sets the value of :py:attr:`predictionCol`.
         """
         return self._set(predictionCol=value)
 
-    def setRawPredictionCol(self, value: str) -> "OneVsRestModel":
+    def setRawPredictionCol(self, value     )                    :
         """
         Sets the value of :py:attr:`rawPredictionCol`.
         """
         return self._set(rawPredictionCol=value)
 
-    def __init__(self, models: List[ClassificationModel]):
+    def __init__(self, models                           ):
         super(OneVsRestModel, self).__init__()
         self.models = models
         if not isinstance(models[0], JavaMLWritable):
@@ -3790,7 +3790,7 @@ class OneVsRestModel(
             java_models_array,
         )
 
-    def _transform(self, dataset: DataFrame) -> DataFrame:
+    def _transform(self, dataset           )             :
         # determine the input columns: these need to be passed through
         origCols = dataset.columns
 
@@ -3834,8 +3834,8 @@ class OneVsRestModel(
 
         if self.getRawPredictionCol():
 
-            def func(predictions: Iterable[float]) -> Vector:
-                predArray: List[float] = []
+            def func(predictions                 )          :
+                predArray              = []
                 for x in predictions:
                     predArray.append(x)
                 return Vectors.dense(predArray)
@@ -3858,7 +3858,7 @@ class OneVsRestModel(
             )
         return aggregatedDataset.drop(accColName)
 
-    def copy(self, extra: Optional["ParamMap"] = None) -> "OneVsRestModel":
+    def copy(self, extra                       = None)                    :
         """
         Creates a copy of this instance with a randomly generated uid
         and some extra params. This creates a deep copy of the embedded paramMap,
@@ -3883,7 +3883,7 @@ class OneVsRestModel(
         return newModel
 
     @classmethod
-    def _from_java(cls, java_stage: "JavaObject") -> "OneVsRestModel":
+    def _from_java(cls, java_stage              )                    :
         """
         Given a Java OneVsRestModel, create and return a Python wrapper of it.
         Used for ML persistence.
@@ -3891,8 +3891,8 @@ class OneVsRestModel(
         featuresCol = java_stage.getFeaturesCol()
         labelCol = java_stage.getLabelCol()
         predictionCol = java_stage.getPredictionCol()
-        classifier: Classifier = JavaParams._from_java(java_stage.getClassifier())
-        models: List[ClassificationModel] = [
+        classifier             = JavaParams._from_java(java_stage.getClassifier())
+        models                            = [
             JavaParams._from_java(model) for model in java_stage.models()
         ]
         py_stage = cls(models=models).setPredictionCol(predictionCol).setFeaturesCol(featuresCol)
@@ -3903,7 +3903,7 @@ class OneVsRestModel(
         py_stage._resetUid(java_stage.uid())
         return py_stage
 
-    def _to_java(self) -> "JavaObject":
+    def _to_java(self)                :
         """
         Transfer this instance to a Java OneVsRestModel. Used for ML persistence.
 
@@ -3935,10 +3935,10 @@ class OneVsRestModel(
         return _java_obj
 
     @classmethod
-    def read(cls) -> "OneVsRestModelReader":
+    def read(cls)                          :
         return OneVsRestModelReader(cls)
 
-    def write(self) -> MLWriter:
+    def write(self)            :
         if all(
             map(
                 lambda elem: isinstance(elem, JavaMLWritable),
@@ -3952,11 +3952,11 @@ class OneVsRestModel(
 
 @inherit_doc
 class OneVsRestModelReader(MLReader[OneVsRestModel]):
-    def __init__(self, cls: Type[OneVsRestModel]):
+    def __init__(self, cls                      ):
         super(OneVsRestModelReader, self).__init__()
         self.cls = cls
 
-    def load(self, path: str) -> OneVsRestModel:
+    def load(self, path     )                  :
         metadata = DefaultParamsReader.loadMetadata(path, self.sc)
         if not DefaultParamsReader.isPythonParamsInstance(metadata):
             return JavaMLReader(self.cls).load(path)  # type: ignore[arg-type]
@@ -3977,11 +3977,11 @@ class OneVsRestModelReader(MLReader[OneVsRestModel]):
 
 @inherit_doc
 class OneVsRestModelWriter(MLWriter):
-    def __init__(self, instance: OneVsRestModel):
+    def __init__(self, instance                ):
         super(OneVsRestModelWriter, self).__init__()
         self.instance = instance
 
-    def saveImpl(self, path: str) -> None:
+    def saveImpl(self, path     )        :
         _OneVsRestSharedReadWrite.validateParams(self.instance)
         instance = self.instance
         numClasses = len(instance.models)
@@ -4060,29 +4060,29 @@ class FMClassifier(
     True
     """
 
-    _input_kwargs: Dict[str, Any]
+    #_input_kwargs: Dict[str, Any]
 
     @keyword_only
     def __init__(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        factorSize: int = 8,
-        fitIntercept: bool = True,
-        fitLinear: bool = True,
-        regParam: float = 0.0,
-        miniBatchFraction: float = 1.0,
-        initStd: float = 0.01,
-        maxIter: int = 100,
-        stepSize: float = 1.0,
-        tol: float = 1e-6,
-        solver: str = "adamW",
-        thresholds: Optional[List[float]] = None,
-        seed: Optional[int] = None,
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        factorSize      = 8,
+        fitIntercept       = True,
+        fitLinear       = True,
+        regParam        = 0.0,
+        miniBatchFraction        = 1.0,
+        initStd        = 0.01,
+        maxIter      = 100,
+        stepSize        = 1.0,
+        tol        = 1e-6,
+        solver      = "adamW",
+        thresholds                        = None,
+        seed                = None,
     ):
         """
         __init__(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
@@ -4103,24 +4103,24 @@ class FMClassifier(
     def setParams(
         self,
         *,
-        featuresCol: str = "features",
-        labelCol: str = "label",
-        predictionCol: str = "prediction",
-        probabilityCol: str = "probability",
-        rawPredictionCol: str = "rawPrediction",
-        factorSize: int = 8,
-        fitIntercept: bool = True,
-        fitLinear: bool = True,
-        regParam: float = 0.0,
-        miniBatchFraction: float = 1.0,
-        initStd: float = 0.01,
-        maxIter: int = 100,
-        stepSize: float = 1.0,
-        tol: float = 1e-6,
-        solver: str = "adamW",
-        thresholds: Optional[List[float]] = None,
-        seed: Optional[int] = None,
-    ) -> "FMClassifier":
+        featuresCol      = "features",
+        labelCol      = "label",
+        predictionCol      = "prediction",
+        probabilityCol      = "probability",
+        rawPredictionCol      = "rawPrediction",
+        factorSize      = 8,
+        fitIntercept       = True,
+        fitLinear       = True,
+        regParam        = 0.0,
+        miniBatchFraction        = 1.0,
+        initStd        = 0.01,
+        maxIter      = 100,
+        stepSize        = 1.0,
+        tol        = 1e-6,
+        solver      = "adamW",
+        thresholds                        = None,
+        seed                = None,
+    )                  :
         """
         setParams(self, \\*, featuresCol="features", labelCol="label", predictionCol="prediction", \
                   probabilityCol="probability", rawPredictionCol="rawPrediction", \
@@ -4132,81 +4132,81 @@ class FMClassifier(
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def _create_model(self, java_model: "JavaObject") -> "FMClassificationModel":
+    def _create_model(self, java_model              )                           :
         return FMClassificationModel(java_model)
 
     @since("3.0.0")
-    def setFactorSize(self, value: int) -> "FMClassifier":
+    def setFactorSize(self, value     )                  :
         """
         Sets the value of :py:attr:`factorSize`.
         """
         return self._set(factorSize=value)
 
     @since("3.0.0")
-    def setFitLinear(self, value: bool) -> "FMClassifier":
+    def setFitLinear(self, value      )                  :
         """
         Sets the value of :py:attr:`fitLinear`.
         """
         return self._set(fitLinear=value)
 
     @since("3.0.0")
-    def setMiniBatchFraction(self, value: float) -> "FMClassifier":
+    def setMiniBatchFraction(self, value       )                  :
         """
         Sets the value of :py:attr:`miniBatchFraction`.
         """
         return self._set(miniBatchFraction=value)
 
     @since("3.0.0")
-    def setInitStd(self, value: float) -> "FMClassifier":
+    def setInitStd(self, value       )                  :
         """
         Sets the value of :py:attr:`initStd`.
         """
         return self._set(initStd=value)
 
     @since("3.0.0")
-    def setMaxIter(self, value: int) -> "FMClassifier":
+    def setMaxIter(self, value     )                  :
         """
         Sets the value of :py:attr:`maxIter`.
         """
         return self._set(maxIter=value)
 
     @since("3.0.0")
-    def setStepSize(self, value: float) -> "FMClassifier":
+    def setStepSize(self, value       )                  :
         """
         Sets the value of :py:attr:`stepSize`.
         """
         return self._set(stepSize=value)
 
     @since("3.0.0")
-    def setTol(self, value: float) -> "FMClassifier":
+    def setTol(self, value       )                  :
         """
         Sets the value of :py:attr:`tol`.
         """
         return self._set(tol=value)
 
     @since("3.0.0")
-    def setSolver(self, value: str) -> "FMClassifier":
+    def setSolver(self, value     )                  :
         """
         Sets the value of :py:attr:`solver`.
         """
         return self._set(solver=value)
 
     @since("3.0.0")
-    def setSeed(self, value: int) -> "FMClassifier":
+    def setSeed(self, value     )                  :
         """
         Sets the value of :py:attr:`seed`.
         """
         return self._set(seed=value)
 
     @since("3.0.0")
-    def setFitIntercept(self, value: bool) -> "FMClassifier":
+    def setFitIntercept(self, value      )                  :
         """
         Sets the value of :py:attr:`fitIntercept`.
         """
         return self._set(fitIntercept=value)
 
     @since("3.0.0")
-    def setRegParam(self, value: float) -> "FMClassifier":
+    def setRegParam(self, value       )                  :
         """
         Sets the value of :py:attr:`regParam`.
         """
@@ -4228,7 +4228,7 @@ class FMClassificationModel(
 
     @property  # type: ignore[misc]
     @since("3.0.0")
-    def intercept(self) -> float:
+    def intercept(self)         :
         """
         Model intercept.
         """
@@ -4236,7 +4236,7 @@ class FMClassificationModel(
 
     @property  # type: ignore[misc]
     @since("3.0.0")
-    def linear(self) -> Vector:
+    def linear(self)          :
         """
         Model linear term.
         """
@@ -4244,14 +4244,14 @@ class FMClassificationModel(
 
     @property  # type: ignore[misc]
     @since("3.0.0")
-    def factors(self) -> Matrix:
+    def factors(self)          :
         """
         Model factor term.
         """
         return self._call_java("factors")
 
     @since("3.1.0")
-    def summary(self) -> "FMClassificationTrainingSummary":
+    def summary(self)                                     :
         """
         Gets summary (accuracy/precision/recall, objective history, total iterations) of model
         trained on the training set. An exception is thrown if `trainingSummary is None`.
@@ -4263,7 +4263,7 @@ class FMClassificationModel(
                 "No training summary available for this %s" % self.__class__.__name__
             )
 
-    def evaluate(self, dataset: DataFrame) -> "FMClassificationSummary":
+    def evaluate(self, dataset           )                             :
         """
         Evaluates the model on a test dataset.
 
